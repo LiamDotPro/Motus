@@ -1,0 +1,13 @@
+{
+    "name": "vendor/motus",
+    "description": "Description of project Motus.",
+    "authors": [
+        {
+            "name": "li",
+            "email": "liam@liam.pro"
+        }
+    ],
+    "require": {
+        "leafo/scssphp": "0.6.6"
+    }
+}

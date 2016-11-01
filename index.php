@@ -53,7 +53,7 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
         <meta property="og:title" content="Motus - Very Personal News" />
         <title>Motus - Very Personal News</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-        <link href="/css/main.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
         <!--[if lt IE 9]>
           <script src="http://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="http://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -62,7 +62,6 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
-        <script src="http://listjs.com/no-cdn/list.pagination.js"></script> 
 
         <!--        Google Analytics-->
         <script>
@@ -96,11 +95,10 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
                                 <li><a href="/home">Home</a></li>
                             </ul>
                             <ul class="nav social-links navbar-nav navbar-right">
-                                <li><a target="_blank" class="facebook" href="https://www.facebook.com/methodgg"><i class="fa fa-facebook"></i></a></li>
-                                <li><a target="_blank" class="youtube" href="https://www.youtube.com/c/methodgg"><i class="fa fa-youtube-play"></i></a></li>
-                                <li><a target="_blank" class="twitch" href="https://www.twitch.tv/team/method"><i class="fa fa-twitch"></i></a></li>
-                                <li><a target="_blank" class="twitter" href="https://twitter.com/methodgg"><i class="fa fa-twitter"></i></a></li>
-
+                                <li><a target="_blank" class="facebook" href=""><i class="fa fa-facebook"></i></a></li>
+                                <li><a target="_blank" class="youtube" href=""><i class="fa fa-youtube-play"></i></a></li>
+                                <li><a target="_blank" class="twitch" href=""><i class="fa fa-twitch"></i></a></li>
+                                <li><a target="_blank" class="twitter" href=""><i class="fa fa-twitter"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -136,6 +134,8 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
             <section class="footer-section">
                 <footer class="container">
                     <div class="row footer-top">
+
+
                     </div>
                 </footer>
             </section>
