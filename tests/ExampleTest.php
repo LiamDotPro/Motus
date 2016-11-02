@@ -3,7 +3,7 @@ class ExampleTest extends PHPUnit_Framework_TestCase {
 	protected $obj = NULL;
 	
 	protected function setUp() {
-		$this->obj = new Application\Example;
+		$this->obj = new motus\Example;
 	}
 	
 	public function data() {
