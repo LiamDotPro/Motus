@@ -7,11 +7,11 @@ class SnakeTest extends PHPUnit_Framework_TestCase {
 	}
 
 	
-	/**
+	    /**
          * @return string persons name
          */
         public function testGetName(){
-            $this->obj->getName();
+            $this->assertTrue($this->obj->getName() == "ben");
         }
 
 
