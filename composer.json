@@ -1,20 +1,12 @@
 {
-    "name": "vendor/motus",
-    "description": "Description of project Motus.",
-    "authors": [
-        {
-            "name": "li",
-            "email": "liam@liam.pro"
-        }
-    ],
-    "require": {
-        "leafo/scssphp": "0.6.6"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "5.5.*"
-    }, "autoload": {
-        "psr-0": {
-            "": "/"
-        }
-    }
+	"require-dev": {
+		"phpunit/phpunit": "3.7.*",
+		"phpunit/dbunit": ">=1.2",
+		"phpunit/phpunit-selenium": ">=1.2"
+	},
+	"autoload": {
+		"psr-0": {
+			"Application": "lib/"
+		}
+	}
 }

@@ -1,9 +1,0 @@
-<!-- /phpunit.xml.dist -->
-<phpunit bootstrap="vendor/autoload.php">
-    <testsuites>
-        <testsuite name="My Test Suite">
-            <directory>./tests</directory>
-            <file>../calculator.php</file>
-        </testsuite>
-    </testsuites>
-</phpunit>

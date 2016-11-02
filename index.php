@@ -10,7 +10,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-require '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 //better print functionality
 function print_r2($val) {

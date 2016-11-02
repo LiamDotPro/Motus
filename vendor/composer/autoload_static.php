@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5b101288cb3af6841d5609b500fab3ab
+class ComposerStaticInit7719b6ecda2c76ebabb7babd1b68d948
 {
     public static $prefixLengthsPsr4 = array (
         'p' => 
@@ -65,6 +65,13 @@ class ComposerStaticInit5b101288cb3af6841d5609b500fab3ab
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+        ),
+        'A' => 
+        array (
+            'Application' => 
+            array (
+                0 => __DIR__ . '/../..' . '/lib',
             ),
         ),
     );
@@ -528,10 +535,10 @@ class ComposerStaticInit5b101288cb3af6841d5609b500fab3ab
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5b101288cb3af6841d5609b500fab3ab::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5b101288cb3af6841d5609b500fab3ab::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit5b101288cb3af6841d5609b500fab3ab::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit5b101288cb3af6841d5609b500fab3ab::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7719b6ecda2c76ebabb7babd1b68d948::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7719b6ecda2c76ebabb7babd1b68d948::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7719b6ecda2c76ebabb7babd1b68d948::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit7719b6ecda2c76ebabb7babd1b68d948::$classMap;
 
         }, null, ClassLoader::class);
     }
