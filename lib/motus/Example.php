@@ -1,5 +1,5 @@
 <?php
-namespace Application;
+namespace motus;
 class Example {
 	
 	private $number = NULL;
