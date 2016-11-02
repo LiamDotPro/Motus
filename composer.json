@@ -8,6 +8,7 @@
         }
     ],
     "require": {
-        "leafo/scssphp": "0.6.6"
+        "leafo/scssphp": "0.6.6",
+        "phpunit/phpunit": "5.5.*"
     }
 }
