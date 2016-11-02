@@ -6,7 +6,7 @@ class Snake {
     
     private $name;
     
-    function __construct($name) {
+    function __construct() {
         $this->name = "ben";
     }
 
