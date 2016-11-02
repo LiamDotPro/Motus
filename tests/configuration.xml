@@ -1,7 +1,0 @@
-<phpunit bootstrap="autoloading.php">
-    <testsuites>
-        <testsuite name="My Test Suite">
-            <file>tests/calculatorTest.php</file>
-        </testsuite>
-    </testsuites>
-</phpunit>
