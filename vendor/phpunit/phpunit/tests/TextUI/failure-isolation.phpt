@@ -2,19 +2,22 @@
 phpunit --process-isolation FailureTest ../_files/FailureTest.php
 --FILE--
 <?php
+define('PHPUNIT_TESTSUITE', TRUE);
+
 $_SERVER['argv'][1] = '--no-configuration';
 $_SERVER['argv'][2] = '--process-isolation';
 $_SERVER['argv'][3] = 'FailureTest';
-$_SERVER['argv'][4] = __DIR__ . '/../_files/FailureTest.php';
+$_SERVER['argv'][4] = dirname(dirname(__FILE__)) . '/_files/FailureTest.php';
 
-require __DIR__ . '/../bootstrap.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/PHPUnit/Autoload.php';
 PHPUnit_TextUI_Command::main();
+?>
 --EXPECTF--
-PHPUnit %s by Sebastian Bergmann and contributors.
+PHPUnit %s by Sebastian Bergmann.
 
-FFFFFFFFFFFFF                                                     13 / 13 (100%)
+FFFFFFFFFFFFF
 
-Time: %s, Memory: %s
+Time: %s, Memory: %sMb
 
 There were 13 failures:
 

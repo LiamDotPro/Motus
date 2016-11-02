@@ -19,13 +19,13 @@ class TemplateMethodsTest extends PHPUnit_Framework_TestCase
     public function testOne()
     {
         print __METHOD__ . "\n";
-        $this->assertTrue(true);
+        $this->assertTrue(TRUE);
     }
 
     public function testTwo()
     {
         print __METHOD__ . "\n";
-        $this->assertTrue(false);
+        $this->assertTrue(FALSE);
     }
 
     protected function assertPostConditions()
@@ -49,3 +49,4 @@ class TemplateMethodsTest extends PHPUnit_Framework_TestCase
         throw $e;
     }
 }
+?>
