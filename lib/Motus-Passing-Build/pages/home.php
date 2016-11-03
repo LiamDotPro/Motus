@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row home-pane-panel ">
             <div class="col-xs-3 home-pane-user nopad">
-                <div class="col-md-12">
+                <div class="col-md-12 user-tile-col">
                     <div class="user-tile">
                         <div class="user-thumbnail">   
                             <img src="/images/default/thumbnail/default-thumbnail-wallpaper.jpg" alt="Add some flair to your news profile">
@@ -21,11 +21,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-12 user-reading-col">
+                    <div class="user-tile">
+                        <div class="text-center">
+                            <h3>Your pinned articles</h3>
+                        </div>
+                        <div class="pinned-articles">
+                            <ul>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-xs-6 home-pane-main nopad">
-                <div></div>
-            </div>
-            <div class="col-xs-3 home-pane-questions nopad">
+            <div class="col-xs-9 home-pane-main nopad">
                 <div></div>
             </div>
         </div>

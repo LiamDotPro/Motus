@@ -66,12 +66,10 @@ a:hover, a:active, a:focus {
   padding-bottom: 7px; }
 
 .home-pane-main {
-  height: 600px;
-  background: pink; }
+  height: 600px; }
 
 .home-pane-questions {
-  height: 600px;
-  background: blue; }
+  height: 600px; }
 
 .home-pane-user {
   height: 600px; }
@@ -118,5 +116,28 @@ a:hover, a:active, a:focus {
 .user-stats i {
   font-size: 14px;
   padding-right: 5px; }
+
+.user-reading-col {
+  padding-top: 20px; }
+
+.pinned-articles {
+  padding-top: 10px;
+  border-top: 1px solid #eee; }
+  .pinned-articles ul {
+    list-style: none;
+    padding-left: 15px; }
+  .pinned-articles ul p {
+    display: inline;
+    font-size: 12px; }
+  .pinned-articles ul li {
+    padding-bottom: 10px; }
+
+.four-o-four {
+  padding-top: 200px; }
+  .four-o-four h1 {
+    font-size: 100px; }
+
+.four-o-four-home {
+  padding-top: 30px; }
 
 /*# sourceMappingURL=style.css.map */

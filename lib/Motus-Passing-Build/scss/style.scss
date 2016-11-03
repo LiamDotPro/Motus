@@ -95,12 +95,10 @@ a:hover, a:active, a:focus {
 
 .home-pane-main {
     height: 600px;
-    background: pink;
 }
 
 .home-pane-questions {
     height: 600px;
-    background: blue;
 }
 
 .home-pane-user {
@@ -159,4 +157,42 @@ a:hover, a:active, a:focus {
 .user-stats i {
     font-size: 14px;
     padding-right: 5px;
+}
+
+.user-reading-col {
+    padding-top: 20px;
+
+}
+
+.pinned-articles {
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+
+    ul {
+        list-style: none;   
+        padding-left: 15px;
+    }
+    
+    ul p {
+        display:inline;
+        font-size: 12px;
+    }
+    
+    ul li{
+        padding-bottom: 10px;
+    }
+}
+
+//404 page
+
+.four-o-four {
+    padding-top: 200px;
+
+    h1{
+        font-size: 100px;
+    }
+}
+
+.four-o-four-home {
+    padding-top: 30px;
 }

@@ -7,6 +7,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+//news api key
+//cfe8990468894b4a96882692c13f063b
+
 //better print functionality
 function print_r2($val) {
     echo '<pre>';
@@ -97,6 +100,7 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
                             <ul class="nav main-links navbar-nav navbar-left">
                                 <li><a href="/home">Home</a></li>
                                 <li><a href="/about">About</a></li>
+                                <li><a href="/mission">Mission Statement</a></li>
                             </ul>
                             <ul class="nav social-links navbar-nav navbar-right">
                                 <li><a target="_blank" class="facebook" href=""><i class="fa fa-facebook"></i></a></li>
@@ -117,6 +121,7 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
                     case 'home':
                     case 'about':
                     case '404':
+                    case 'mission':
                         if (file_exists(ROOT . "/pages/" . $page . ".php")) {
                             // Route and file was found on the system
                             include_once(ROOT . "/pages/" . $_GET['page'] . ".php");
