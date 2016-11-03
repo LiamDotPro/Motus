@@ -1,14 +1,122 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 01-Nov-2016, 22:09:30
-    Author     : li
-*/
-body {
-  font-family: "Raleway", sans-serif;
-  background: #f1f1f1; }
-
-/*# sourceMappingURL=style.css.map */
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 01-Nov-2016, 22:09:30
+    Author     : li
+*/
+.nopad {
+  padding: 0 0 0 0 !important; }
+
+body {
+  font-family: "Raleway", sans-serif;
+  background: #fafafa; }
+
+.navbar {
+  position: relative;
+  -webkit-box-shadow: 0 8px 6px -6px #E4E4E4;
+  -moz-box-shadow: 0 8px 6px -6px #E4E4E4;
+  box-shadow: 0 8px 6px -6px #E4E4E4; }
+
+.brand {
+  padding-top: 5px;
+  position: absolute;
+  left: 50%;
+  margin-left: -50px !important;
+  /* 50% of your logo width */
+  display: block;
+  padding-left: 20px; }
+
+.main-links > li > a {
+  color: black; }
+
+.main-links > li > a:hover {
+  color: black;
+  text-decoration: none;
+  background: none; }
+
+.social-links {
+  padding-right: 14px; }
+
+.social-links > li > a {
+  transition: color 0.3s ease-in-out;
+  color: black; }
+
+.social-links > li > a:hover {
+  text-decoration: none;
+  background: none; }
+
+.facebook:hover {
+  color: #3b5998; }
+
+.twitter:hover {
+  color: #00aced; }
+
+.linkedin:hover {
+  color: #007bb5; }
+
+a:hover, a:active, a:focus {
+  outline: 0; }
+
+.main-navbar {
+  background: white;
+  padding-top: 5px;
+  padding-bottom: 7px; }
+
+.home-pane-main {
+  height: 600px;
+  background: pink; }
+
+.home-pane-questions {
+  height: 600px;
+  background: blue; }
+
+.home-pane-user {
+  height: 600px; }
+
+.user-tile {
+  padding: 0;
+  background: #fff;
+  display: block;
+  overflow: hidden;
+  margin: 0px 0;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05); }
+
+.user-tile .user-thumbnail {
+  max-height: 110px;
+  background: #252c32;
+  position: relative;
+  min-height: 110px;
+  overflow: hidden; }
+
+.user-info {
+  padding: 15px 25px; }
+
+.user-tile .user-actions {
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding: 5px 15px;
+  background: #ffffff; }
+
+.user-info h3 {
+  margin-top: 5px;
+  margin-bottom: 5px; }
+
+.user-info p {
+  margin: 0px 0 5px; }
+
+.user-stats {
+  border-bottom: 1px solid rgba(238, 238, 238, 0.4); }
+
+.user-stats i {
+  font-size: 14px;
+  padding-right: 5px; }
+
+/*# sourceMappingURL=style.css.map */

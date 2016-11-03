@@ -1,6 +1,4 @@
 <?php
-
-
 //start session
 session_start();
 
@@ -8,9 +6,6 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-
-require __DIR__ . '/vendor/autoload.php';
 
 //better print functionality
 function print_r2($val) {
@@ -82,11 +77,14 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
     <body>
         <header>
             <nav class="navbar navbar-lg main-navbar" role="navigation" id="top-navigation">
-                <div class="container">
+                <div class="container nopad">
                     <div class="row">
                         <!-- Mobile Only -->
                         <div class="navbar-header"> 
-                            <img src="/images/logos/logo.png" class="img-responsive pull-left hidden-lg logo-xs" alt="logo here">
+                            <a class="brand" style="margin: 0; float: none;" href="/home">
+                                <img src="/images/logos/logo.png"/>
+                            </a>
+<!--                            <img src="/images/logos/logo.png" class="img-responsive pull-left logo-xs" alt="logo here">-->
                             <button type="button" class="navbar-toggle pull-right"> 
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="nav-menu-line"></span>
@@ -95,15 +93,15 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
                             </button>
                         </div>
                         <!-- Main Navigation -->
-                        <div class="collapse navbar-collapse" id="main-nav">
+                        <div class="collapse navbar-collapse">
                             <ul class="nav main-links navbar-nav navbar-left">
                                 <li><a href="/home">Home</a></li>
+                                <li><a href="/about">About</a></li>
                             </ul>
                             <ul class="nav social-links navbar-nav navbar-right">
                                 <li><a target="_blank" class="facebook" href=""><i class="fa fa-facebook"></i></a></li>
-                                <li><a target="_blank" class="youtube" href=""><i class="fa fa-youtube-play"></i></a></li>
-                                <li><a target="_blank" class="twitch" href=""><i class="fa fa-twitch"></i></a></li>
                                 <li><a target="_blank" class="twitter" href=""><i class="fa fa-twitter"></i></a></li>
+                                <li><a target="_blank" class="linkedin" href=""><i class="fa fa-linkedin"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -117,6 +115,7 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
                 $page = $_GET['page'];
                 switch ($page) {
                     case 'home':
+                    case 'about':
                     case '404':
                         if (file_exists(ROOT . "/pages/" . $page . ".php")) {
                             // Route and file was found on the system
@@ -155,5 +154,7 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
         <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" type="text/css" rel="stylesheet">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        <!--        momentjs-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
     </body>
 </html>
