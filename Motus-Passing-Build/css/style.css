@@ -12,13 +12,10 @@ and open the template in the editor.
 
 body {
   font-family: "Raleway", sans-serif;
-  background: #fafafa; }
+  background: #f4f4f4; }
 
 .navbar {
-  position: relative;
-  -webkit-box-shadow: 0 8px 6px -6px #E4E4E4;
-  -moz-box-shadow: 0 8px 6px -6px #E4E4E4;
-  box-shadow: 0 8px 6px -6px #E4E4E4; }
+  position: relative; }
 
 .brand {
   padding-top: 5px;
@@ -32,20 +29,24 @@ body {
 .main-links > li > a {
   color: black; }
 
-.main-links > li > a:hover {
+.main-links > li > a:hover, a:focus, a:visited {
   color: black;
   text-decoration: none;
-  background: none; }
+  background: none !important; }
 
 .social-links {
   padding-right: 14px; }
 
 .social-links > li > a {
   transition: color 0.3s ease-in-out;
-  color: black; }
+  color: black;
+  outline: 0; }
 
 .social-links > li > a:hover {
   text-decoration: none;
+  background: none; }
+
+.social-links > li > a:focus {
   background: none; }
 
 .facebook:hover {
@@ -57,13 +58,14 @@ body {
 .linkedin:hover {
   color: #007bb5; }
 
-a:hover, a:active, a:focus {
-  outline: 0; }
+a:hover, a:active, a:focus, a:visited {
+  outline: none !important; }
 
 .main-navbar {
   background: white;
   padding-top: 5px;
-  padding-bottom: 7px; }
+  padding-bottom: 7px;
+  border-bottom: solid #ef242d; }
 
 .home-pane-main {
   height: 600px; }
@@ -122,7 +124,10 @@ a:hover, a:active, a:focus {
 
 .pinned-articles {
   padding-top: 10px;
-  border-top: 1px solid #eee; }
+  border-top: 1px solid #eee;
+  min-height: 250px;
+  max-height: 250px;
+  overflow-y: scroll; }
   .pinned-articles ul {
     list-style: none;
     padding-left: 15px; }
@@ -131,6 +136,15 @@ a:hover, a:active, a:focus {
     font-size: 12px; }
   .pinned-articles ul li {
     padding-bottom: 10px; }
+
+.user-question-col {
+  padding-top: 20px; }
+  .user-question-col .question-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid #eee; }
+    .user-question-col .question-container .question-text-box {
+      padding-bottom: 10px; }
 
 .four-o-four {
   padding-top: 200px; }

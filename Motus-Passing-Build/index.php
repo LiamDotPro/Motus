@@ -10,6 +10,8 @@ error_reporting(E_ALL);
 //news api key
 //cfe8990468894b4a96882692c13f063b
 
+
+
 //better print functionality
 function print_r2($val) {
     echo '<pre>';

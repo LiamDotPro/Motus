@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="container">
         <div class="row home-pane-panel ">
-            <div class="col-xs-3 home-pane-user nopad">
+            <div class="col-xs-12 col-md-3 home-pane-user nopad">
                 <div class="col-md-12 user-tile-col">
                     <div class="user-tile">
                         <div class="user-thumbnail">   
@@ -25,10 +25,13 @@
                 <div class="col-md-12 user-reading-col">
                     <div class="user-tile">
                         <div class="text-center">
-                            <h3>Your pinned articles</h3>
+                            <h3>Your Pinned Articles</h3>
                         </div>
                         <div class="pinned-articles">
                             <ul>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
+                                <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
                                 <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
                                 <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
                                 <li><a href="">Hello World</a> <p> - A short introduction to life</p></li>
@@ -37,10 +40,54 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="col-md-12 user-question-col">
+                    <div class="user-tile">
+                        <div class="text-center">
+                            <div>
+                                <h3>Questionnaire</h3>
+                            </div>
+                            <div class="question-container">
+                                <p>How personal is too personal?</p>
+                                <div class="form-group">
+                                    <div class="col-md-12 question-text-box">
+                                        <input type="text" placeholder="Answer here" class="form-control" id="input-question-area">
+                                    </div>
+                                </div>
+                                <button class="btn btn-default">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
             <div class="col-xs-9 home-pane-main nopad">
-                <div></div>
+                <div class="news-hub">
+                    <div style="height:200px; background: red;" class="col-xs-3">
+                        <img src="">   
+                    </div>
+
+                    <div style="height:200px; background: red;" class="col-xs-3">
+                        <img src="">   
+                    </div>
+
+                    <div style="height:200px; background: red;" class="col-xs-3">
+                        <img src="">   
+                    </div>
+                    <div style="height:200px; background: red;" class="col-xs-3">
+                        <img src="">   
+                    </div>
+                    <div style="height:200px; background: red;" class="col-xs-3">
+                        <img src="">   
+                    </div>
+                    <div style="height:200px; background: red;" class="col-xs-3">
+                        <img src="">   
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
