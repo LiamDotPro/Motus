@@ -9,9 +9,6 @@ error_reporting(E_ALL);
 
 //news api key
 //cfe8990468894b4a96882692c13f063b
-
-
-
 //better print functionality
 function print_r2($val) {
     echo '<pre>';
@@ -73,7 +70,7 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
 
         </script>
         <?php
-        //gets the page the person is requesting
+//gets the page the person is requesting
         if (isset($_GET['page'])) {
             $pagetitle = strtolower(trim($_GET['page']));
         }
@@ -161,7 +158,10 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
         <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" type="text/css" rel="stylesheet">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-        <!--        momentjs-->
+        <!-- momentjs-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+        <!-- packer js-->
+        <script src="https://unpkg.com/packery@2.1/dist/packery.pkgd.js"></script>
+        <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
     </body>
 </html>
