@@ -64,32 +64,40 @@
 
 
             <div class="col-xs-9 home-pane-main nopad">
-                <div class="news-hub">
-                    <div style="height:200px; background: red;" class="col-xs-3">
-                        <img src="">   
-                    </div>
+                <div class="news-hub ">
+                    <div class="grid">
 
-                    <div style="height:200px; background: red;" class="col-xs-3">
-                        <img src="">   
-                    </div>
+                        <div class="grid-item">
+                            <div class='grid-img'>
+                                <img src='/images/default/news/default1.jpg'>
 
-                    <div style="height:200px; background: red;" class="col-xs-3">
-                        <img src="">   
-                    </div>
-                    <div style="height:200px; background: red;" class="col-xs-3">
-                        <img src="">   
-                    </div>
-                    <div style="height:200px; background: red;" class="col-xs-3">
-                        <img src="">   
-                    </div>
-                    <div style="height:200px; background: red;" class="col-xs-3">
-                        <img src="">   
+                            </div>
+                        </div>
+                        <div class="grid-item"><img src='/images/default/news/default2.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default3.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default4.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default5.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default3.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default2.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default4.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default1.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default2.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default3.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default4.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default5.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default3.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default2.jpg'></div>
+                        <div class="grid-item"><img src='/images/default/news/default4.jpg'></div>
+
                     </div>
                 </div>
             </div>
-
         </div>
+
+
+
     </div>
+</div>
 </div>
 
 <script>
@@ -111,5 +119,16 @@
         $("#ip").html(response.ip);
         $("#loc").html(response.city + ", " + response.region);
     }, "jsonp");
+
+    $(document).ready(function () {
+        var $grid = $('.grid').packery({
+            itemSelector: '.grid-item',
+            percentPosition: true
+        });
+        // layout Packery after each image loads
+        $grid.imagesLoaded().progress(function () {
+            $grid.packery();
+        });
+    });
 </script>
 
