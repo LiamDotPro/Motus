@@ -146,6 +146,30 @@ a:hover, a:active, a:focus, a:visited {
     .user-question-col .question-container .question-text-box {
       padding-bottom: 10px; }
 
+.news-hub {
+  padding-top: 1px;
+  padding-left: 10px; }
+
+/* ---- .grid-item ---- */
+.grid-item {
+  width: 33.333%; }
+
+.grid-item {
+  float: left; }
+
+.grid-item img {
+  display: block;
+  max-width: 100%; }
+
+h2 span {
+  color: white;
+  font: bold 24px/45px Helvetica, Sans-Serif;
+  letter-spacing: -1px;
+  background: black;
+  /* fallback color */
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px; }
+
 .four-o-four {
   padding-top: 200px; }
   .four-o-four h1 {
