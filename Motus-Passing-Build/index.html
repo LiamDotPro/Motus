@@ -69,12 +69,6 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
         <script>
 
         </script>
-        <?php
-//gets the page the person is requesting
-        if (isset($_GET['page'])) {
-            $pagetitle = strtolower(trim($_GET['page']));
-        }
-        ?>
     </head>
     <body>
         <header>
@@ -112,32 +106,10 @@ define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
             </nav>
         </header>
         <div class="page-wrapper">
-            <!-- PAGE CONTENT -->
-            <?php
-            if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-                switch ($page) {
-                    case 'home':
-                    case 'about':
-                    case '404':
-                    case 'mission':
-                        if (file_exists(ROOT . "/pages/" . $page . ".php")) {
-                            // Route and file was found on the system
-                            include_once(ROOT . "/pages/" . $_GET['page'] . ".php");
-                        } else {
-                            // Route was found, but no file on the system exists
-                            include("pages/404.php");
-                        }
-                        break;
-                    default:
-                        include("pages/404.php");
-                        break;
-                }
-            } else {
-                // Page variable is not set, throw homepage 
-                include(ROOT . "/pages/home.php");
-            }
-            ?>
+         
+		 
+		 
+		 
             <!-- FOOTER SECTION -->
             <section class="footer-section">
                 <footer class="container">

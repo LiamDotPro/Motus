@@ -1,0 +1,19 @@
+{
+  "name": "motus",
+  "version": "0.0.0",
+  "description": "Motus the online news platform that learns",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiamDotPro/Motus.git"
+  },
+  "author": "Liam Read",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LiamDotPro/Motus/issues"
+  },
+  "homepage": "https://github.com/LiamDotPro/Motus#readme"
+}
