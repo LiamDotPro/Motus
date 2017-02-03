@@ -9443,7 +9443,7 @@ module.exports = __webpack_require__(109);
 /* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("c:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("c:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
 "use strict";
 
@@ -9483,7 +9483,7 @@ var App = function (_React$Component) {
                 _react2.default.createElement(
                     "h1",
                     null,
-                    "Hello World"
+                    "React Loaded"
                 )
             );
         }
@@ -9494,7 +9494,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "App.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("c:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "App.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
 /* 82 */
@@ -21735,8 +21735,8 @@ module.exports = traverseAllChildren;
 
 /* REACT HOT LOADER */if (false) {
   (function () {
-    var ReactHotAPI = require("C:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-api\\modules\\index.js"),
-        RootInstanceProvider = require("C:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\RootInstanceProvider.js"),
+    var ReactHotAPI = require("c:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-api\\modules\\index.js"),
+        RootInstanceProvider = require("c:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\RootInstanceProvider.js"),
         ReactMount = require("react-dom/lib/ReactMount"),
         React = require("react");module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () {
       return RootInstanceProvider.getRootInstances(ReactMount);
@@ -21771,7 +21771,7 @@ module.exports = traverseAllChildren;
   if (false) {
     (function () {
       var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false;if (module.exports && module.makeHot) {
-        var makeExportsHot = require("C:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\makeExportsHot.js");if (makeExportsHot(module, require("react"))) {
+        var makeExportsHot = require("c:\\Users\\li\\Documents\\GitHub\\Motus\\node_modules\\react-hot-loader\\makeExportsHot.js");if (makeExportsHot(module, require("react"))) {
           foundReactClasses = true;
         }var shouldAcceptModule = true && foundReactClasses;if (shouldAcceptModule) {
           module.hot.accept(function (err) {

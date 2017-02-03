@@ -125,16 +125,5 @@
         $("#ip").html(response.ip);
         $("#loc").html(response.city + ", " + response.region);
     }, "jsonp");
-
-    $(document).ready(function () {
-        var $grid = $('.grid').packery({
-            itemSelector: '.grid-item',
-            percentPosition: true
-        });
-        // layout Packery after each image loads
-        $grid.imagesLoaded().progress(function () {
-            $grid.packery();
-        });
-    });
 </script>
 
