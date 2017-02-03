@@ -68,12 +68,18 @@
                     <div class="grid">
 
                         <div class="grid-item">
-                            <div class='grid-img'>
-                                <img src='/images/default/news/default1.jpg'>
-
+                            <img class='news-image' src='/images/default/news/default1.jpg'>
+                            <div class='news-text'>
+                                <p>Title Goes here</p>
                             </div>
+
                         </div>
-                        <div class="grid-item"><img src='/images/default/news/default2.jpg'></div>
+
+
+                        <div class="grid-item">
+                            <img src='/images/default/news/default2.jpg'>
+
+                        </div>
                         <div class="grid-item"><img src='/images/default/news/default3.jpg'></div>
                         <div class="grid-item"><img src='/images/default/news/default4.jpg'></div>
                         <div class="grid-item"><img src='/images/default/news/default5.jpg'></div>
