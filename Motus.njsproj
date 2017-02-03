@@ -18,6 +18,7 @@
   <ItemGroup>
     <Content Include=".babelrc" />
     <Content Include="client\components\App.jsx" />
+    <Content Include="client\css\style.css" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="Motus-Passing-Build\css\style.css" />
@@ -33,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="client\components\" />
+    <Folder Include="client\css\" />
     <Folder Include="Motus-Passing-Build" />
     <Folder Include="Motus-Passing-Build\admin" />
     <Folder Include="Motus-Passing-Build\css" />
@@ -41,10 +43,9 @@
     <Folder Include="Motus-Passing-Build\images\default\news" />
     <Folder Include="Motus-Passing-Build\images\default\thumbnail" />
     <Folder Include="Motus-Passing-Build\images\logos" />
-    <Folder Include="Motus-Passing-Build\includes" />
     <Folder Include="Motus-Passing-Build\pages" />
-    <Folder Include="Motus-Passing-Build\scss" />
-    <Folder Include="src\" />
+    <Folder Include="client\scss\" />
+    <Folder Include="dist\" />
     <Folder Include="client\" />
   </ItemGroup>
   <ItemGroup>

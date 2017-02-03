@@ -1,45 +1,4 @@
-<?php
-//start session
-session_start();
-
-//errors
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-//news api key
-//cfe8990468894b4a96882692c13f063b
-//better print functionality
-function print_r2($val) {
-    echo '<pre>';
-    print_r($val);
-    echo '</pre>';
-}
-
-//memory usage indicator
-function echo_memory_usage() {
-    $mem_usage = memory_get_usage(true);
-    if ($mem_usage < 1024)
-        echo $mem_usage . " bytes";
-    elseif ($mem_usage < 1048576)
-        echo round($mem_usage / 1024, 2) . " kilobytes";
-    else
-        echo round($mem_usage / 1048576, 2) . " megabytes";
-    echo "<br/>";
-}
-
-//load in database
-require_once "includes/Database.php";
-
-//check to see if a user is actively logged into the website
-if (isset($_SESSION['active_user'])) {
-    
-}
-
-//defines the real path of the server
-define('ROOT', realpath($_SERVER["DOCUMENT_ROOT"]));
-?>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">

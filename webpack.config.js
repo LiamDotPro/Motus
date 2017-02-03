@@ -1,4 +1,5 @@
 ﻿const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
     template: './client/index.html',
     filename: 'index.html',
@@ -14,7 +15,7 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-            { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ }
+            { test: /\.jsx?$/, loaders: ['react-hot-loader', 'babel-loader'], exclude: /node_modules/ }
         ]
     },
     plugins: [HtmlWebpackPluginConfig]
