@@ -17,32 +17,48 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include=".babelrc" />
-    <Content Include="client\components\App.jsx" />
-    <Content Include="client\css\style.css" />
+    <Compile Include="client\components\App.jsx" />
+    <None Include="compilerconfig.json" />
+    <Content Include="compilerconfig.json.defaults">
+      <SubType>Content</SubType>
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </Content>
+    <Content Include="dist\images\default\news\default1.jpg" />
+    <Content Include="dist\images\default\news\default2.jpg" />
+    <Content Include="dist\images\default\news\default3.jpg" />
+    <Content Include="dist\images\default\news\default4.jpg" />
+    <Content Include="dist\images\default\news\default5.jpg" />
+    <Content Include="dist\images\default\thumbnail\default-thumbnail-wallpaper.jpg" />
+    <Content Include="dist\images\logos\logo-old.png" />
+    <Content Include="dist\images\logos\logo.png" />
     <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="Motus-Passing-Build\css\style.css" />
-    <Content Include="Motus-Passing-Build\images\logos\logo-old.png" />
-    <Content Include="Motus-Passing-Build\images\logos\logo.png" />
-    <Content Include="Motus-Passing-Build\images\default\news\default1.jpg" />
-    <Content Include="Motus-Passing-Build\images\default\news\default2.jpg" />
-    <Content Include="Motus-Passing-Build\images\default\news\default3.jpg" />
-    <Content Include="Motus-Passing-Build\images\default\news\default4.jpg" />
-    <Content Include="Motus-Passing-Build\images\default\news\default5.jpg" />
-    <Content Include="Motus-Passing-Build\images\default\thumbnail\default-thumbnail-wallpaper.jpg" />
+    <Content Include="client\images\logos\logo-old.png" />
+    <Content Include="client\images\logos\logo.png" />
+    <Content Include="client\images\default\news\default1.jpg" />
+    <Content Include="client\images\default\news\default2.jpg" />
+    <Content Include="client\images\default\news\default3.jpg" />
+    <Content Include="client\images\default\news\default4.jpg" />
+    <Content Include="client\images\default\news\default5.jpg" />
+    <Content Include="client\images\default\thumbnail\default-thumbnail-wallpaper.jpg" />
     <Content Include="client\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="client\components\" />
     <Folder Include="client\css\" />
+    <Folder Include="dist\css\" />
+    <Folder Include="dist\images\" />
+    <Folder Include="dist\images\default\" />
+    <Folder Include="dist\images\default\news\" />
+    <Folder Include="dist\images\default\thumbnail\" />
+    <Folder Include="dist\images\logos\" />
     <Folder Include="Motus-Passing-Build" />
-    <Folder Include="Motus-Passing-Build\admin" />
     <Folder Include="Motus-Passing-Build\css" />
-    <Folder Include="Motus-Passing-Build\images" />
-    <Folder Include="Motus-Passing-Build\images\default" />
-    <Folder Include="Motus-Passing-Build\images\default\news" />
-    <Folder Include="Motus-Passing-Build\images\default\thumbnail" />
-    <Folder Include="Motus-Passing-Build\images\logos" />
+    <Folder Include="client\images\" />
+    <Folder Include="client\images\default\" />
+    <Folder Include="client\images\default\news\" />
+    <Folder Include="client\images\default\thumbnail\" />
+    <Folder Include="client\images\logos\" />
     <Folder Include="Motus-Passing-Build\pages" />
     <Folder Include="client\scss\" />
     <Folder Include="dist\" />
@@ -50,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="client\index.js" />
+    <Compile Include="server.js" />
     <Compile Include="webpack.config.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />

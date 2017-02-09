@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.jsx';
+import HomePane from './components/HomePane.jsx';
+import NewsPane from './components/NewsPane.jsx';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<HomePane />, document.getElementById('root'));
