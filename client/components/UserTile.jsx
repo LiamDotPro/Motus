@@ -14,9 +14,9 @@ export default class UserTile extends React.Component {
                     </div>
                 </div>
                 <div className="user-info text-center">
-                    <h3>Anonymous</h3>
-                    <p id="loc"></p>
-                    <p id="ip"></p>
+                    <h3>{this.props.userName}</h3>
+                    <p>{this.props.loc}</p>
+                    <p>{this.props.ip}</p>
                 </div>
                 <div className="user-actions text-center">
                     <a className="btn btn-action" href="">Register</a>
