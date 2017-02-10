@@ -17,8 +17,14 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include=".babelrc" />
-    <Compile Include="client\components\App.jsx" />
+    <Compile Include="client\components\Tile.jsx" />
     <None Include="compilerconfig.json" />
+    <Content Include="client\components\HomePane.jsx" />
+    <Content Include="client\components\NewsPane.jsx" />
+    <Content Include="client\components\UserPane.jsx" />
+    <Content Include="client\components\userQuestion.jsx" />
+    <Content Include="client\components\UserReadingList.jsx" />
+    <Content Include="client\components\UserTile.jsx" />
     <Content Include="compilerconfig.json.defaults">
       <SubType>Content</SubType>
       <DependentUpon>compilerconfig.json</DependentUpon>

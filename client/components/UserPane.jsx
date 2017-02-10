@@ -17,7 +17,7 @@ export default class UserPane extends React.Component {
     }
 
     componentDidMount() {
-        this.response = () => this.getIP();
+        this.response = this.getIP();
         this.setState({
             ip: this.response.ip,
             loc: this.response.loc
@@ -25,8 +25,8 @@ export default class UserPane extends React.Component {
     }
 
     async getIP() {
-        const result = await fetch("http://ipinfo.io","jsonp");
-        return {ip: result.ip, loc: result.id};
+        const result = await fetch("http://ipinfo.io");
+        console.log(result);
     }
 
     render() {
