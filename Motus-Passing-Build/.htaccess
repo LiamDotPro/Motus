@@ -1,7 +1,0 @@
-DirectoryIndex index.php
-
-RewriteEngine On
-
-RewriteRule ^([^/\.]+)/?$ index.php?page=$1
-RewriteRule ^([^/\.]+)/([^/\.]+)/?$ index.php?page=$1&id=$2
-RewriteRule ^blog/([^/\.]+)/([^/\.]+)/?$ index.php?page=blog&id=$1&blog=$2
