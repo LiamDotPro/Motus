@@ -7,7 +7,7 @@ export default class UserTile extends React.Component {
       <div className="col-xs-12 user-tile-col">
         <div className="user-tile">
           <div className="user-thumbnail">
-            <img src="client/images/default/thumbnail/default-thumbnail-wallpaper.jpg"
+            <img src="media/default/thumbnail/default-thumbnail-wallpaper.jpg"
                  alt="Add some flair to your news profile"></img>
           </div>
           <div className="user-stats text-center row">
