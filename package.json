@@ -1,0 +1,25 @@
+{
+  "name": "motus",
+  "version": "0.0.0",
+  "description": "Motus Personal News",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiamDotPro/Motus.git"
+  },
+  "author": "Liam Read",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LiamDotPro/Motus/issues"
+  },
+  "homepage": "https://github.com/LiamDotPro/Motus#readme",
+  "dependencies": {
+    "express": "^4.15.0",
+    "mysql": "^2.13.0",
+    "path": "^0.12.7",
+    "socket.io": "^1.7.3"
+  }
+}
