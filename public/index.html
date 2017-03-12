@@ -105,6 +105,10 @@
                 console.log("Cookie from previous session found");
                 var id = decipherCookie('id');
                 this.setId(id);
+                //emit the ID found in the cookie and also the path we received.
+                socket.emit('assignOldUser', {
+                    id: this.id
+                });
             }
         };
 
@@ -124,7 +128,6 @@
 
         /**
          * Deciphers a cookie string into a use able javascript array.
-         * @param cookieName cookie string to be used.
          * @param ref the cookies ref we are looking to extract.
          */
         function decipherCookie(ref) {
@@ -158,16 +161,16 @@
 
         }
 
-        function collectDataNewUser() {
-
-        }
-
         /**
          * Deletes the current cookie by setting it's expires field to yesterday.
          */
         this.deleteCookie = function (name) {
             document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         };
+
+        function collectDataNewUser() {
+
+        }
 
     }
 
@@ -186,9 +189,9 @@
         thisClient.addCookie(data.id);
     });
 
-    //    setInterval(function () {
-    //        console.log(thisClient);
-    //    }, 7000);
+    setInterval(function () {
+        console.log(thisClient);
+    }, 7000);
 
 </script>
 

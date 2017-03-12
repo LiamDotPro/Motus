@@ -2,13 +2,13 @@
  * Created by li on 04/03/2017.
  */
 
-var Client = function (id) {
+var Client = function (socketId) {
 
-    this.id = id;
+    this.socketId = id;
     this.status = 'online';
 
-    this.getId = function () {
-        return this.id;
+    this.getSocketId = function () {
+        return this.socketId;
     };
 
     this.changeStatus = function () {

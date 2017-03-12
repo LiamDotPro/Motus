@@ -17,8 +17,8 @@ var connection = mysql.createConnection({
 });
 
 //checking to see if connection is working correctly.
-connection.connect(function(err){
-    if(!err) {
+connection.connect(function (err) {
+    if (!err) {
         console.log("Database is connected");
     } else {
         console.log("Error connecting database");
@@ -28,9 +28,14 @@ connection.connect(function(err){
 //module exports
 var Client = require('./server/Client.js');
 var UUID = require('./server/UUID.js');
+var DataStore = require('./server/DataStore.js');
 
 //UUID generating class
 var UUID = new UUID();
+
+var dataStore = new DataStore(connection);
+dataStore.loadExp();
+
 
 //make the public resources static
 app.use(express.static(__dirname + '/'));
@@ -45,17 +50,18 @@ server.listen(80, function () {
 });
 
 
-
 server.listen(80);
 
 var clients = new Map();
 
 io.on('connection', function (socket) {
 
+    var connectedClient = '';
+
     //disconnect event
     socket.on('disconnect', function () {
         console.log("a user has disconnected.");
-
+        //session time - path they were viewing
     });
 
     //registers a new instance of client with the server, late this will need to be indexed in long term storage
@@ -70,9 +76,25 @@ io.on('connection', function (socket) {
 
         console.log('new client registered');
 
+        //inform the database of a new client and make a record.
+        connection.query('INSERT INTO `exp` SET ?',{ uuid: UUID.getUUID()}, function(err, results, fields){
+            if(err){
+                console.log(err);
+            }
+        });
+
+        //tell the client to create a cookie for this experience.
         socket.emit('addCookieForUser', {
             id: UUID.getUUID()
         })
+    });
+
+    socket.on('assignOldUser', function (data) {
+        //Id is passed from the cookie that was assigned.
+        console.log(data.id);
+        console.log(clients);
+        connectedClient = clients.get(data.id);
+        console.log(connectedClient);
     });
 
 });
