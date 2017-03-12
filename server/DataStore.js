@@ -4,6 +4,7 @@
 
 var dataStore = function (connection) {
 
+    var self = this;
     this.con = connection;
     this.clientArr = new Map();
 
@@ -11,23 +12,24 @@ var dataStore = function (connection) {
      * Loads all of the user experiences into the array.
      */
     this.loadExp = function () {
-
-        var output = 'err';
-
         loadData(this.con, function (err, result) {
-            console.log(err || result);
-            output = result.uuid;
+            self.addClient(result.uuid, 'test');
         });
 
-        console.log(output);
     };
 
     function loadData(con, callback) {
         con.query('SELECT * FROM exp', function (err, rows, fields) {
             if (err) throw err;
-            callback(null, rows);
+            for (var i in rows) {
+                callback(null, rows[i]);
+            }
         });
     }
+
+    this.getSelf = function () {
+        return self;
+    };
 
     /**
      * Returns the value of a client from within the hash map.
@@ -58,6 +60,7 @@ var dataStore = function (connection) {
      */
     this.addClient = function (id, client) {
         this.clientArr.set(id, client);
+        console.log(this.getClientList());
     };
 
 };
