@@ -2,30 +2,35 @@
  * Created by li on 12/03/2017.
  */
 
-var dataStore = function (connection) {
+var Client = require('./Client.js');
+var UUID = require('./UUID.js');
+
+var dataStore = function () {
 
     var self = this;
-    this.con = connection;
+    this.pool = null;
     this.clientArr = new Map();
+    this.uuid = new UUID();
+
+    /**
+     * sets the connection pool.
+     * @param conn
+     */
+    this.setPool = function (pool) {
+        this.pool = pool;
+    };
 
     /**
      * Loads all of the user experiences into the array.
      */
     this.loadExp = function () {
-        loadData(this.con, function (err, result) {
-            self.addClient(result.uuid, 'test');
+        this.pool.query('SELECT * FROM `exp`').then(function (rows) {
+            for (var i in rows) {
+                self.addClient(rows[i].uuid, new Client());
+            }
         });
 
     };
-
-    function loadData(con, callback) {
-        con.query('SELECT * FROM exp', function (err, rows, fields) {
-            if (err) throw err;
-            for (var i in rows) {
-                callback(null, rows[i]);
-            }
-        });
-    }
 
     this.getSelf = function () {
         return self;
@@ -54,13 +59,41 @@ var dataStore = function (connection) {
     };
 
     /**
-     * Creates a new instance of a client within the database and also within our datastore.
+     * Creates a new instance of a client within the database.
      * @param id
      * @param client
      */
     this.addClient = function (id, client) {
         this.clientArr.set(id, client);
         console.log(this.getClientList());
+    };
+
+    /**
+     * Registers a new instance of client within the datastore and also adds a new instance to the database.
+     */
+    this.registerNewClient = function () {
+
+        //generate new unique ID and then grab it for use when identifying this user in future sessions.
+        this.uuid.generateUUID();
+        var uniqueId = this.uuid.getUUID();
+
+        //Using methods to setup the client instance
+        var clientInstance = new Client();
+
+        //increase initial tabs open to one.
+        clientInstance.increaseTabs();
+
+        //set initial status to online
+        clientInstance.changeStatus('online');
+
+        //add the newly created client to the datastore.
+        this.clientArr.set(uniqueId, clientInstance);
+
+        this.pool.query('INSERT INTO `exp` (uuid) VALUES ("' + uniqueId + '")');
+
+        console.log(this.getClientList());
+
+        return uniqueId;
     };
 
 };

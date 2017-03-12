@@ -6,37 +6,24 @@ var app = require('express')();
 var server = require('http').createServer(app);
 var path = require('path');
 var io = require('socket.io')(server);
-var mysql = require('mysql');
+var mysql = require('promise-mysql');
 
-//database connection
-var connection = mysql.createConnection({
+//module exports
+var DataStore = require('./server/DataStore.js');
+
+var dataStore = new DataStore();
+
+//database connection pool - 100 max connections
+var pool = mysql.createPool({
     host: 'localhost',
     user: 'liam',
     password: 'newpassword123',
-    database: 'motus'
+    database: 'motus',
+    connectionLimit: 100
 });
 
-//checking to see if connection is working correctly.
-connection.connect(function (err) {
-    if (!err) {
-        console.log("Database is connected");
-    } else {
-        console.log("Error connecting database");
-    }
-});
-
-//module exports
-var Client = require('./server/Client.js');
-var UUID = require('./server/UUID.js');
-var DataStore = require('./server/DataStore.js');
-
-//UUID generating class
-var UUID = new UUID();
-
-var dataStore = new DataStore(connection);
+dataStore.setPool(pool);
 dataStore.loadExp();
-
-
 
 
 //make the public resources static
@@ -47,6 +34,10 @@ app.get('/', function (req, res) {
     //console.log('express serves homepage');
 });
 
+app.get('/home', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
+
 server.listen(80, function () {
     console.log('Server Started')
 });
@@ -54,49 +45,71 @@ server.listen(80, function () {
 
 server.listen(80);
 
-var clients = new Map();
-
 io.on('connection', function (socket) {
 
+    //Holds the Unique ID of this client session for retrieval from the datastore.
     var connectedClient = '';
 
     //disconnect event
     socket.on('disconnect', function () {
-        console.log("a user has disconnected.");
-        //session time - path they were viewing
+
+        console.log('User: ' + connectedClient + ' Leaving. ');
+
+        if (connectedClient != '') {
+            var dataStoreInstance = dataStore.getClient(connectedClient);
+
+            //decrease tabs open accessing the website.
+            dataStoreInstance.decreaseTabs();
+
+            //attempt to change the status on closure of tab.
+            dataStoreInstance.changeStatus('offline');
+
+        } else {
+            console.log('no unique id for user was found');
+        }
+
+        console.log(dataStore.getClient(connectedClient));
+
+        //session time - path they were viewing.
     });
 
     //registers a new instance of client with the server, late this will need to be indexed in long term storage
     socket.on('registerUser', function () {
-        var connectedUser = new Client(socket.id);
 
-        //Generate new UUID
-        UUID.generateUUID();
+        //register a new client within the datastore.
+        var result = dataStore.registerNewClient();
 
-        //add new client to the clients map
-        clients.set(UUID.getUUID(), connectedUser);
+        //assign new unique id to connected client
+        connectedClient = result;
 
         console.log('new client registered');
 
-        //inform the database of a new client and make a record.
-        connection.query('INSERT INTO `exp` SET ?',{ uuid: UUID.getUUID()}, function(err, results, fields){
-            if(err){
-                console.log(err);
-            }
-        });
-
         //tell the client to create a cookie for this experience.
         socket.emit('addCookieForUser', {
-            id: UUID.getUUID()
-        })
+            id: result
+        });
     });
 
     socket.on('assignOldUser', function (data) {
         //Id is passed from the cookie that was assigned.
-        console.log(data.id);
-        console.log(clients);
-        connectedClient = clients.get(data.id);
-        console.log(connectedClient);
+        console.log('Previous User detected via cookie: ' + data.id);
+
+        //provide the parent variable with the instance of the unique ID.
+        connectedClient = data.id;
+
+        console.log(dataStore.getClient(connectedClient).getStatus() + ' --------- ' +  dataStore.getClient(connectedClient).getTabs());
+
+        if (dataStore.getClient(connectedClient).getStatus() === 'offline' && dataStore.getClient(connectedClient).getTabs() == 0) {
+            dataStore.getClient(connectedClient).increaseTabs();
+            dataStore.getClient(connectedClient).changeStatus('online');
+        } else if (dataStore.getClient(connectedClient).getTabs() > 0) {
+            console.log('User: ' + data.id + ' Has opened another tab');
+            dataStore.getClient(connectedClient).increaseTabs();
+        } else {
+            console.log("err");
+        }
+
+        console.log(dataStore.getClient(connectedClient));
     });
 
 });

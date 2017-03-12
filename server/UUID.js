@@ -7,7 +7,7 @@ var UUID = function () {
 
     this.uniqueID = 0;
 
-    //This creates a UUID using a regular exspression and math random
+    //This creates a uuid using a regular exspression and math random
     this.createUUID = function () {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
