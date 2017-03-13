@@ -4,6 +4,7 @@
 
 var Client = require('./Client.js');
 var UUID = require('./UUID.js');
+var mysql = require('promise-mysql');
 
 var dataStore = function () {
 
@@ -11,10 +12,11 @@ var dataStore = function () {
     this.pool = null;
     this.clientArr = new Map();
     this.uuid = new UUID();
+    this.loadedExspierences = false;
 
     /**
      * sets the connection pool.
-     * @param conn
+     * @param pool
      */
     this.setPool = function (pool) {
         this.pool = pool;
@@ -28,10 +30,17 @@ var dataStore = function () {
             for (var i in rows) {
                 self.addClient(rows[i].uuid, new Client());
             }
+        }).then(function () {
+            self.loadedExspierences = true;
+            console.log('loaded all data from database into store.');
         });
 
     };
 
+    /**
+     * Ref to self which can be used in context inside the outer lexical scope.
+     * @returns {dataStore}
+     */
     this.getSelf = function () {
         return self;
     };
@@ -52,7 +61,7 @@ var dataStore = function () {
 
     /**
      * Returns a full list of clients.
-     * @returns {Map}
+     * @returns {Client}
      */
     this.getClientList = function () {
         return this.clientArr;
@@ -65,13 +74,13 @@ var dataStore = function () {
      */
     this.addClient = function (id, client) {
         this.clientArr.set(id, client);
-        console.log(this.getClientList());
+        //console.log(this.getClientList());
     };
 
     /**
      * Registers a new instance of client within the datastore and also adds a new instance to the database.
      */
-    this.registerNewClient = function () {
+    this.registerNewClient = function (ip, county, country) {
 
         //generate new unique ID and then grab it for use when identifying this user in future sessions.
         this.uuid.generateUUID();
@@ -91,9 +100,30 @@ var dataStore = function () {
 
         this.pool.query('INSERT INTO `exp` (uuid) VALUES ("' + uniqueId + '")');
 
-        console.log(this.getClientList());
+        ///client list call.
+        //console.log(this.getClientList());
 
         return uniqueId;
+    };
+
+    /**
+     * Updates a clients record within the database providing the user is registered within the datastore.
+     * @param id uuid of user
+     * @param data [ip, county, country]
+     */
+    this.updateClientAreaSettings = function (id, data) {
+        if (this.clientArr.has(id)) {
+            this.pool.query('UPDATE `exp` SET county="' + data[1] + '" , country="' + data[2] + '" , ip="' + data[0] + '" WHERE uuid="' + id + '"').then(function () {
+                console.log('area settings updated in the database for: ' + id);
+            });
+
+            var client = this.clientArr.get(id);
+            client.setDefaultClientData([data[0], data[1], data[2]]);
+            console.log('area settings updated within the datastore for: ' + id);
+
+        } else {
+            console.log("tried to update a record that doesn't exist");
+        }
     };
 
 };

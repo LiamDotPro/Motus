@@ -39,7 +39,7 @@ app.get('/home', function (req, res) {
 });
 
 server.listen(80, function () {
-    console.log('Server Started')
+    console.log('Server Started');
 });
 
 
@@ -53,7 +53,6 @@ io.on('connection', function (socket) {
     //disconnect event
     socket.on('disconnect', function () {
 
-        console.log('User: ' + connectedClient + ' Leaving. ');
 
         if (connectedClient != '') {
             var dataStoreInstance = dataStore.getClient(connectedClient);
@@ -62,19 +61,25 @@ io.on('connection', function (socket) {
             dataStoreInstance.decreaseTabs();
 
             //attempt to change the status on closure of tab.
-            dataStoreInstance.changeStatus('offline');
+            if (dataStoreInstance.getTabs() == 0) {
+                dataStoreInstance.changeStatus('offline');
+                console.log('User: ' + connectedClient + ' Has closed all tabs. ');
+                console.log(dataStore.getClient(connectedClient));
+            } else {
+                console.log('User: ' + connectedClient + ' Has closed a tab, but is still connected. ');
+            }
 
         } else {
             console.log('no unique id for user was found');
         }
 
-        console.log(dataStore.getClient(connectedClient));
-
         //session time - path they were viewing.
     });
 
     //registers a new instance of client with the server, late this will need to be indexed in long term storage
-    socket.on('registerUser', function () {
+    socket.on('registerUser', function (data) {
+
+        console.log(data);
 
         //register a new client within the datastore.
         var result = dataStore.registerNewClient();
@@ -88,28 +93,47 @@ io.on('connection', function (socket) {
         socket.emit('addCookieForUser', {
             id: result
         });
+
+    });
+
+    socket.on('updateUserAreaSettings', function (data) {
+        console.log('area settings received');
+
+        //notify datastore to handle updating area settings.
+        dataStore.updateClientAreaSettings(data.id, [data.ip, data.county, data.country]);
+
     });
 
     socket.on('assignOldUser', function (data) {
+
         //Id is passed from the cookie that was assigned.
         console.log('Previous User detected via cookie: ' + data.id);
 
         //provide the parent variable with the instance of the unique ID.
         connectedClient = data.id;
 
-        console.log(dataStore.getClient(connectedClient).getStatus() + ' --------- ' +  dataStore.getClient(connectedClient).getTabs());
+        //context is the actual client class we are operating on.
+        var context = dataStore.getClient(connectedClient);
 
-        if (dataStore.getClient(connectedClient).getStatus() === 'offline' && dataStore.getClient(connectedClient).getTabs() == 0) {
-            dataStore.getClient(connectedClient).increaseTabs();
-            dataStore.getClient(connectedClient).changeStatus('online');
-        } else if (dataStore.getClient(connectedClient).getTabs() > 0) {
+        //allows us to understand if the user is using multiple tabs as a means of accessing the website.
+        if (context.getStatus() === 'offline' && context.getTabs() == 0) {
+            context.increaseTabs();
+            context.changeStatus('online');
+        } else if (context.getTabs() > 0) {
             console.log('User: ' + data.id + ' Has opened another tab');
-            dataStore.getClient(connectedClient).increaseTabs();
+            context.increaseTabs();
         } else {
             console.log("err");
         }
 
-        console.log(dataStore.getClient(connectedClient));
+        /**
+         * Sends existing information about the current session to the origin and skips api call.
+         */
+        socket.emit('originInfo', {
+            ip: context.getIp(),
+            county: context.getCounty(),
+            country: context.getCountry()
+        });
     });
 
 });

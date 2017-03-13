@@ -100,11 +100,17 @@
          */
         this.checkForCookie = function () {
             if (!document.cookie) {
-                socket.emit('registerUser', {});
+                socket.emit('registerUser', {
+                    ref: this.referrer,
+                    reso: this.reso
+                });
             } else {
                 console.log("Cookie from previous session found");
+
+                //getting cookie from previous session.
                 var id = decipherCookie('id');
                 this.setId(id);
+
                 //emit the ID found in the cookie and also the path we received.
                 socket.emit('assignOldUser', {
                     id: this.id
@@ -113,17 +119,40 @@
         };
 
         /**
+         * When registering a new user we take there initial settings and using the ip info api also make note of
+         * there outlined geo ip.
+         */
+        function updateAreaSettings(id) {
+
+            $.get("http://ipinfo.io", function (response) {
+
+                $("#ip").html(response.ip);
+                $("#loc").html(response.city + ", " + response.region);
+
+                /**
+                 * Using socket here so we send the information back for logging when it return from the request.
+                 */
+                socket.emit('updateUserAreaSettings', {
+                    ip: response.ip,
+                    county: response.city,
+                    country: response.region,
+                    id: id
+                });
+
+            }, "jsonp");
+        }
+
+        /**
          * Adds a new cookie for the user to track them across the website
          */
         this.addCookie = function (id) {
             document.cookie = 'id=' + id + ';' + ' createdAt=' + window.location.pathname + ';';
             this.id = id;
             console.log("new cookie generated for user's session");
+
+            // attempt to grab area data about our new user.
+            updateAreaSettings(id);
         };
-
-        function collectInitalData() {
-
-        }
 
         /**
          * Deciphers a cookie string into a use able javascript array.
@@ -177,6 +206,7 @@
 
     thisClient.checkForCookie();
 
+   //thisClient.deleteCookie('id');
 
 
     /**
@@ -327,11 +357,6 @@
         update();
         setInterval(update, 1000);
     });
-
-    $.get("http://ipinfo.io", function (response) {
-        $("#ip").html(response.ip);
-        $("#loc").html(response.city + ", " + response.region);
-    }, "jsonp");
 
     $(document).ready(function () {
         var $grid = $('.grid').packery({
