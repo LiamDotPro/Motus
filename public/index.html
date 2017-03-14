@@ -26,6 +26,7 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
 </head>
 <body>
 <header>
@@ -152,6 +153,9 @@
 
             // attempt to grab area data about our new user.
             updateAreaSettings(id);
+
+            //Attempt to collect canvas data
+            this.collectCanvasData();
         };
 
         /**
@@ -196,8 +200,28 @@
             document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         };
 
-        function collectDataNewUser() {
+        /**
+         * Collects canvas data using FingerPrint2 - https://github.com/Valve/fingerprintjs2
+         */
+        this.collectCanvasData = function () {
 
+            //Canvas Hashing for user plus other data.
+            new Fingerprint2().get(function (result, components) {
+
+                socket.emit('clientCanvasData', {
+                    hash: result,
+                    arrOfData: components
+                });
+
+                console.log(result); //a hash, representing your device fingerprint
+                console.log(components); // an array of FP components
+            });
+        };
+
+        this.getLocaleLang = function () {
+            var language = navigator.languages && navigator.languages[0] ||
+                navigator.language ||
+                navigator.userLanguage;
         }
 
     }
@@ -206,8 +230,10 @@
 
     thisClient.checkForCookie();
 
-   //thisClient.deleteCookie('id');
 
+    console.log(language);
+
+    //thisClient.deleteCookie('id');
 
     /**
      * This event is triggered when the server tells the user that a client instance has been generated for them.
@@ -218,9 +244,14 @@
         thisClient.addCookie(data.id);
     });
 
-    setInterval(function () {
-        console.log(thisClient);
-    }, 7000);
+    socket.on('originInfo', function (data) {
+        $("#ip").html(data.ip);
+        $("#loc").html(data.county + ", " + data.country);
+    });
+
+    //    setInterval(function () {
+    //        console.log(thisClient);
+    //    }, 7000);
 
 </script>
 
@@ -387,5 +418,6 @@
 <!-- packer js-->
 <script src="https://unpkg.com/packery@2.1/dist/packery.pkgd.js"></script>
 <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
+
 </body>
 </html>

@@ -4,6 +4,7 @@
 
 var Client = function () {
 
+    this.id = 0;
     this.status = 'offline';
     this.ip = '';
     this.country = '';
@@ -15,6 +16,13 @@ var Client = function () {
         var sessionId = this.sessions.count();
     };
 
+    /**
+     * Sets the ID for a specific client session.
+     * @param id UUID
+     */
+    this.setId = function (id) {
+        this.id = id;
+    };
 
     /**
      * Sets the default data that is passed on creating a new client and registering the client.
@@ -100,6 +108,14 @@ var Client = function () {
      */
     this.getIp = function () {
         return this.ip;
+    };
+
+    /**
+     * Sets a new IP to the client.
+     * @param newIp Ip address
+     */
+    this.setIp = function (newIp) {
+        this.ip = newIp;
     };
 
 };

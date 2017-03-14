@@ -8,6 +8,8 @@ var path = require('path');
 var io = require('socket.io')(server);
 var mysql = require('promise-mysql');
 
+//api key for news api - cfe8990468894b4a96882692c13f063b - newsapi.org
+
 //module exports
 var DataStore = require('./server/DataStore.js');
 
@@ -76,13 +78,13 @@ io.on('connection', function (socket) {
         //session time - path they were viewing.
     });
 
-    //registers a new instance of client with the server, late this will need to be indexed in long term storage
+    //registers a new instance of client with the server.
     socket.on('registerUser', function (data) {
 
         console.log(data);
 
         //register a new client within the datastore.
-        var result = dataStore.registerNewClient();
+        var result = dataStore.registerNewClient(data.reso, data.ref);
 
         //assign new unique id to connected client
         connectedClient = result;
@@ -134,6 +136,11 @@ io.on('connection', function (socket) {
             county: context.getCounty(),
             country: context.getCountry()
         });
+    });
+
+    socket.on('clientCanvasData', function (data) {
+        console.log('canvas data incoming');
+        dataStore.createCanvasFingerPrintRecord(data, connectedClient);
     });
 
 });

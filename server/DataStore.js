@@ -4,6 +4,7 @@
 
 var Client = require('./Client.js');
 var UUID = require('./UUID.js');
+var Article = require('./Article.js');
 var mysql = require('promise-mysql');
 
 var dataStore = function () {
@@ -28,7 +29,12 @@ var dataStore = function () {
     this.loadExp = function () {
         this.pool.query('SELECT * FROM `exp`').then(function (rows) {
             for (var i in rows) {
-                self.addClient(rows[i].uuid, new Client());
+                var clientObj = new Client();
+                clientObj.setId(rows[i].uuid);
+                clientObj.setIp(rows[i].ip);
+                clientObj.setCountry(rows[i].country);
+                clientObj.setCounty(rows[i].county);
+                self.addClient(rows[i].uuid, clientObj);
             }
         }).then(function () {
             self.loadedExspierences = true;
@@ -80,7 +86,7 @@ var dataStore = function () {
     /**
      * Registers a new instance of client within the datastore and also adds a new instance to the database.
      */
-    this.registerNewClient = function (ip, county, country) {
+    this.registerNewClient = function (res, ref) {
 
         //generate new unique ID and then grab it for use when identifying this user in future sessions.
         this.uuid.generateUUID();
@@ -98,7 +104,9 @@ var dataStore = function () {
         //add the newly created client to the datastore.
         this.clientArr.set(uniqueId, clientInstance);
 
-        this.pool.query('INSERT INTO `exp` (uuid) VALUES ("' + uniqueId + '")');
+        var resStr = res[1] + "x" + res[0];
+
+        this.pool.query('INSERT INTO `exp` (uuid, ref, screenRes) VALUES ("' + uniqueId + '", "' + ref + '", "' + resStr + '")');
 
         ///client list call.
         //console.log(this.getClientList());
@@ -125,6 +133,60 @@ var dataStore = function () {
             console.log("tried to update a record that doesn't exist");
         }
     };
+
+    this.createCanvasFingerPrintRecord = function (data, client) {
+
+        //uncomment below for detailed logging.
+
+        // console.log(data.hash);
+        //
+        // for (var x in data.arrOfData) {
+        //
+        //     if (data.arrOfData[x].key === 'canvas' || data.arrOfData[x].key === 'webgl') {
+        //         console.log('componenet ' + x);
+        //     } else {
+        //         console.log('componenet ' + x);
+        //         console.log(data.arrOfData[x].key);
+        //         console.log(data.arrOfData[x].value);
+        //     }
+        //
+        // }
+
+        function makeRes(arr) {
+            return arr[0] + 'x' + arr[1];
+        }
+
+        function touchSupport(arr) {
+            return arr[0] + '-' + arr[1] + '-' + arr[2];
+        }
+
+        function jsFonts(arr) {
+            var str = '';
+
+            for (x in arr) {
+                str += arr[x] + "-";
+            }
+
+            return str;
+
+        }
+
+        // 22 fields hw ss dnt_tr js fonts
+        // 24 values
+        var sql = 'INSERT INTO `canvasdata` (hash, user_agent, lang, color_depth, pixel_ratio, hardware_concurrency, resolution, available_resolution, timezone_offset, session_storage, local_storage, indexed_db, ' +
+            'cpu_class, navigator_platform, do_not_track, has_lied_lang, has_lied_resolution, has_lied_os, touch_support, js_fonts, adblock, has_lied_browser)' +
+            ' VALUES ("' + data.hash + '","' + data.arrOfData[0].value + '","' + data.arrOfData[1].value + '","' + data.arrOfData[2].value + '","' + data.arrOfData[3].value + '","' + data.arrOfData[4].value + '","' + makeRes(data.arrOfData[5].value) + '","' + makeRes(data.arrOfData[6].value) + '","' + data.arrOfData[7].value + '","' + data.arrOfData[8].value + '","' + data.arrOfData[9].value + '","' + data.arrOfData[10].value + '","' + data.arrOfData[11].value + '","' + data.arrOfData[12].value + '","' + data.arrOfData[13].value + '","' + data.arrOfData[18].value + '","' + data.arrOfData[19].value + '","' + data.arrOfData[20].value + '","' + touchSupport(data.arrOfData[22].value) + '","' + jsFonts(data.arrOfData[23].value) + '","' + data.arrOfData[17].value + '","' + data.arrOfData[21].value + '")';
+
+
+        var poolRef = this.pool;
+
+        poolRef.query(sql).then(function (result) {
+            return poolRef.query('UPDATE `exp` SET canvasId="' + result.insertId + '" WHERE UUID="' + client + '"');
+        }).then(function () {
+            console.log('Updated experience table with canvas record for:' + client);
+        });
+
+    }
 
 };
 
