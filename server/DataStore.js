@@ -5,6 +5,7 @@
 var Client = require('./Client.js');
 var UUID = require('./UUID.js');
 var Article = require('./Article.js');
+var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
 
 var dataStore = function () {
@@ -13,6 +14,7 @@ var dataStore = function () {
     this.pool = null;
     this.clientArr = new Map();
     this.uuid = new UUID();
+    this.articleBank = new ArticleBank();
     this.loadedExspierences = false;
 
     /**
@@ -38,7 +40,7 @@ var dataStore = function () {
             }
         }).then(function () {
             self.loadedExspierences = true;
-            console.log('loaded all data from database into store.');
+            console.log('loaded all user data from database into store.');
         });
 
     };
@@ -186,7 +188,7 @@ var dataStore = function () {
             console.log('Updated experience table with canvas record for:' + client);
         });
 
-    }
+    };
 
 };
 

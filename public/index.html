@@ -29,7 +29,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
 </head>
 <body>
-<header>
+<header class="header-sticky">
     <nav class="navbar navbar-lg main-navbar" role="navigation" id="top-navigation">
         <div class="container nopad">
             <div class="row">
@@ -57,6 +57,7 @@
                         <li><a target="_blank" class="facebook" href=""><i class="fa fa-facebook"></i></a></li>
                         <li><a target="_blank" class="twitter" href=""><i class="fa fa-twitter"></i></a></li>
                         <li><a target="_blank" class="linkedin" href=""><i class="fa fa-linkedin"></i></a></li>
+                        <li><a class="toggle" href=""><i id="inverseToggle" class="fa fa-toggle-on"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -231,8 +232,6 @@
     thisClient.checkForCookie();
 
 
-    console.log(language);
-
     //thisClient.deleteCookie('id');
 
     /**
@@ -259,6 +258,7 @@
     <div class="container-fluid">
         <div class="container">
             <div class="row home-pane-panel ">
+
                 <div class="col-xs-12 col-md-3 home-pane-user nopad">
                     <div class="col-md-12 user-tile-col">
                         <div class="user-tile">
@@ -309,7 +309,6 @@
                         </div>
                     </div>
 
-
                     <div class="col-md-12 user-question-col">
                         <div class="user-tile">
                             <div class="text-center">
@@ -329,47 +328,177 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-12">
+
+                    </div>
+
                 </div>
 
 
                 <div class="col-xs-9 home-pane-main nopad">
-                    <div class="news-hub ">
-                        <div class="grid">
-
-                            <div class="grid-item">
-                                <img class='news-image' src='/public/images/default/news/default1.jpg'>
-                                <div class='news-text'>
-                                    <p>Title Goes here</p>
-                                </div>
-
-                            </div>
 
 
-                            <div class="grid-item">
-                                <img src='/public/images/default/news/default2.jpg'>
-
-                            </div>
-                            <div class="grid-item"><img src='/public/images/default/news/default3.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default4.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default5.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default3.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default2.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default4.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default1.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default2.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default3.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default4.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default5.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default3.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default2.jpg'></div>
-                            <div class="grid-item"><img src='/public/images/default/news/default4.jpg'></div>
-
+                    <div class="minimal-controls">
+                        <div class="pull-right">
+                            <i class="fa fa-filter"></i>
                         </div>
+
                     </div>
+
+                    <div class="news-hub scrollbar-light">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The document shows a $38m tax bill on $150m income
+                                                but the White House says its publication is illegal.</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://ichef.bbci.co.uk/news/1024/cpsprodpb/642D/production/_95154652_hi038477431.jpg"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The Nighthold Hardcore Exodus: A Midwinter
+                                                Interview</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://www.method.gg/images/blog/hero/unspecified-3-11-03-17-04-38-36-5.png"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The Nighthold Hardcore Exodus: A Midwinter
+                                                Interview</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://www.method.gg/images/blog/hero/unspecified-3-11-03-17-04-38-36-5.png"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The Nighthold Hardcore Exodus: A Midwinter
+                                                Interview</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://www.method.gg/images/blog/hero/unspecified-3-11-03-17-04-38-36-5.png"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The Nighthold Hardcore Exodus: A Midwinter
+                                                Interview</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://www.method.gg/images/blog/hero/unspecified-3-11-03-17-04-38-36-5.png"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The Nighthold Hardcore Exodus: A Midwinter
+                                                Interview</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://www.method.gg/images/blog/hero/unspecified-3-11-03-17-04-38-36-5.png"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <div class="article-wide">
+                                        <div class="article-info">
+                                            <div class="article-info-block">
+                                                <span class="article-date"><i class="fa fa-clock-o"
+                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
+                                            </div>
+                                            <h2 class="article-title">The Nighthold Hardcore Exodus: A Midwinter
+                                                Interview</h2>
+                                        </div>
+                                        <div class="article-overlay"></div>
+                                        <img class="article-image img-responsive"
+                                             src="http://www.method.gg/images/blog/hero/unspecified-3-11-03-17-04-38-36-5.png"
+                                             alt="News thumbnail">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -389,16 +518,6 @@
         setInterval(update, 1000);
     });
 
-    $(document).ready(function () {
-        var $grid = $('.grid').packery({
-            itemSelector: '.grid-item',
-            percentPosition: true
-        });
-        // layout Packery after each image loads
-        $grid.imagesLoaded().progress(function () {
-            $grid.packery();
-        });
-    });
 </script>
 
 
@@ -415,9 +534,5 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <!-- momentjs-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
-<!-- packer js-->
-<script src="https://unpkg.com/packery@2.1/dist/packery.pkgd.js"></script>
-<script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
-
 </body>
 </html>

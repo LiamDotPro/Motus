@@ -11,6 +11,7 @@ var Client = function () {
     this.county = '';
     this.tabs = 0;
     this.sessions = [];
+    this.CanvasData = {};
 
     this.addSession = function (path) {
         var sessionId = this.sessions.count();
@@ -116,6 +117,22 @@ var Client = function () {
      */
     this.setIp = function (newIp) {
         this.ip = newIp;
+    };
+
+    /**
+     * Sets the canvas data for the user.
+     * @param newData
+     */
+    this.setCanvasData = function (newData) {
+        this.CanvasData = newData;
+    };
+
+    /**
+     * Returns the canvas data for the user.
+     * @returns {{}|*}
+     */
+    this.getCanvasData = function () {
+        return this.CanvasData;
     };
 
 };
