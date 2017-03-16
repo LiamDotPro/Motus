@@ -17,6 +17,11 @@ var dataStore = function () {
     this.articleBank = new ArticleBank();
     this.loadedExspierences = false;
 
+
+    this.getAllArticles = function () {
+        return this.articleBank.getAllArticles();
+    };
+
     /**
      * sets the connection pool.
      * @param pool

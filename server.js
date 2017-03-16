@@ -11,19 +11,6 @@ var request = require('request-promise');
 
 //api key for news api - cfe8990468894b4a96882692c13f063b - newsapi.org
 
-var json = '';
-
-request('https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b', function (error, response, body) {
-    console.log('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    json = JSON.parse(body);
-}).then(function () {
-    for (var i in json.articles) {
-        console.log(json.articles[i]);
-    }
-});
-
-
 //module exports
 var DataStore = require('./server/DataStore.js');
 
