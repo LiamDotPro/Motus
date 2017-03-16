@@ -4,7 +4,7 @@
 
 var Client = require('./Client.js');
 var UUID = require('./UUID.js');
-var Article = require('./Article.js');
+
 var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
 
@@ -43,6 +43,11 @@ var dataStore = function () {
             console.log('loaded all user data from database into store.');
         });
 
+    };
+
+    this.getArticles = function (pool) {
+        this.articleBank.setPool(pool);
+        this.articleBank.loadArticlesFromDatabase();
     };
 
     /**

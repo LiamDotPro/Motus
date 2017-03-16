@@ -4,15 +4,78 @@
 
 var Article = function () {
 
-    var source = '';
-    var author = '';
-    var title = '';
-    var desc = '';
-    var url = '';
-    var urlToImage = '';
-    var publishedAt = '';
+    this.id = 0;
+    this.source = '';
+    this.author = '';
+    this.title = '';
+    this.desc = '';
+    this.url = '';
+    this.urlToImage = '';
+    this.publishedAt = '';
 
+    this.getId = function () {
+        return this.id;
+    };
 
+    this.getSource = function () {
+        return this.source;
+    };
+
+    this.getAuthor = function () {
+        return this.author;
+    };
+
+    this.getTitle = function () {
+        return this.title;
+    };
+
+    this.getDesc = function () {
+        return this.desc;
+    };
+
+    this.getUrl = function () {
+        return this.url;
+    };
+
+    this.getUrlToImage = function () {
+        return this.urlToImage;
+    };
+
+    this.getPublishedAt = function () {
+        return this.publishedAt;
+    };
+
+    this.setId = function (newId) {
+        this.id = newId;
+    };
+
+    this.setSource = function (newSource) {
+        this.source = newSource;
+    };
+
+    this.setAuthor = function (newAuthor) {
+        this.author = newAuthor;
+    };
+
+    this.setTitle = function (newTitle) {
+        this.title = newTitle;
+    };
+
+    this.setDesc = function (newDesc) {
+        this.desc = newDesc;
+    };
+
+    this.setUrl = function (newUrl) {
+        this.url = newUrl;
+    };
+
+    this.setUrlToImage = function (newUrlToImage) {
+        this.urlToImage = newUrlToImage;
+    };
+
+    this.setPublishedAt = function (newPublishedAt) {
+        this.publishedAt = newPublishedAt;
+    };
 
 };
 
