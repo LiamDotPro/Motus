@@ -53,6 +53,7 @@ var dataStore = function () {
     this.getArticles = function (pool) {
         this.articleBank.setPool(pool);
         this.articleBank.loadArticlesFromDatabase();
+        this.articleBank.StartCollectingArticles();
     };
 
     /**
@@ -199,6 +200,10 @@ var dataStore = function () {
         });
 
     };
+
+    this.getArticleBank = function () {
+        return this.articleBank;
+    }
 
 };
 

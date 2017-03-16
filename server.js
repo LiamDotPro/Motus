@@ -8,6 +8,8 @@ var path = require('path');
 var io = require('socket.io')(server);
 var mysql = require('promise-mysql');
 var request = require('request-promise');
+var Promise = require("bluebird");
+
 
 //api key for news api - cfe8990468894b4a96882692c13f063b - newsapi.org
 
@@ -49,10 +51,60 @@ server.listen(80, function () {
 
 server.listen(80);
 
+
 io.on('connection', function (socket) {
 
     //Holds the Unique ID of this client session for retrieval from the datastore.
     var connectedClient = '';
+
+    function ensureDataIsAvailable() {
+        return new Promise(function (resolve, reject) {
+            waitForData(resolve);
+        });
+    }
+
+    function waitForData(resolve) {
+        if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
+            console.log(dataStore.getArticleBank().getLoadedArticlesBool());
+            setTimeout(waitForData.bind(this, resolve), 300);
+        } else {
+            resolve();
+        }
+    }
+
+    if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
+        console.log("Database or view is not ready for rendering yet, hold tight.");
+        ensureDataIsAvailable().then(function () {
+            console.log("Database is ready.");
+        });
+    } else {
+        //Database is ready for view to be extracted.
+        var view = dataStore.getArticleBank().getAllArticles();
+        var arrOfArticles = [];
+
+        view.forEach(function (value, key) {
+
+            var articleObj = {
+                id: value.getId(),
+                source: value.getSource(),
+                author: value.getAuthor(),
+                title: value.getTitle(),
+                desc: value.getDesc(),
+                url: value.getUrl(),
+                urlToImage: value.getUrlToImage(),
+                publishedAt: value.getPublishedAt()
+            };
+
+            arrOfArticles.push(articleObj);
+
+        });
+
+        socket.emit('loadArticles', {
+            articles: arrOfArticles
+        });
+
+    }
+
 
     //disconnect event
     socket.on('disconnect', function () {

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/LiamDotPro/Motus#readme",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "express": "^4.15.0",
     "geode": "^1.0.0",
     "mysql": "^2.13.0",

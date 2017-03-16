@@ -36,8 +36,8 @@
                 <!-- Mobile Only -->
                 <div class="navbar-header">
                     <a class="brand" style="margin: 0; float: none;" href="/home">
-                        <div class="loader">Loading...</div>
-                        <!--<img src="/public/images/logos/logo.png"/>-->
+                        <div id="loader" class="loader">Loading...</div>
+                        <img id="logo" class="hidden" src="/public/images/logos/logo.png"/>
                     </a>
                     <!--                            <img src="/images/logos/logo.png" class="img-responsive pull-left logo-xs" alt="logo here">-->
                     <button type="button" class="navbar-toggle pull-right">
@@ -232,9 +232,6 @@
 
     thisClient.checkForCookie();
 
-
-    //thisClient.deleteCookie('id');
-
     /**
      * This event is triggered when the server tells the user that a client instance has been generated for them.
      */
@@ -247,6 +244,28 @@
     socket.on('originInfo', function (data) {
         $("#ip").html(data.ip);
         $("#loc").html(data.county + ", " + data.country);
+    });
+
+    socket.on('loadArticles', function (data) {
+
+        console.log(data);
+
+        var newsHub = document.getElementById("news-hub");
+
+        //add all of the new articles to the page
+        for (var i in data.articles) {
+            var div = document.createElement("div");
+            div.innerHTML = '<div id="' + data.articles[i].id + '" class="col-md-12"> <a href="#"> <div class="article-wide"> <div class="article-info"> <div class="article-info-block"> <span class="article-date"><i class="fa fa-clock-o" aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span> </div> <h2 class="article-title">' + data.articles[i].title + '</h2> </div> <div class="article-overlay"></div> <img class="article-image img-responsive" src="' + data.articles[i].urlToImage + '"alt="News thumbnail"> </div> </a> </div>';
+            newsHub.appendChild(div);
+        }
+
+        //stop loader.
+        $('#loader').css('display', 'none');
+
+        //load normal logo
+        $('#logo').removeClass('hidden');
+
+
     });
 
     //    setInterval(function () {
@@ -378,31 +397,10 @@
                     </div>
 
                     <div class="row">
-                        <div class="news-hub">
+                        <div id="news-hub" class="news-hub">
 
-                            <div class="col-md-12">
-                                <a href="#">
-                                    <div class="article-wide">
-                                        <div class="article-info">
-                                            <div class="article-info-block">
-                                                <span class="article-date"><i class="fa fa-clock-o"
-                                                                              aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span>
-                                            </div>
-                                            <h2 class="article-title">The document shows a $38m tax bill on $150m
-                                                income
-                                                but the White House says its publication is illegal.</h2>
-                                        </div>
-                                        <div class="article-overlay"></div>
-                                        <img class="article-image img-responsive"
-                                             src="http://ichef.bbci.co.uk/news/1024/cpsprodpb/642D/production/_95154652_hi038477431.jpg"
-                                             alt="News thumbnail">
-                                    </div>
-                                </a>
 
-                            </div>
                         </div>
-
-
                     </div>
 
                 </div>
