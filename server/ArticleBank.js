@@ -33,85 +33,63 @@ var ArticleBank = function () {
     };
 
     this.loadArticlesFromDatabase = function () {
-        this.pool.query('SELECT * FROM `articles` ORDER BY id DESC').then(function (rows) {
-            for (var i in rows) {
-                if (!self.articles.has(rows[i].title)) {
-                    var articleObj = new Article();
-                    articleObj.setId(rows[i].id);
-                    articleObj.setSource(rows[i].source);
-                    articleObj.setAuthor(rows[i].author);
-                    articleObj.setTitle(rows[i].title);
-                    articleObj.setDesc(rows[i].articleDesc);
-                    articleObj.setUrl(rows[i].url);
-                    articleObj.setUrlToImage(rows[i].urlToImage);
-                    articleObj.setPublishedAt(rows[i].publishedAt);
-                    self.articles.set(rows[i].title, articleObj);
-                }
-
-            }
-            self.loadedArticles = true;
-        }).then(function () {
-            console.log('finished loading all articles from the database.');
+        return this.pool.query('SELECT * FROM `articles` ORDER BY id DESC').then(function (rows) {
+            return rows.map((row) => {
+                const articleObj = new Article();
+                articleObj.setId(row.id);
+                articleObj.setSource(row.source);
+                articleObj.setAuthor(row.author);
+                articleObj.setTitle(row.title);
+                articleObj.setDesc(row.articleDesc);
+                articleObj.setUrl(row.url);
+                articleObj.setUrlToImage(row.urlToImage);
+                articleObj.setPublishedAt(row.publishedAt);
+                self.articles.set(row.title, articleObj);
+            });
         });
     };
 
     this.StartCollectingArticles = function () {
-        self.getNewSources();
-        setInterval(self.getNewSources, 600000);
+        return this.getNewSources().then(() => {
+            setInterval(self.getNewSources.bind(this), 600000);
+        });
     };
 
     this.getNewSources = function () {
-        //self.getBbcSources();
-
-        //bbc-news
-        self.requestArticles('bbc-news', 'general', 'https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b');
-
-        //bbc-sport
-        self.requestArticles('bbc-sport', 'sport', ' https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b');
-
-        //techcrunch
-        self.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b');
+        return Promise.all([
+            self.requestArticles('bbc-news', 'general', 'https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            self.requestArticles('bbc-sport', 'sport', 'https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            self.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b')
+        ]).then(() => {
+            self.loadArticlesFromDatabase();
+            self.loadedArticles = true;
+            console.log('all sources updated');
+        }).catch(e => {
+            console.log(e);
+        });
     };
 
-    function insertArticleData(json, pool) {
-        var poolRef = pool;
-
-    }
-
     this.requestArticles = function (source, type, query) {
-        var poolRef = this.pool;
-
-        request(query, function (error, response, body) {
-            return body;
-        }).then(function (json) {
-            json = JSON.parse(json);
-            var ChangedData = false;
-            for (var i in json.articles) {
-                if (!self.articles.has(json.articles[i].title)) {
-                    //create new instance of articles in database.
-
-                    self.loadedArticles = false;
-
-                    var values = [json.source, json.articles[i].author, json.articles[i].title, json.articles[i].description, json.articles[i].url, json.articles[i].urlToImage, json.articles[i].publishedAt, type];
-                    poolRef.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category) VALUES (?,?,?,?,?,?,?,?)', values, function (error, result, fields) {
-                    });
-
-                    ChangedData = true;
+        return request(query).then((body) => {
+            const json = JSON.parse(body);
+            return Promise.all(
+                json.articles
+                    .filter(article => !self.articles.has(article.title))
+                    .map(article => {
+                        const values = [json.source, article.author, article.title, article.description, article.url, article.urlToImage, article.publishedAt, type];
+                        return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category) VALUES (?,?,?,?,?,?,?,?)', values);
+                    })
+            ).then(() => {
+                    self.loadArticlesFromDatabase();
                 }
-            }
-
-            if (ChangedData === true) {
-                console.log('New Articles for ' + source + ' added.');
-                self.loadArticlesFromDatabase();
-            } else {
-                console.log('No New Articles for ' + source + ' Added this round.');
-            }
-
+            );
+        }).catch(e => {
+            console.log(e);
         });
     };
 
     /**
-     * Returns the status of the database in loading contant.
+     * Returns the status of the database in loading content.
      */
     this.getLoadedArticlesBool = function () {
         return this.loadedArticles;
