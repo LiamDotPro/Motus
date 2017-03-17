@@ -33,19 +33,23 @@ var ArticleBank = function () {
     };
 
     this.loadArticlesFromDatabase = function () {
-        return this.pool.query('SELECT * FROM `articles` ORDER BY id DESC').then(function (rows) {
-            return rows.map((row) => {
-                const articleObj = new Article();
-                articleObj.setId(row.id);
-                articleObj.setSource(row.source);
-                articleObj.setAuthor(row.author);
-                articleObj.setTitle(row.title);
-                articleObj.setDesc(row.articleDesc);
-                articleObj.setUrl(row.url);
-                articleObj.setUrlToImage(row.urlToImage);
-                articleObj.setPublishedAt(row.publishedAt);
-                self.articles.set(row.title, articleObj);
-            });
+        return this.pool.query('SELECT * FROM `articles` ORDER BY id DESC').then((rows) => {
+            return rows
+                .filter(row => !self.articles.has(row.title))
+                .map((row) => {
+                    const articleObj = new Article();
+                    articleObj.setId(row.id);
+                    articleObj.setSource(row.source);
+                    articleObj.setAuthor(row.author);
+                    articleObj.setTitle(row.title);
+                    articleObj.setDesc(row.articleDesc);
+                    articleObj.setUrl(row.url);
+                    articleObj.setUrlToImage(row.urlToImage);
+                    articleObj.setPublishedAt(row.publishedAt);
+                    self.articles.set(row.title, articleObj);
+                });
+        }).catch(e =>{
+            console.log(e);
         });
     };
 
@@ -61,7 +65,6 @@ var ArticleBank = function () {
             self.requestArticles('bbc-sport', 'sport', 'https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             self.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b')
         ]).then(() => {
-            self.loadArticlesFromDatabase();
             self.loadedArticles = true;
             console.log('all sources updated');
         }).catch(e => {
