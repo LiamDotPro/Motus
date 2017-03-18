@@ -48,7 +48,7 @@ var ArticleBank = function () {
                     articleObj.setPublishedAt(row.publishedAt);
                     self.articles.set(row.title, articleObj);
                 });
-        }).catch(e =>{
+        }).catch(e => {
             console.log(e);
         });
     };
@@ -63,7 +63,10 @@ var ArticleBank = function () {
         return Promise.all([
             self.requestArticles('bbc-news', 'general', 'https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             self.requestArticles('bbc-sport', 'sport', 'https://newsapi.org/v1/articles?source=bbc-sport&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
-            self.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b')
+            self.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            self.requestArticles('abc-news', 'general', 'https://newsapi.org/v1/articles?source=abc-news-au&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            self.requestArticles('ars-technica', 'technology', 'https://newsapi.org/v1/articles?source=ars-technica&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            self.requestArticles('associated Press', 'general', 'https://newsapi.org/v1/articles?source=ars-technica&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
         ]).then(() => {
             self.loadedArticles = true;
             console.log('all sources updated');

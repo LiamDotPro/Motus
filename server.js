@@ -120,7 +120,6 @@ io.on('connection', function (socket) {
             if (dataStoreInstance.getTabs() == 0) {
                 dataStoreInstance.changeStatus('offline');
                 console.log('User: ' + connectedClient + ' Has closed all tabs. ');
-                console.log(dataStore.getClient(connectedClient));
             } else {
                 console.log('User: ' + connectedClient + ' Has closed a tab, but is still connected. ');
             }

@@ -2,9 +2,11 @@
   <dictionary name="li">
     <words>
       <w>adblock</w>
+      <w>addon</w>
       <w>datastore</w>
       <w>newsapi</w>
       <w>techcrunch</w>
+      <w>technica</w>
     </words>
   </dictionary>
 </component>
