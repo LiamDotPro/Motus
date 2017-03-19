@@ -92,7 +92,9 @@ io.on('connection', function (socket) {
                 desc: value.getDesc(),
                 url: value.getUrl(),
                 urlToImage: value.getUrlToImage(),
-                publishedAt: value.getPublishedAt()
+                publishedAt: value.getPublishedAt(),
+                score: value.getArticleScore(),
+                category: value.getCategory()
             };
 
             arrOfArticles.push(articleObj);

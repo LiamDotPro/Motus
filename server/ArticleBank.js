@@ -46,6 +46,8 @@ var ArticleBank = function () {
                     articleObj.setUrl(row.url);
                     articleObj.setUrlToImage(row.urlToImage);
                     articleObj.setPublishedAt(row.publishedAt);
+                    articleObj.setArticleScore(row.articleScore);
+                    articleObj.setCategory(row.category);
                     self.articles.set(row.title, articleObj);
                 });
         }).catch(e => {
@@ -82,8 +84,8 @@ var ArticleBank = function () {
                 json.articles
                     .filter(article => !self.articles.has(article.title))
                     .map(article => {
-                        const values = [json.source, article.author, article.title, article.description, article.url, article.urlToImage, article.publishedAt, type];
-                        return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category) VALUES (?,?,?,?,?,?,?,?)', values);
+                        const values = [json.source, article.author, article.title, article.description, article.url, article.urlToImage, article.publishedAt, type, 0];
+                        return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category,articleScore) VALUES (?,?,?,?,?,?,?,?,?)', values);
                     })
             ).then(() => {
                     self.loadArticlesFromDatabase();

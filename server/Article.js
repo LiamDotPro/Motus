@@ -12,6 +12,8 @@ var Article = function () {
     this.url = '';
     this.urlToImage = '';
     this.publishedAt = '';
+    this.articleScore = '';
+    this.category = '';
 
     this.getId = function () {
         return this.id;
@@ -45,6 +47,10 @@ var Article = function () {
         return this.publishedAt;
     };
 
+    this.getArticleScore = function () {
+        return this.articleScore;
+    };
+
     this.setId = function (newId) {
         this.id = newId;
     };
@@ -75,6 +81,18 @@ var Article = function () {
 
     this.setPublishedAt = function (newPublishedAt) {
         this.publishedAt = newPublishedAt;
+    };
+
+    this.setArticleScore = function (newScore) {
+        this.articleScore = newScore;
+    };
+
+    this.getCategory = function () {
+        return this.category;
+    };
+
+    this.setCategory = function (newCat) {
+        this.category = newCat;
     };
 
 };

@@ -228,9 +228,139 @@
 
     }
 
+    function Article() {
+
+        this.id = 0;
+        this.source = '';
+        this.author = '';
+        this.title = '';
+        this.desc = '';
+        this.url = '';
+        this.urlToImage = '';
+        this.publishedAt = '';
+        this.articleScore = '';
+        this.category = '';
+
+        this.getId = function () {
+            return this.id;
+        };
+
+        this.getSource = function () {
+            return this.source;
+        };
+
+        this.getAuthor = function () {
+            return this.author;
+        };
+
+        this.getTitle = function () {
+            return this.title;
+        };
+
+        this.getDesc = function () {
+            return this.desc;
+        };
+
+        this.getUrl = function () {
+            return this.url;
+        };
+
+        this.getUrlToImage = function () {
+            return this.urlToImage;
+        };
+
+        this.getPublishedAt = function () {
+            return this.publishedAt;
+        };
+
+        this.getArticleScore = function () {
+            return this.articleScore;
+        };
+
+        this.setId = function (newId) {
+            this.id = newId;
+        };
+
+        this.setSource = function (newSource) {
+            this.source = newSource;
+        };
+
+        this.setAuthor = function (newAuthor) {
+            this.author = newAuthor;
+        };
+
+        this.setTitle = function (newTitle) {
+            this.title = newTitle;
+        };
+
+        this.setDesc = function (newDesc) {
+            this.desc = newDesc;
+        };
+
+        this.setUrl = function (newUrl) {
+            this.url = newUrl;
+        };
+
+        this.setUrlToImage = function (newUrlToImage) {
+            this.urlToImage = newUrlToImage;
+        };
+
+        this.setPublishedAt = function (newPublishedAt) {
+            this.publishedAt = newPublishedAt;
+        };
+
+        this.setArticleScore = function (newScore) {
+            this.articleScore = newScore;
+        };
+
+        this.getCategory = function () {
+            return this.category;
+        };
+
+        this.setCategory = function (newCat) {
+            this.category = newCat;
+        };
+
+    }
+
+    function Website() {
+
+        this.articleList = [];
+
+        this.setArticleList = function (arrOfArticles) {
+            this.articleList = arrOfArticles;
+        };
+
+        this.getArticleList = function () {
+            return this.articleList;
+        };
+
+        /**
+         * Initial load function that loads articles into the dom
+         */
+        this.websiteLoadArticles = function (pos) {
+
+            const newsHub = document.getElementById("news-hub");
+
+            //add all of the new articles to the page
+            for (var i = pos; i < 10; i++) {
+                newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + this.articleList[i].getUrlToImage() + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+            }
+
+            //stop loader.
+            $('#loader').css('display', 'none');
+
+            //load normal logo
+            $('#logo').removeClass('hidden');
+        }
+
+    }
+
     var thisClient = new Client(socket);
+    var thisWebsite = new Website();
 
     thisClient.checkForCookie();
+
 
     /**
      * This event is triggered when the server tells the user that a client instance has been generated for them.
@@ -252,27 +382,30 @@
             return b.id - a.id;
         });
 
-        const newsHub = document.getElementById("news-hub");
+        console.log(data);
 
-        //add all of the new articles to the page
-        for (var i = 0; i < 10; i++) {
 
-            newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + data.articles[i].id + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">0</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + data.articles[i].urlToImage + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">Monday 17th July, 10:30am | General News </span> <h2>' + data.articles[i].title + '</h2> </a> </div> </div> </div> </div>';
+        var tempArr = [];
 
-//            div.innerHTML = '<div id="' + data.articles[i].id + '" class="col-md-12 article"> <a href="#"> <div class="article-wide"> <div class="article-info"> <div class="article-info-block"> <span class="article-date"><i class="fa fa-clock-o" aria-hidden="true"></i> 12th March, 2017, 7:34 pm</span> </div> <h2 class="article-title">' + data.articles[i].title + '</h2> </div> <div class="article-overlay"></div> <img class="article-image img-responsive" src="' + data.articles[i].urlToImage + '" alt="News thumbnail"> </div> </a> </div>';
+        for (var x = 0; x < data.articles.length; x++) {
+            var tempArticle = new Article();
+            tempArticle.setId(data.articles[x].id);
+            tempArticle.setSource(data.articles[x].source);
+            tempArticle.setAuthor(data.articles[x].author);
+            tempArticle.setTitle(data.articles[x].title);
+            tempArticle.setDesc(data.articles[x].desc);
+            tempArticle.setUrl(data.articles[x].url);
+            tempArticle.setUrlToImage(data.articles[x].urlToImage);
+            tempArticle.setPublishedAt(data.articles[x].publishedAt);
+            tempArticle.setArticleScore(data.articles[x].score);
+            tempArticle.setCategory(data.articles[x].category);
+            tempArr.push(tempArticle);
         }
 
-        //stop loader.
-        $('#loader').css('display', 'none');
-
-        //load normal logo
-        $('#logo').removeClass('hidden');
+        thisWebsite.setArticleList(tempArr);
+        thisWebsite.websiteLoadArticles(0);
 
     });
-
-    //    setInterval(function () {
-    //        console.log(thisClient);
-    //    }, 7000);
 
 </script>
 
