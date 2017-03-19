@@ -326,6 +326,8 @@
     function Website() {
 
         this.articleList = [];
+        this.loadedArticleIds = [];
+        this.currentViewType = 'list';
 
         this.setArticleList = function (arrOfArticles) {
             this.articleList = arrOfArticles;
@@ -338,13 +340,24 @@
         /**
          * Initial load function that loads articles into the dom
          */
-        this.websiteLoadArticles = function (pos) {
+        this.websiteLoadArticles = function (amount) {
 
             const newsHub = document.getElementById("news-hub");
 
+            var x = 0;
+
             //add all of the new articles to the page
-            for (var i = pos; i < 10; i++) {
-                newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + this.articleList[i].getUrlToImage() + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+            for (var i = this.loadedArticleIds.length; x < amount; x++) {
+                if (this.currentViewType === 'tile') {
+                    this.loadedArticleIds.push(this.articleList[i].getId());
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    i++;
+                } else {
+                    this.loadedArticleIds.push(this.articleList[i].getId());
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    i++;
+                }
+
             }
 
             //stop loader.
@@ -352,6 +365,24 @@
 
             //load normal logo
             $('#logo').removeClass('hidden');
+        };
+
+        /**
+         * Checks to see if an image string is null, if true returns the default image.
+         */
+        function checkImageForNull(imageString) {
+            if (imageString === null) {
+                return 'public/images/default/news/default1.jpg'
+            } else {
+                return imageString;
+            }
+        }
+
+        /**
+         * Sets the current view type for the website (Tiles / List view).
+         */
+        this.setCurrentViewType = function (newType) {
+            this.currentViewType = newType;
         }
 
     }
@@ -384,7 +415,6 @@
 
         console.log(data);
 
-
         var tempArr = [];
 
         for (var x = 0; x < data.articles.length; x++) {
@@ -403,7 +433,22 @@
         }
 
         thisWebsite.setArticleList(tempArr);
-        thisWebsite.websiteLoadArticles(0);
+        thisWebsite.websiteLoadArticles(10);
+
+        /**
+         * Tell website to check if the user has reached the bottom of the page.
+         * @param ev
+         */
+        window.onscroll = function (ev) {
+            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+                //stop loader.
+                $('#loader').css('display', 'block');
+
+                //load normal logo
+                $('#logo').addClass('hidden');
+                thisWebsite.websiteLoadArticles(10);
+            }
+        };
 
     });
 
@@ -445,20 +490,10 @@
                             </div>
                             <div class="pinned-articles">
                                 <ul>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
-                                    <li><a href="">Hello World</a>
-                                        <p> - A short introduction to life</p></li>
+                                    <li>
+                                        <a href="">Hello World</a>
+                                        <p> - A short introduction to life</p>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -586,7 +621,7 @@
                         $(document).ready(function () {
                             $('#tile-btn').click(function (e) {
 
-                                if (!currentViewSetting === 'tiles') {
+                                if (!currentViewSetting === 'tile') {
                                     return;
                                 }
 
@@ -600,6 +635,7 @@
                                 });
 
                                 currentViewSetting = 'tile';
+                                thisWebsite.setCurrentViewType('tile');
 
 
                             });
@@ -620,6 +656,7 @@
                                 });
 
                                 currentViewSetting = 'list';
+                                thisWebsite.setCurrentViewType('list');
 
                             })
                         });
