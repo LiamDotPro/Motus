@@ -104,7 +104,6 @@ io.on('connection', function (socket) {
 
     }
 
-
     //disconnect event
     socket.on('disconnect', function () {
 
