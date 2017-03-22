@@ -16,6 +16,7 @@ var ArticleBank = function () {
     this.tags = ['general', 'technology', 'sport', 'business', 'entertainment', 'music', 'science-and-nature', 'gaming'];
     this.pool = null;
     this.loadedArticles = false;
+    this.newArticles = [];
 
     /**
      * Ref to self which can be used in context inside the outer lexical scope.
@@ -102,11 +103,12 @@ var ArticleBank = function () {
                     }
                 }
 
-                for(var i in arrOfNewArticles){
-                    console.log(arrOfNewArticles[i].id);
-                }
+                //All of the articles ready to be pushed are made available in the new Articles Container.
+                this.newArticles = arrOfNewArticles;
 
-                console.log("Pushing new articles to clients: " + arrOfNewArticles.length);
+                this.articleCount = this.articles.size;
+
+                console.log("New Articles Ready to be pushed to clients: " + arrOfNewArticles.length);
 
             } else {
                 console.log("nothing to update this round");

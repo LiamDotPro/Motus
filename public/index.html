@@ -320,7 +320,7 @@
     }
 
     function Website() {
-
+        var self = this;
         this.articleList = [];
         this.loadedArticleIds = [];
         this.currentViewType = 'list';
@@ -391,7 +391,16 @@
          */
         this.setCurrentViewType = function (newType) {
             this.currentViewType = newType;
-        }
+        };
+
+        this.setupArticleCollector = function (socket) {
+            setInterval(function () {
+                socket.emit('checkForNewArticles', {
+                    latestId: self.getArticleList()[0].id
+                });
+            }, 60000);
+        };
+
 
     }
 
@@ -401,6 +410,7 @@
     var thisWebsite = new Website();
 
     thisClient.checkForCookie();
+    thisWebsite.setupArticleCollector(socket,);
 
     window.addEventListener("load", function (event) {
         console.log("All resources finished loading!");
@@ -420,9 +430,6 @@
         console.log('Attempting to add a cookie for a user');
         console.log(data.id);
         thisClient.addCookie(data.id);
-    });
-
-    socket.on('originInfo', function (data) {
     });
 
     socket.on('loadArticles', function (data) {
@@ -453,6 +460,10 @@
 
         thisWebsite.setArticleList(tempArr);
         thisWebsite.websiteLoadArticles(10);
+
+        socket.on('test', () => {
+            alert("halloe");
+        });
 
         /**
          * Tell website to check if the user has reached the bottom of the page.
@@ -489,12 +500,13 @@
                                 </h5></div>
                             </div>
                             <div class="user-info text-center">
-                                <div class="default-login-details hidden">
+                                <div id="user-dashboard" class="default-login-details">
                                     <img src="/public/images/default/thumbnail/default-user.png">
                                     <h3>Anonymous</h3>
+                                    <h5>Last Seen: </h5>
                                 </div>
-                                <div class="login-panel">
-                                    <form>
+                                <div id="login-panel" class="login-panel hidden">
+                                    <form onsubmit="event.preventDefault();">
                                         <div class="form-group">
                                             <input type="email" class="form-control" id="email-input"
                                                    placeholder="Email" required>
@@ -509,7 +521,7 @@
                             </div>
                             <div class="user-actions text-center">
                                 <a id="register-user" class="btn btn-action" href="">Register</a>
-                                <a id="login-btn" class="btn btn-action" href="">Sign in</a>
+                                <a id="login-btn" class="btn btn-action" href="">Sign In</a>
                             </div>
                         </div>
                     </div>
@@ -712,13 +724,29 @@
                                 $('#home-panel').removeClass('hidden');
                             });
 
+                            var loginState = 'dashboard';
+
                             $('#login-btn').click((e) => {
                                 e.preventDefault();
+                                if (loginState === 'dashboard') {
+                                    //Make user panel
 
+                                    $('#login-btn').text('Back');
+                                    $('#user-dashboard').addClass('hidden');
+                                    $('#login-panel').removeClass('hidden');
+                                    loginState = 'login';
+                                } else {
+                                    $('#login-btn').text('Sign In');
+                                    $('#user-dashboard').removeClass('hidden');
+                                    $('#login-panel').addClass('hidden');
+                                    loginState = 'dashboard';
+                                }
                             });
 
                             $('#submit-btn').click((e) => {
                                 e.preventDefault();
+                                //handle the login process with sockets.
+
                             });
 
 

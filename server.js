@@ -56,6 +56,8 @@ server.listen(80);
 
 io.on('connection', function (socket) {
 
+
+
     //Holds the Unique ID of this client session for retrieval from the datastore.
     var connectedClient = '';
 
@@ -184,19 +186,17 @@ io.on('connection', function (socket) {
             console.log("err");
         }
 
-        /**
-         * Sends existing information about the current session to the origin and skips api call.
-         */
-        socket.emit('originInfo', {
-            ip: context.getIp(),
-            county: context.getCounty(),
-            country: context.getCountry()
-        });
     });
 
     socket.on('clientCanvasData', function (data) {
         console.log('canvas data incoming');
         dataStore.createCanvasFingerPrintRecord(data, connectedClient);
+    });
+
+    socket.on('checkForNewArticles', function (data) {
+        var latestID = data.latestId;
+
+        console.log("Incoming request for new articles: " + latestID);
     });
 
 });
