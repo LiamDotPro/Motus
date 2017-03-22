@@ -57,7 +57,6 @@ var ArticleBank = function () {
     };
 
     this.StartCollectingArticles = function () {
-        console.log("started collecting stuff");
         return this.getNewSources().then(() => {
             setInterval(self.getNewSources.bind(this), 600000);
         }).then(() => {
@@ -72,7 +71,11 @@ var ArticleBank = function () {
             this.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('abc-news', 'general', 'https://newsapi.org/v1/articles?source=abc-news-au&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('ars-technica', 'technology', 'https://newsapi.org/v1/articles?source=ars-technica&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('associated Press', 'general', 'https://newsapi.org/v1/articles?source=ars-technica&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
+            //this.requestArticles('blid', 'general', 'https://newsapi.org/v1/articles?source=bild&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('Bloomberg', 'business', 'https://newsapi.org/v1/articles?source=bloomberg&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('Business Insider', 'business', ' https://newsapi.org/v1/articles?source=business-insider&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('Business Insider (UK)', 'business', 'https://newsapi.org/v1/articles?source=business-insider-uk&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
+
         ]).then(() => {
             console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;
@@ -82,7 +85,7 @@ var ArticleBank = function () {
             console.log(this.articles.size);
 
             //checking to see if new articles have been loaded, if articles are still not loaded a 0 will be there first round.
-            if (this.articleCount < this.articles.size && this.articleCount !== 0) {
+            if (this.articleCount < this.articles.size && this.articleCount > 0) {
                 //sending clients new sources discovered.
 
                 var arrOfNewArticles = [];
@@ -95,7 +98,7 @@ var ArticleBank = function () {
                         counter--;
                     }
                 }
-                console.log(arrOfNewArticles);
+                console.log(arrOfNewArticles + "batch");
             }
 
         }).catch(e => {
@@ -132,8 +135,11 @@ var ArticleBank = function () {
      * @returns {boolean}
      */
     function checkValueWith(articleData) {
-        for (var [key, value] of ) {
-
+        for (var [key, value] of self.articles) {
+            if (value.getPublishedAt() === articleData.publishedAt && value.getUrl() === articleData.url) {
+                console.log("Changed Found for Article");
+                return false;
+            }
         }
         return true;
     }

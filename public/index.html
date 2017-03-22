@@ -351,11 +351,11 @@
                 if (this.articleList.length != i) {
                     if (this.currentViewType === 'tile') {
                         this.loadedArticleIds.push(this.articleList[i].getId());
-                        newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                        newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
                         i++;
                     } else {
                         this.loadedArticleIds.push(this.articleList[i].getId());
-                        newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                        newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
                         i++;
                     }
                 }
@@ -579,6 +579,7 @@
 
                     </style>
 
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="minimal-search-container">
@@ -595,6 +596,7 @@
                                         </div>
                                     </div>
                                     <div class="right-minimal-controls text-right col-xs-8">
+                                        <a id="refresh-btn" href=""><span class="new-label">10</span><i class="fa fa-newspaper-o"></i></a>
                                         <a id="filter-btn" href=""><i class="fa fa-filter"></i></a>
                                         <a id="tile-btn" href=""><i class="fa fa-th-large"></i></a>
                                         <a id="list-btn" href=""><i class="fa fa-th-list "></i></a>
@@ -615,9 +617,7 @@
                     </div>
 
                     <div id="news-hub" class="row row-flex row-flex-wrap">
-                        <div class="col-md-12">
-                            <h1>test</h1>
-                        </div>
+
                     </div>
 
                     <script>
@@ -724,6 +724,7 @@
 
 <!-- Custom Google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 <!-- Bootstrap -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
 <!-- Animate.css -->
