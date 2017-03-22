@@ -74,31 +74,44 @@ var ArticleBank = function () {
             //this.requestArticles('blid', 'general', 'https://newsapi.org/v1/articles?source=bild&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('Bloomberg', 'business', 'https://newsapi.org/v1/articles?source=bloomberg&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('Business Insider', 'business', ' https://newsapi.org/v1/articles?source=business-insider&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('Business Insider (UK)', 'business', 'https://newsapi.org/v1/articles?source=business-insider-uk&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
+            this.requestArticles('Business Insider (UK)', 'business', 'https://newsapi.org/v1/articles?source=business-insider-uk&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('Buzzfeed', 'entertainment', 'https://newsapi.org/v1/articles?source=buzzfeed&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
 
         ]).then(() => {
             console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;
             console.log('all sources updated');
 
-            console.log(this.articleCount);
-            console.log(this.articles.size);
-
             //checking to see if new articles have been loaded, if articles are still not loaded a 0 will be there first round.
             if (this.articleCount < this.articles.size && this.articleCount > 0) {
                 //sending clients new sources discovered.
 
+                console.log("made it here");
+
                 var arrOfNewArticles = [];
                 var counter = Math.abs(this.articles.size - this.articleCount);
+
+                console.log("counter: " + counter);
+
                 for (var [key, value] of this.articles.entries()) {
                     if (counter === 0) {
-                        return;
+                        break;
                     } else {
                         arrOfNewArticles.push(value);
                         counter--;
                     }
                 }
-                console.log(arrOfNewArticles + "batch");
+
+                for(var i in arrOfNewArticles){
+                    console.log(arrOfNewArticles[i].id);
+                }
+
+                console.log("Pushing new articles to clients: " + arrOfNewArticles.length);
+
+            } else {
+                console.log("nothing to update this round");
+                console.log(this.articleCount);
+                console.log(this.articles.size);
             }
 
         }).catch(e => {

@@ -35,7 +35,7 @@
             <div class="row">
                 <!-- Mobile Only -->
                 <div class="navbar-header">
-                    <a class="brand" style="margin: 0; float: none;" href="/home">
+                    <a id="logo-link" class="brand" style="margin: 0; float: none;" href="/home">
                         <div id="loader" class="loader">Loading...</div>
                         <img id="logo" class="hidden" src="/public/images/logos/logo.png"/>
                     </a>
@@ -128,10 +128,6 @@
         function updateAreaSettings(id) {
 
             $.get("http://ipinfo.io", function (response) {
-
-                $("#ip").html(response.ip);
-                $("#loc").html(response.city + ", " + response.region);
-
                 /**
                  * Using socket here so we send the information back for logging when it return from the request.
                  */
@@ -342,6 +338,12 @@
          */
         this.websiteLoadArticles = function (amount) {
 
+            //stop loader.
+            $('#loader').css('display', 'block');
+
+            //load normal logo
+            $('#logo').addClass('hidden');
+
             const newsHub = document.getElementById("news-hub");
 
             var x = 0;
@@ -362,11 +364,15 @@
 
             }
 
-            //stop loader.
-            $('#loader').css('display', 'none');
+            //Set time out to let dom elements render efficiently.
+            setTimeout(function () {
+                //stop loader.
+                $('#loader').css('display', 'none');
 
-            //load normal logo
-            $('#logo').removeClass('hidden');
+                //load normal logo
+                $('#logo').removeClass('hidden');
+            }, 0);
+
         };
 
         /**
@@ -396,6 +402,16 @@
 
     thisClient.checkForCookie();
 
+    window.addEventListener("load", function (event) {
+        console.log("All resources finished loading!");
+
+        //stop loader.
+        $('#loader').css('display', 'none');
+
+        //load normal logo
+        $('#logo').removeClass('hidden');
+    });
+
 
     /**
      * This event is triggered when the server tells the user that a client instance has been generated for them.
@@ -407,8 +423,6 @@
     });
 
     socket.on('originInfo', function (data) {
-        $("#ip").html(data.ip);
-        $("#loc").html(data.county + ", " + data.country);
     });
 
     socket.on('loadArticles', function (data) {
@@ -453,13 +467,7 @@
     function scrollEvent() {
 
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
-            //stop loader.
-            $('#loader').css('display', 'block');
-
-            //load normal logo
-            $('#logo').addClass('hidden');
             thisWebsite.websiteLoadArticles(10);
-
         }
     }
 
@@ -468,8 +476,7 @@
 <div class="page-wrapper">
     <div class="container-fluid">
         <div class="container">
-            <div id="home-panel" class="row home-pane-panel ">
-
+            <div id="home-panel" class="row home-pane-panel">
                 <div class="col-xs-12 col-md-3 home-pane-user nopad">
                     <div class="col-md-12 user-tile-col">
                         <div class="user-tile">
@@ -482,10 +489,23 @@
                                 </h5></div>
                             </div>
                             <div class="user-info text-center">
-                                <h3>Anonymous</h3>
-                                <p id="loc">
-                                <p>
-                                <p id="ip"></p>
+                                <div class="default-login-details hidden">
+                                    <img src="/public/images/default/thumbnail/default-user.png">
+                                    <h3>Anonymous</h3>
+                                </div>
+                                <div class="login-panel">
+                                    <form>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" id="email-input"
+                                                   placeholder="Email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" id="password-input"
+                                                   placeholder="Password" required>
+                                        </div>
+                                        <button id="submit-btn" type="submit" class="btn btn-default">Sign in</button>
+                                    </form>
+                                </div>
                             </div>
                             <div class="user-actions text-center">
                                 <a id="register-user" class="btn btn-action" href="">Register</a>
@@ -580,7 +600,7 @@
                     </style>
 
 
-                    <div class="row">
+                    <div id="minimal-Controls" class="row ">
                         <div class="col-md-12">
                             <div class="minimal-search-container">
                                 <div class="row">
@@ -596,7 +616,8 @@
                                         </div>
                                     </div>
                                     <div class="right-minimal-controls text-right col-xs-8">
-                                        <a id="refresh-btn" href=""><span class="new-label">10</span><i class="fa fa-newspaper-o"></i></a>
+                                        <a id="refresh-btn" href=""><span class="new-label">10</span><i
+                                                class="fa fa-newspaper-o"></i></a>
                                         <a id="filter-btn" href=""><i class="fa fa-filter"></i></a>
                                         <a id="tile-btn" href=""><i class="fa fa-th-large"></i></a>
                                         <a id="list-btn" href=""><i class="fa fa-th-list "></i></a>
@@ -690,6 +711,22 @@
                                 e.preventDefault();
                                 $('#home-panel').removeClass('hidden');
                             });
+
+                            $('#login-btn').click((e) => {
+                                e.preventDefault();
+
+                            });
+
+                            $('#submit-btn').click((e) => {
+                                e.preventDefault();
+                            });
+
+
+                            $('#logo-link').click((e) => {
+                                e.preventDefault();
+                                $('html,body').scrollTop(0);
+                            })
+
                         });
 
 
