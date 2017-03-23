@@ -433,7 +433,7 @@
         }
 
         this.configureNewsLabel = () => {
-            if (this.unloadedArticles.size > 0) {
+            if (this.unloadedArticles.length > 0) {
                 //configure label to show how many items we have to load.
                 $('#news-notification-label').removeClass('hidden');
                 $('#news-notification-label').text(this.unloadedArticles.length);
@@ -508,6 +508,7 @@
     });
 
     socket.on('addNewArticles', function (data) {
+        console.log("recieved new articles");
         if (data.arrOfNewArticles.length > 0) {
             var articles = data.arrOfNewArticles;
             for (var x in articles) {

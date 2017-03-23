@@ -90,11 +90,9 @@ var ArticleBank = function () {
                 console.log(this.articleCount);
                 console.log(this.articles.size);
 
-
                 var arrOfNewArticles = [];
                 var arrMap = Array.from(this.articles);
                 var counter = Math.abs(this.articles.size - this.articleCount);
-
 
                 console.log("counter: " + counter);
 
@@ -152,7 +150,7 @@ var ArticleBank = function () {
     function checkValueWith(articleData) {
         for (var [key, value] of self.articles) {
             if (value.getPublishedAt() === articleData.publishedAt && value.getUrl() === articleData.url) {
-                console.log("Changed Found for Article");
+                console.log("Previous article found");
                 return false;
             }
         }
@@ -164,7 +162,7 @@ var ArticleBank = function () {
      */
     this.getLoadedArticlesBool = function () {
         return this.loadedArticles;
-    }
+    };
 
     this.getNewArticlesArr = function () {
         return this.newArticles;

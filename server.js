@@ -195,6 +195,10 @@ io.on('connection', function (socket) {
         var latestID = data.latestId;
         console.log("Incoming request for new articles: " + latestID);
 
+        for (var x in dataStore.getArticleBank().getNewArticlesArr()) {
+            console.log(dataStore.getArticleBank().getNewArticlesArr()[x]);
+        }
+
         if (dataStore.getArticleBank().getNewArticlesArr().length > 0 && dataStore.getArticleBank().getNewArticlesArr()[0].id > latestID) {
 
             console.log("Articles sent to socket.");
@@ -203,11 +207,11 @@ io.on('connection', function (socket) {
                 arrOfNewArticles: dataStore.getArticleBank().getNewArticlesArr()
             });
 
-        } else if (dataStore.getArticleBank().getNewArticlesArr()[0] !== undefined && !dataStore.getArticleBank().getNewArticlesArr()[0].id > latestID) {
+        } else if (dataStore.getArticleBank().getNewArticlesArr().length > 0 && !dataStore.getArticleBank().getNewArticlesArr()[0].id > latestID) {
             console.log("new articles are of lower order" + dataStore.getArticleBank().getNewArticlesArr()[0].id);
         } else {
             console.log(dataStore.getArticleBank().getNewArticlesArr().length);
-            console.log("odd error");
+            console.log("nothing to return to client.");
         }
 
 
