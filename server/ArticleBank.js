@@ -87,25 +87,23 @@ var ArticleBank = function () {
             if (this.articleCount < this.articles.size && this.articleCount > 0) {
                 //sending clients new sources discovered.
 
-                console.log("made it here");
+                console.log(this.articleCount);
+                console.log(this.articles.size);
+
 
                 var arrOfNewArticles = [];
+                var arrMap = Array.from(this.articles);
                 var counter = Math.abs(this.articles.size - this.articleCount);
+
 
                 console.log("counter: " + counter);
 
-                for (var [key, value] of this.articles.entries()) {
-                    if (counter === 0) {
-                        break;
-                    } else {
-                        arrOfNewArticles.push(value);
-                        counter--;
-                    }
+                for (var x = arrMap.length - counter; x < arrMap.length; x++) {
+                    arrOfNewArticles.push(arrMap[x][1]);
                 }
 
                 //All of the articles ready to be pushed are made available in the new Articles Container.
                 this.newArticles = arrOfNewArticles;
-
                 this.articleCount = this.articles.size;
 
                 console.log("New Articles Ready to be pushed to clients: " + arrOfNewArticles.length);
@@ -114,6 +112,8 @@ var ArticleBank = function () {
                 console.log("nothing to update this round");
                 console.log(this.articleCount);
                 console.log(this.articles.size);
+                //reset articles to be pushed this round
+                this.newArticles = [];
             }
 
         }).catch(e => {
@@ -164,6 +164,10 @@ var ArticleBank = function () {
      */
     this.getLoadedArticlesBool = function () {
         return this.loadedArticles;
+    }
+
+    this.getNewArticlesArr = function () {
+        return this.newArticles;
     }
 
 };

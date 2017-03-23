@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
@@ -14,7 +15,7 @@
 
     <!-- Custom Meta title tags -->
     <meta property="og:title" content="Motus - Very Personal News"/>
-    <title>Motus - Very Personal News</title>
+    <title>Motus</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="/public/css/style.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -323,6 +324,7 @@
         var self = this;
         this.articleList = [];
         this.loadedArticleIds = [];
+        this.unloadedArticles = [];
         this.currentViewType = 'list';
 
         this.setArticleList = function (arrOfArticles) {
@@ -371,7 +373,7 @@
 
                 //load normal logo
                 $('#logo').removeClass('hidden');
-            }, 0);
+            }, 300);
 
         };
 
@@ -395,13 +397,51 @@
 
         this.setupArticleCollector = function (socket) {
             setInterval(function () {
+
+                var currentId;
+
+                if (self.getUnloadedArticles().length > 0) {
+                    currentId = self.getUnloadedArticles()[0].id;
+                } else {
+                    currentId = self.getArticleList()[0].id;
+                }
+
                 socket.emit('checkForNewArticles', {
-                    latestId: self.getArticleList()[0].id
+                    latestId: currentId
                 });
             }, 60000);
         };
 
+        this.sortArticlesById = () => {
+            this.articleList.sort(function (a, b) {
+                return b.id - a.id;
+            });
+        }
 
+        this.sortUnloadedArticlesById = () => {
+            this.unloadedArticles.sort(function (a, b) {
+                return b.id - a.id;
+            });
+        }
+
+        this.pushNewArticle = (newArticle) => {
+            this.unloadedArticles.push(newArticle);
+        }
+
+        this.getUnloadedArticles = () => {
+            return this.unloadedArticles;
+        }
+
+        this.configureNewsLabel = () => {
+            if (this.unloadedArticles.size > 0) {
+                //configure label to show how many items we have to load.
+                $('#news-notification-label').removeClass('hidden');
+                $('#news-notification-label').text(this.unloadedArticles.length);
+            } else {
+                //no new articles to be pushed.
+                $('#news-notification-label').addClass('hidden');
+            }
+        }
     }
 
 
@@ -434,10 +474,6 @@
 
     socket.on('loadArticles', function (data) {
 
-        data.articles.sort(function (a, b) {
-            return b.id - a.id;
-        });
-
         console.log(data);
         console.log(data.articles.length);
 
@@ -459,11 +495,8 @@
         }
 
         thisWebsite.setArticleList(tempArr);
+        thisWebsite.sortArticlesById();
         thisWebsite.websiteLoadArticles(10);
-
-        socket.on('test', () => {
-            alert("halloe");
-        });
 
         /**
          * Tell website to check if the user has reached the bottom of the page.
@@ -472,11 +505,31 @@
 
         var addTiles = window.addEventListener('scroll', scrollEvent);
 
-    })
-    ;
+    });
+
+    socket.on('addNewArticles', function (data) {
+        if (data.arrOfNewArticles.length > 0) {
+            var articles = data.arrOfNewArticles;
+            for (var x in articles) {
+                var tempArticle = new Article();
+                tempArticle.setId(articles[x].id);
+                tempArticle.setSource(articles[x].source);
+                tempArticle.setAuthor(articles[x].author);
+                tempArticle.setTitle(articles[x].title);
+                tempArticle.setDesc(articles[x].desc);
+                tempArticle.setUrl(articles[x].url);
+                tempArticle.setUrlToImage(articles[x].urlToImage);
+                tempArticle.setPublishedAt(articles[x].publishedAt);
+                tempArticle.setArticleScore(articles[x].score);
+                tempArticle.setCategory(articles[x].category);
+                thisWebsite.pushNewArticle(tempArticle);
+            }
+            thisWebsite.sortUnloadedArticlesById();
+            thisWebsite.configureNewsLabel();
+        }
+    });
 
     function scrollEvent() {
-
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             thisWebsite.websiteLoadArticles(10);
         }
@@ -628,7 +681,7 @@
                                         </div>
                                     </div>
                                     <div class="right-minimal-controls text-right col-xs-8">
-                                        <a id="refresh-btn" href=""><span class="new-label">10</span><i
+                                        <a id="refresh-btn" href=""><span id="news-notification-label" class="new-label hidden">0</span><i
                                                 class="fa fa-newspaper-o"></i></a>
                                         <a id="filter-btn" href=""><i class="fa fa-filter"></i></a>
                                         <a id="tile-btn" href=""><i class="fa fa-th-large"></i></a>
