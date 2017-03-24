@@ -104,6 +104,8 @@ var ArticleBank = function () {
                 this.newArticles = arrOfNewArticles;
                 this.articleCount = this.articles.size;
 
+                console.log(arrOfNewArticles);
+
                 console.log("New Articles Ready to be pushed to clients: " + arrOfNewArticles.length);
 
             } else {

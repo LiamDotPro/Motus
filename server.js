@@ -195,8 +195,14 @@ io.on('connection', function (socket) {
         var latestID = data.latestId;
         console.log("Incoming request for new articles: " + latestID);
 
+        var articleArr = dataStore.getArticleBank().getNewArticlesArr();
+
+        articleArr.sort(function (a, b) {
+            return b.id - a.id;
+        });
+
         for (var x in dataStore.getArticleBank().getNewArticlesArr()) {
-            console.log(dataStore.getArticleBank().getNewArticlesArr()[x]);
+            console.log(dataStore.getArticleBank().getNewArticlesArr()[x].id);
         }
 
         if (dataStore.getArticleBank().getNewArticlesArr().length > 0 && dataStore.getArticleBank().getNewArticlesArr()[0].id > latestID) {
