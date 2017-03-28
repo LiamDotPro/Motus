@@ -73,12 +73,39 @@
 <script>
     var socket = io();
 
+
+    //Self executing annoymous function used as a loader.
+    (() => {
+        if (!window.location.pathname.includes("/article/")) {
+            switch (window.location.pathname) {
+                case"/":
+
+                    break;
+
+                case "/about":
+
+                    break;
+
+                case "/mission":
+
+                    break;
+            }
+        } else {
+            //Article has been found, setup page for article viewing.
+
+        }
+    })();
+
     //Setting up website for viewing.
     var thisClient = new Client(socket);
     var thisWebsite = new Website();
 
     thisClient.checkForCookie();
     thisWebsite.setupArticleCollector(socket);
+    //
+    //    var stateObj = {foo: "bar"};
+    //    history.pushState(stateObj, "page 2", "bar.html");
+    //    console.log(window.history);
 
     window.addEventListener("load", function (event) {
         console.log("All resources finished loading!");
@@ -444,44 +471,55 @@
                         </div>
                     </div>
 
-                    <div id="news-hub" class="row row-flex row-flex-wrap hidden">
+                    <div id="news-hub" class="row row-flex row-flex-wrap">
 
                     </div>
 
 
-                    <div id="article-hub" class="">
+                    <div id="article-hub" class="hidden">
                         <div id="aticle-holder">
                             <div class="col-md-12 article-way-back-section">
                                 <a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a>
+                                <a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a>
                             </div>
 
-                            <div class="article-page col-md-12 text-center">
+                            <div class="col-md-12 nopad">
                                 <img src="http://static2.businessinsider.com/image/58d9f43e2dfbdb1c008b47c2-1190-625/a-chinese-conglomerate-is-in-talks-to-buy-a-controlling-stake-in-forbes.jpg"
                                      class="img-responsive">
+                            </div>
+                            <div class="article-page col-md-12 text-center">
 
-                                <div class="article-page-info">
-                                    <p>Author | Publisher | Publishing Time | Category</p>
-                                </div>
 
                                 <div class="article-page-minimal-controls">
                                     <a href=""><i class="fa fa-twitter"></i></a>
                                     <a href=""><i class="fa fa-facebook"></i></a>
                                     <a href=""><i class="fa fa-google-plus"></i></a>
                                     <a href=""><i class="fa fa-reddit"></i></a>
-                                    <a href=""><i class="fa fa-thumb-tack"></i></a>
+                                </div>
+
+
+                                <div class="article-page-info">
+                                    <p>Author | Publisher | Publishing Time | Category</p>
+                                </div>
+
+                                <div class="article-page-link">
+                                    <a id="articleViewBtn" href=""><i class="fa fa-link"></i>View Full Article Here</a>
                                 </div>
 
                                 <h1>Article Header goes somewhere here</h1>
                                 <h2>Description text goes here</h2>
-                                <a id="articleViewBtn" href=""><i class="fa fa-link"></i>View Full Article Here</a>
+
 
                             </div>
                         </div>
                     </div>
+
                     <div id="loading-div">
-
+                        <div class="col-md-12 text-center">
+                            <img style="opacity: 0.4;" src="/public/images/default/loading/break.png"/>
+                            <h1 style="color:#dcdcdc;">Grabbing the latest news off the press...</h1>
+                        </div>
                     </div>
-
 
                 </div>
             </div>

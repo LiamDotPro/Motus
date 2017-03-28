@@ -58,6 +58,9 @@ function Website() {
             $('#logo').removeClass('hidden');
         }, 300);
 
+        //Hide the loading div once articles are loaded into the DOM.
+        $('#loading-div').addClass("hidden");
+
     };
 
     /**
@@ -126,9 +129,11 @@ function Website() {
             //configure label to show how many items we have to load.
             $('#news-notification-label').removeClass('hidden');
             $('#news-notification-label').text(this.unloadedArticles.length);
+            $('#refresh-btn').css("color", "#000");
         } else {
             //no new articles to be pushed.
             $('#news-notification-label').addClass('hidden');
+            $('#refresh-btn').css("color", "#dcdcdc");
         }
     };
 
