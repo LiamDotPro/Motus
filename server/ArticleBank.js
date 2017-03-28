@@ -83,39 +83,8 @@ var ArticleBank = function () {
             console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;
             console.log('all sources updated');
-
-            //checking to see if new articles have been loaded, if articles are still not loaded a 0 will be there first round.
-            if (this.articleCount < this.articles.size && this.articleCount > 0) {
-                //sending clients new sources discovered.
-
-                console.log(this.articleCount);
-                console.log(this.articles.size);
-
-                var arrOfNewArticles = [];
-                var arrMap = Array.from(this.articles);
-                var counter = Math.abs(this.articles.size - this.articleCount);
-
-                console.log("counter: " + counter);
-
-                for (var x = arrMap.length - counter; x < arrMap.length; x++) {
-                    arrOfNewArticles.push(arrMap[x][1]);
-                }
-
-                //All of the articles ready to be pushed are made available in the new Articles Container.
-                this.newArticles = arrOfNewArticles;
-                this.articleCount = this.articles.size;
-
-                console.log(arrOfNewArticles);
-
-                console.log("New Articles Ready to be pushed to clients: " + arrOfNewArticles.length);
-
-            } else {
-                console.log("nothing to update this round");
-                console.log(this.articleCount);
-                console.log(this.articles.size);
-                //reset articles to be pushed this round
-                this.newArticles = [];
-            }
+            console.log(this.articleCount);
+            console.log(this.articles.size);
 
         }).catch(e => {
             console.log(e);
@@ -179,9 +148,6 @@ var ArticleBank = function () {
         return this.loadedArticles;
     };
 
-    this.getNewArticlesArr = function () {
-        return this.newArticles;
-    }
 
 };
 

@@ -206,33 +206,34 @@ io.on('connection', function (socket) {
         var latestID = data.latestId;
         console.log("Incoming request for new articles: " + latestID);
 
-        var articleArr = dataStore.getArticleBank().getNewArticlesArr();
+        var articleMap = dataStore.getArticleBank().getAllArticles();
+
+        var articleArr = Array.from(articleMap);
 
         articleArr.sort(function (a, b) {
-            return b.id - a.id;
+            return b[1].id - a[1].id;
         });
 
-        for (var x in dataStore.getArticleBank().getNewArticlesArr()) {
-            console.log(dataStore.getArticleBank().getNewArticlesArr()[x].id);
+        var resultArr = [];
+
+        for (var i = 0; i < articleArr.length; i++) {
+            if (latestID < articleArr[i][1].id) {
+                resultArr.push(articleArr[i][1]);
+            } else {
+                //break as were parsing articles the user already has.
+                break;
+            }
         }
 
-        if (dataStore.getArticleBank().getNewArticlesArr().length > 0 && dataStore.getArticleBank().getNewArticlesArr()[0].id > latestID) {
-
-            console.log("Articles sent to socket.");
-
+        if (resultArr.length > 0) {
             socket.emit('addNewArticles', {
-                arrOfNewArticles: dataStore.getArticleBank().getNewArticlesArr()
+                arrOfNewArticles: resultArr
             });
-
-        } else if (dataStore.getArticleBank().getNewArticlesArr().length > 0 && !dataStore.getArticleBank().getNewArticlesArr()[0].id > latestID) {
-            console.log("new articles are of lower order" + dataStore.getArticleBank().getNewArticlesArr()[0].id);
-        } else {
-            console.log(dataStore.getArticleBank().getNewArticlesArr().length);
-            console.log("nothing to return to client.");
         }
 
 
     });
+
 
 });
 

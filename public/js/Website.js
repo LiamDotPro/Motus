@@ -97,6 +97,8 @@ function Website() {
     this.setupArticleCollector = function (socket) {
         setInterval(function () {
 
+            console.log("unloaded length: " + self.getUnloadedArticles().length);
+
             var currentId;
 
             if (self.getUnloadedArticles().length > 0) {
