@@ -50,6 +50,7 @@ var ArticleBank = function () {
                     articleObj.setPublishedAt(row.publishedAt);
                     articleObj.setArticleScore(row.articleScore);
                     articleObj.setCategory(row.category);
+                    articleObj.setWebSafeLink(row.webSafeLink);
                     this.articles.set(row.title, articleObj);
                 });
         }).catch(e => {
@@ -132,8 +133,8 @@ var ArticleBank = function () {
                 json.articles
                     .filter(article => !self.articles.has(article.title) && checkValueWith(article))
                     .map(article => {
-                        const values = [json.source, article.author, article.title, article.description, article.url, article.urlToImage, article.publishedAt, type, 0];
-                        return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category,articleScore) VALUES (?,?,?,?,?,?,?,?,?)', values);
+                        const values = [json.source, article.author, article.title, article.description, article.url, article.urlToImage, article.publishedAt, type, 0, createWebSafeLink(article.title)];
+                        return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category,articleScore,webSafeLink) VALUES (?,?,?,?,?,?,?,?,?,?)', values);
                     })
             ).then(() => {
                     self.loadArticlesFromDatabase();
@@ -158,6 +159,18 @@ var ArticleBank = function () {
         }
         return true;
     }
+
+    function createWebSafeLink(str) {
+        var tempStr = str.toLowerCase();
+
+        //remove unsafe apostrophes
+        tempStr = tempStr.replace(/'/g, "");
+        tempStr = tempStr.replace(/"/g, "");
+
+        //remove spacing and return web safe link.
+        return tempStr.replace(/ /g, "-");
+    }
+
 
     /**
      * Returns the status of the database in loading content.

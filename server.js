@@ -74,40 +74,51 @@ io.on('connection', function (socket) {
         }
     }
 
-    if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
-        console.log("Database or view is not ready for rendering yet, hold tight.");
-        ensureDataIsAvailable().then(function () {
-            console.log("Database is ready.");
-        });
-    } else {
-        //Database is ready for view to be extracted.
-        var view = dataStore.getArticleBank().getAllArticles();
-        var arrOfArticles = [];
+    socket.on('websiteLoad', function (data) {
 
-        view.forEach(function (value, key) {
+        if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
+            console.log("Database or view is not ready for rendering yet, hold tight.");
+            ensureDataIsAvailable().then(function () {
+                console.log("Database is ready.");
+            });
+        } else {
+            //Database is ready for view to be extracted.
+            var view = dataStore.getArticleBank().getAllArticles();
+            var arrOfArticles = [];
 
-            var articleObj = {
-                id: value.getId(),
-                source: value.getSource(),
-                author: value.getAuthor(),
-                title: value.getTitle(),
-                desc: value.getDesc(),
-                url: value.getUrl(),
-                urlToImage: value.getUrlToImage(),
-                publishedAt: value.getPublishedAt(),
-                score: value.getArticleScore(),
-                category: value.getCategory()
-            };
+            view.forEach(function (value, key) {
 
-            arrOfArticles.push(articleObj);
+                var articleObj = {
+                    id: value.getId(),
+                    source: value.getSource(),
+                    author: value.getAuthor(),
+                    title: value.getTitle(),
+                    desc: value.getDesc(),
+                    url: value.getUrl(),
+                    urlToImage: value.getUrlToImage(),
+                    publishedAt: value.getPublishedAt(),
+                    score: value.getArticleScore(),
+                    category: value.getCategory(),
+                    webSafeLink: value.getWebSafeLink()
+                };
 
-        });
+                arrOfArticles.push(articleObj);
 
-        socket.emit('loadArticles', {
-            articles: arrOfArticles
-        });
+            });
 
-    }
+            if (data.type === 'silent') {
+                socket.emit('loadArticles', {
+                    articles: arrOfArticles,
+                    type: data.type
+                });
+            } else if (data.type === 'load') {
+                socket.emit('loadArticles', {
+                    articles: arrOfArticles,
+                    type: data.type
+                });
+            }
+        }
+    });
 
     //disconnect event
     socket.on('disconnect', function () {

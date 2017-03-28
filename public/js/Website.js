@@ -10,6 +10,7 @@ function Website() {
     this.loadedArticleIds = [];
     this.unloadedArticles = [];
     this.currentViewType = 'list';
+    this.scrolling = false;
 
     this.setArticleList = function (arrOfArticles) {
         this.articleList = arrOfArticles;
@@ -39,11 +40,11 @@ function Website() {
             if (this.articleList.length != i) {
                 if (this.currentViewType === 'tile') {
                     this.loadedArticleIds.push(this.articleList[i].getId());
-                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.articleList[i].getTitle()) + '"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
                     i++;
                 } else {
                     this.loadedArticleIds.push(this.articleList[i].getId());
-                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a  href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.articleList[i].getTitle()) + '"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
                     i++;
                 }
             }
@@ -61,6 +62,18 @@ function Website() {
         //Hide the loading div once articles are loaded into the DOM.
         $('#loading-div').addClass("hidden");
 
+        function createNavSafeLink(str) {
+            var tempStr = str.toLowerCase();
+
+            //remove unsafe apostrophes
+            tempStr = tempStr.replace(/'/g, "");
+            tempStr = tempStr.replace(/"/g, "");
+
+            //remove spacing and return web safe link.
+            return tempStr.replace(/ /g, "-");
+
+        }
+
     };
 
     /**
@@ -68,7 +81,7 @@ function Website() {
      */
     function checkImageForNull(imageString) {
         if (imageString === null) {
-            return 'public/images/default/news/default1.jpg'
+            return 'public/images/default/news/default1.jpg';
         } else {
             return imageString;
         }
@@ -112,7 +125,7 @@ function Website() {
      */
     this.sortUnloadedArticlesById = () => {
         this.unloadedArticles.sort(function (a, b) {
-            return b.id - a.id;
+            return a.id - b.id;
         });
     };
 
@@ -170,5 +183,26 @@ function Website() {
         //configure news label after changes
         this.configureNewsLabel();
 
+    };
+
+    /**
+     * Returns if our current website has scrolling.
+     * @returns {boolean}
+     */
+    this.getScrolling = () => {
+        return this.scrolling;
+    };
+
+    /**
+     * Sets a new value to scrolling, used as part of the infinity scrolling feature to add and remove events.
+     * @param newValue
+     */
+    this.setScrolling = (newValue) => {
+        this.scrolling = newValue;
+    };
+
+    this.getArticleByName = (str) => {
+
     }
+
 }

@@ -95,6 +95,15 @@ var Article = function () {
         this.category = newCat;
     };
 
+    this.setWebSafeLink = function (newLink) {
+        this.websafelink = newLink;
+    };
+
+    this.getWebSafeLink = function () {
+        return this.websafelink;
+    };
+
+
 };
 
 module.exports = Article;

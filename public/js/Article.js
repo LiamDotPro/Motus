@@ -13,6 +13,7 @@ function Article() {
     this.publishedAt = '';
     this.articleScore = '';
     this.category = '';
+    this.websafelink = '';
 
     this.getId = function () {
         return this.id;
@@ -92,6 +93,15 @@ function Article() {
 
     this.setCategory = function (newCat) {
         this.category = newCat;
+    };
+
+    this.setWebSafeLink = function (newLink) {
+        this.websafelink = newLink;
+    };
+
+
+    this.getWebSafeLink = function () {
+        return this.websafelink;
     };
 
 }

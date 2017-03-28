@@ -73,39 +73,80 @@
 <script>
     var socket = io();
 
-
-    //Self executing annoymous function used as a loader.
-    (() => {
-        if (!window.location.pathname.includes("/article/")) {
-            switch (window.location.pathname) {
-                case"/":
-
-                    break;
-
-                case "/about":
-
-                    break;
-
-                case "/mission":
-
-                    break;
-            }
-        } else {
-            //Article has been found, setup page for article viewing.
-
-        }
-    })();
-
     //Setting up website for viewing.
     var thisClient = new Client(socket);
     var thisWebsite = new Website();
 
     thisClient.checkForCookie();
     thisWebsite.setupArticleCollector(socket);
-    //
-    //    var stateObj = {foo: "bar"};
-    //    history.pushState(stateObj, "page 2", "bar.html");
-    //    console.log(window.history);
+
+
+    //Self executing annoymous function used as a loader.
+    (() => {
+
+        var path = window.location.pathname.toLowerCase();
+
+        if (!path.includes("/article/")) {
+            switch (path) {
+                case"/":
+                    loadState('load');
+                    readyHomePage();
+                    break;
+
+                case"/home":
+                    loadState('load');
+                    readyHomePage();
+                    break;
+
+                case "/about":
+                    loadState('silent');
+
+                    break;
+
+                case "/mission":
+                    loadState('silent');
+                    break;
+            }
+        } else {
+            //Article has been found, setup page for article viewing.
+
+        }
+
+        /***
+         * Based on the state that is passed we asses if we should load the articles and write them quitely or normally.
+         */
+        function loadState(type) {
+            if (type === 'silent') {
+                //silent load
+                socket.emit("websiteLoad", {
+                    type: type
+                })
+            } else if (type === 'load') {
+                //normal load
+                socket.emit("websiteLoad", {
+                    type: type
+                })
+            } else {
+                console.log("Unexspected load state specfied.");
+            }
+        }
+
+        function readyHomePage() {
+            $(document).ready(() => {
+                $('#loading-div').removeClass('hidden');
+                $('#minimal-Controls').removeClass('hidden');
+                $('#news-hub').removeClass('hidden');
+
+                //Create Scrolling event to later be cancelled.
+                window.addEventListener('scroll', scrollEvent);
+
+                thisWebsite.setScrolling(true);
+            });
+        }
+
+        //logging
+        console.log("path: " + path);
+    })();
 
     window.addEventListener("load", function (event) {
         console.log("All resources finished loading!");
@@ -151,14 +192,18 @@
 
         thisWebsite.setArticleList(tempArr);
         thisWebsite.sortArticlesById();
-        thisWebsite.websiteLoadArticles(10);
 
-        /**
-         * Tell website to check if the user has reached the bottom of the page.
-         * @param ev
-         */
 
-        var addTiles = window.addEventListener('scroll', scrollEvent);
+        if (data.type === 'load') {
+            thisWebsite.websiteLoadArticles(10);
+
+            /**
+             * Tell website to check if the user has reached the bottom of the page.
+             * @param ev
+             */
+            var addTiles = window.addEventListener('scroll', scrollEvent);
+        }
+
 
     });
 
@@ -178,6 +223,7 @@
                 tempArticle.setPublishedAt(articles[x].publishedAt);
                 tempArticle.setArticleScore(articles[x].articleScore);
                 tempArticle.setCategory(articles[x].category);
+                tempArticle.setWebSafeLink(articles[x].websafelink);
                 thisWebsite.pushNewArticle(tempArticle);
             }
             thisWebsite.sortUnloadedArticlesById();
@@ -249,16 +295,43 @@
         });
 
         $('#aboutBtn').click((e) => {
-            e.preventDefault();
+            //push state
+            var stateObj = {previousLoc: window.location.pathname};
+            history.pushState(stateObj, "about page", "/about");
 
+            //Actions to take below
+            e.preventDefault();
             window.removeEventListener('scroll', scrollEvent);
 
-            $('#home-panel').addClass('hidden');
+            $('#minimal-Controls').addClass('hidden');
+            $('#news-hub').addClass('hidden');
+
+            if (thisWebsite.getScrolling() === true) {
+                //no scrolling currently attached.
+                window.removeEventListener('scroll', scrollEvent);
+            }
+
         });
 
         $('#homeBtn').click((e) => {
+            //push state
+            var stateObj = {previousLoc: window.location.pathname};
+            history.pushState(stateObj, "home page", "/home");
+
+            //Actions to take below
             e.preventDefault();
-            $('#home-panel').removeClass('hidden');
+            $('#minimal-Controls').removeClass('hidden');
+            $('#news-hub').removeClass('hidden');
+
+            if (thisWebsite.getScrolling() === false) {
+                //no scrolling currently attached.
+                window.addEventListener('scroll', scrollEvent);
+            }
+
+            if (thisWebsite.loadedArticleIds.length === 0) {
+                thisWebsite.websiteLoadArticles(10);
+            }
+
         });
 
         var loginState = 'dashboard';
@@ -290,7 +363,7 @@
         $('#logo-link').click((e) => {
             e.preventDefault();
             $('html,body').scrollTop(0);
-        })
+        });
 
         $('#refresh-btn').click((e) => {
             e.preventDefault();
@@ -298,6 +371,13 @@
                 //There are articles to be loaded.
                 thisWebsite.loadNewArticles();
             }
+        });
+
+        $(document).on('click', '.article-link', (e) => {
+            e.preventDefault();
+
+            console.log("found article click");
+
         });
 
 
@@ -433,7 +513,7 @@
 
                     </style>
 
-                    <div id="minimal-Controls" class="row ">
+                    <div id="minimal-Controls" class="row hidden">
                         <div class="col-md-12">
                             <div class="minimal-search-container">
                                 <div class="row">
@@ -471,7 +551,7 @@
                         </div>
                     </div>
 
-                    <div id="news-hub" class="row row-flex row-flex-wrap">
+                    <div id="news-hub" class="row row-flex row-flex-wrap hidden">
 
                     </div>
 
@@ -514,7 +594,7 @@
                         </div>
                     </div>
 
-                    <div id="loading-div">
+                    <div class="hidden" id="loading-div">
                         <div class="col-md-12 text-center">
                             <img style="opacity: 0.4;" src="/public/images/default/loading/break.png"/>
                             <h1 style="color:#dcdcdc;">Grabbing the latest news off the press...</h1>
