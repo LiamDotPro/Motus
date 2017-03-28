@@ -28,6 +28,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
+    <script src="/public/js/Website.js"></script>
+    <script src="/public/js/Client.js"></script>
+    <script src="/public/js/Article.js"></script>
 </head>
 <body>
 <header class="header-sticky">
@@ -69,399 +72,6 @@
 
 <script>
     var socket = io();
-
-    function Client(socket) {
-
-        this.id = null;
-        this.referrer = document.referrer;
-        this.reso = [window.screen.availHeight, window.screen.availWidth];
-
-        this.setId = function (id) {
-            this.id = id;
-        };
-
-        /**
-         * Returns a referral address if one exists otherwise nothing is passed.
-         */
-        this.getReferringDocument = function () {
-            if (!this.referrer) {
-                return 'none';
-            } else {
-                return this.referrer;
-            }
-        };
-
-        /**
-         * This is called when finding the starting resolution.
-         * @returns {[*,*]}
-         */
-        this.getRes = function () {
-            this.reso = [window.screen.availHeight, window.screen.availWidth];
-        };
-
-        /**
-         * Checks if a Cookie has been presented before collecting information.
-         */
-        this.checkForCookie = function () {
-            if (!document.cookie) {
-                socket.emit('registerUser', {
-                    ref: this.referrer,
-                    reso: this.reso
-                });
-            } else {
-                console.log("Cookie from previous session found");
-
-                //getting cookie from previous session.
-                var id = decipherCookie('id');
-                this.setId(id);
-
-                //emit the ID found in the cookie and also the path we received.
-                socket.emit('assignOldUser', {
-                    id: this.id
-                });
-            }
-        };
-
-        /**
-         * When registering a new user we take there initial settings and using the ip info api also make note of
-         * there outlined geo ip.
-         */
-        function updateAreaSettings(id) {
-
-            $.get("http://ipinfo.io", function (response) {
-                /**
-                 * Using socket here so we send the information back for logging when it return from the request.
-                 */
-                socket.emit('updateUserAreaSettings', {
-                    ip: response.ip,
-                    county: response.city,
-                    country: response.region,
-                    id: id
-                });
-
-            }, "jsonp");
-        }
-
-        /**
-         * Adds a new cookie for the user to track them across the website
-         */
-        this.addCookie = function (id) {
-            document.cookie = 'id=' + id + ';' + ' createdAt=' + window.location.pathname + ';';
-            this.id = id;
-            console.log("new cookie generated for user's session");
-
-            // attempt to grab area data about our new user.
-            updateAreaSettings(id);
-
-            //Attempt to collect canvas data
-            this.collectCanvasData();
-        };
-
-        /**
-         * Deciphers a cookie string into a use able javascript array.
-         * @param ref the cookies ref we are looking to extract.
-         */
-        function decipherCookie(ref) {
-            const decodedCookie = decodeURIComponent(document.cookie);
-            const cookieArr = decodedCookie.split(';');
-            const resultCookieArr = chunkArrOfPieces(cookieArr);
-
-            switch (ref) {
-                case 'id':
-                    return resultCookieArr[0][1];
-                    break;
-                case 'createdAt':
-                    return resultCookieArr[1][1];
-                    break;
-            }
-        }
-
-        /**
-         * Helper function that takes an array splits the values by = and then returns a multi dimensional array with
-         * key => value style arrays inside.
-         * @param cookieArr
-         * @returns {Array}
-         */
-        function chunkArrOfPieces(cookieArr) {
-            var result = [];
-            for (var x = 0; x < cookieArr.length; x++) {
-                var pieces = cookieArr[x].split('=');
-                result.push(pieces);
-            }
-            return result;
-
-        }
-
-        /**
-         * Deletes the current cookie by setting it's expires field to yesterday.
-         */
-        this.deleteCookie = function (name) {
-            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        };
-
-        /**
-         * Collects canvas data using FingerPrint2 - https://github.com/Valve/fingerprintjs2
-         */
-        this.collectCanvasData = function () {
-
-            //Canvas Hashing for user plus other data.
-            new Fingerprint2().get(function (result, components) {
-
-                socket.emit('clientCanvasData', {
-                    hash: result,
-                    arrOfData: components
-                });
-
-                console.log(result); //a hash, representing your device fingerprint
-                console.log(components); // an array of FP components
-            });
-        };
-
-        this.getLocaleLang = function () {
-            var language = navigator.languages && navigator.languages[0] ||
-                navigator.language ||
-                navigator.userLanguage;
-        }
-
-    }
-
-    function Article() {
-
-        this.id = 0;
-        this.source = '';
-        this.author = '';
-        this.title = '';
-        this.desc = '';
-        this.url = '';
-        this.urlToImage = '';
-        this.publishedAt = '';
-        this.articleScore = '';
-        this.category = '';
-
-        this.getId = function () {
-            return this.id;
-        };
-
-        this.getSource = function () {
-            return this.source;
-        };
-
-        this.getAuthor = function () {
-            return this.author;
-        };
-
-        this.getTitle = function () {
-            return this.title;
-        };
-
-        this.getDesc = function () {
-            return this.desc;
-        };
-
-        this.getUrl = function () {
-            return this.url;
-        };
-
-        this.getUrlToImage = function () {
-            return this.urlToImage;
-        };
-
-        this.getPublishedAt = function () {
-            return this.publishedAt;
-        };
-
-        this.getArticleScore = function () {
-            return this.articleScore;
-        };
-
-        this.setId = function (newId) {
-            this.id = newId;
-        };
-
-        this.setSource = function (newSource) {
-            this.source = newSource;
-        };
-
-        this.setAuthor = function (newAuthor) {
-            this.author = newAuthor;
-        };
-
-        this.setTitle = function (newTitle) {
-            this.title = newTitle;
-        };
-
-        this.setDesc = function (newDesc) {
-            this.desc = newDesc;
-        };
-
-        this.setUrl = function (newUrl) {
-            this.url = newUrl;
-        };
-
-        this.setUrlToImage = function (newUrlToImage) {
-            this.urlToImage = newUrlToImage;
-        };
-
-        this.setPublishedAt = function (newPublishedAt) {
-            this.publishedAt = newPublishedAt;
-        };
-
-        this.setArticleScore = function (newScore) {
-            this.articleScore = newScore;
-        };
-
-        this.getCategory = function () {
-            return this.category;
-        };
-
-        this.setCategory = function (newCat) {
-            this.category = newCat;
-        };
-
-    }
-
-    function Website() {
-        var self = this;
-        this.articleList = [];
-        this.loadedArticleIds = [];
-        this.unloadedArticles = [];
-        this.currentViewType = 'list';
-
-        this.setArticleList = function (arrOfArticles) {
-            this.articleList = arrOfArticles;
-        };
-
-        this.getArticleList = function () {
-            return this.articleList;
-        };
-
-        /**
-         * Initial load function that loads articles into the dom
-         */
-        this.websiteLoadArticles = function (amount) {
-
-            //stop loader.
-            $('#loader').css('display', 'block');
-
-            //load normal logo
-            $('#logo').addClass('hidden');
-
-            const newsHub = document.getElementById("news-hub");
-
-            var x = 0;
-
-            //add all of the new articles to the page
-            for (var i = this.loadedArticleIds.length; x < amount; x++) {
-                if (this.articleList.length != i) {
-                    if (this.currentViewType === 'tile') {
-                        this.loadedArticleIds.push(this.articleList[i].getId());
-                        newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
-                        i++;
-                    } else {
-                        this.loadedArticleIds.push(this.articleList[i].getId());
-                        newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
-                        i++;
-                    }
-                }
-            }
-
-            //Set time out to let dom elements render efficiently.
-            setTimeout(function () {
-                //stop loader.
-                $('#loader').css('display', 'none');
-
-                //load normal logo
-                $('#logo').removeClass('hidden');
-            }, 300);
-
-        };
-
-        /**
-         * Checks to see if an image string is null, if true returns the default image.
-         */
-        function checkImageForNull(imageString) {
-            if (imageString === null) {
-                return 'public/images/default/news/default1.jpg'
-            } else {
-                return imageString;
-            }
-        }
-
-        /**
-         * Sets the current view type for the website (Tiles / List view).
-         */
-        this.setCurrentViewType = function (newType) {
-            this.currentViewType = newType;
-        };
-
-        this.setupArticleCollector = function (socket) {
-            setInterval(function () {
-
-                var currentId;
-
-                if (self.getUnloadedArticles().length > 0) {
-                    currentId = self.getUnloadedArticles()[0].id;
-                } else {
-                    currentId = self.getArticleList()[0].id;
-                }
-
-                socket.emit('checkForNewArticles', {
-                    latestId: currentId
-                });
-            }, 60000);
-        };
-
-        this.sortArticlesById = () => {
-            this.articleList.sort(function (a, b) {
-                return b.id - a.id;
-            });
-        }
-
-        this.sortUnloadedArticlesById = () => {
-            this.unloadedArticles.sort(function (a, b) {
-                return b.id - a.id;
-            });
-        }
-
-        this.pushNewArticle = (newArticle) => {
-            this.unloadedArticles.push(newArticle);
-        }
-
-        this.getUnloadedArticles = () => {
-            return this.unloadedArticles;
-        }
-
-        this.configureNewsLabel = () => {
-            if (this.unloadedArticles.length > 0) {
-                //configure label to show how many items we have to load.
-                $('#news-notification-label').removeClass('hidden');
-                $('#news-notification-label').text(this.unloadedArticles.length);
-            } else {
-                //no new articles to be pushed.
-                $('#news-notification-label').addClass('hidden');
-            }
-        }
-
-        this.loadNewArticles = () => {
-
-            const newsHub = document.getElementById("news-hub");
-
-            if (this.unloadedArticles.length > 0) {
-                for (var x in this.unloadedArticles) {
-                    if (this.currentViewType === 'tile') {
-                        newsHub.innerHTML = ' <div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
-                    } else {
-                        newsHub.innerHTML = '<div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
-                    }
-                }
-            } else {
-                console.log("nothing to load");
-            }
-
-
-        }
-    }
-
 
     //Setting up website for viewing.
     var thisClient = new Client(socket);
@@ -553,6 +163,119 @@
             thisWebsite.websiteLoadArticles(10);
         }
     }
+
+    /**
+     * Handles all of the Javascript involved with changing and interacting with UI logic.
+     * All of the event driven button logic is contained here and makes for a catalogue of
+     * events and how they are to be handled when clicking events occur, state drive logic
+     * such as links being passed between users are handled on load and setup the application.
+     */
+
+    /**
+     * Every users starts as a list view.
+     */
+    var currentViewSetting = 'list';
+
+    /**
+     * Handles setting event triggers onto the minimal control features.
+     */
+    $(document).ready(function () {
+        $('#tile-btn').click(function (e) {
+
+            if (!currentViewSetting === 'tile') {
+                return;
+            }
+
+            //handle the prevention of normal transfer.
+            e.preventDefault();
+
+            //handle changing all articles to col-md-6 using tiles
+            $('.article').each(function (i, obj) {
+                $(obj).removeClass('col-md-12');
+                $(obj).addClass('col-md-6 news-tile-half');
+            });
+
+            currentViewSetting = 'tile';
+            thisWebsite.setCurrentViewType('tile');
+
+
+        });
+
+        $('#list-btn').click(function (e) {
+            if (!currentViewSetting === 'list') {
+                return;
+            }
+
+            //handle the prevention of normal transfer.
+            e.preventDefault();
+
+            //handle changing all articles to col-md-6 using tiles
+            $('.article').each(function (i, obj) {
+                $(obj).removeClass('col-md-6');
+                $(obj).addClass('col-md-12');
+                $(obj).removeClass('news-tile-half');
+            });
+
+            currentViewSetting = 'list';
+            thisWebsite.setCurrentViewType('list');
+
+        });
+
+        $('#aboutBtn').click((e) => {
+            e.preventDefault();
+
+            window.removeEventListener('scroll', scrollEvent);
+
+            $('#home-panel').addClass('hidden');
+        });
+
+        $('#homeBtn').click((e) => {
+            e.preventDefault();
+            $('#home-panel').removeClass('hidden');
+        });
+
+        var loginState = 'dashboard';
+
+        $('#login-btn').click((e) => {
+            e.preventDefault();
+            if (loginState === 'dashboard') {
+                //Make user panel
+
+                $('#login-btn').text('Back');
+                $('#user-dashboard').addClass('hidden');
+                $('#login-panel').removeClass('hidden');
+                loginState = 'login';
+            } else {
+                $('#login-btn').text('Sign In');
+                $('#user-dashboard').removeClass('hidden');
+                $('#login-panel').addClass('hidden');
+                loginState = 'dashboard';
+            }
+        });
+
+        $('#submit-btn').click((e) => {
+            e.preventDefault();
+            //handle the login process with sockets.
+
+        });
+
+
+        $('#logo-link').click((e) => {
+            e.preventDefault();
+            $('html,body').scrollTop(0);
+        })
+
+        $('#refresh-btn').click((e) => {
+            e.preventDefault();
+            if (thisWebsite.getUnloadedArticles().length > 0) {
+                //There are articles to be loaded.
+                thisWebsite.loadNewArticles();
+            }
+        });
+
+
+    });
+
 
 </script>
 
@@ -683,7 +406,6 @@
 
                     </style>
 
-
                     <div id="minimal-Controls" class="row ">
                         <div class="col-md-12">
                             <div class="minimal-search-container">
@@ -722,124 +444,44 @@
                         </div>
                     </div>
 
-                    <div id="news-hub" class="row row-flex row-flex-wrap">
+                    <div id="news-hub" class="row row-flex row-flex-wrap hidden">
 
                     </div>
 
-                    <script>
-                        /**
-                         * Handles all of the Javascript involved with changing and interacting with UI logic.
-                         * All of the event driven button logic is contained here and makes for a catalogue of
-                         * events and how they are to be handled when clicking events occur, state drive logic
-                         * such as links being passed between users are handled on load and setup the application.
-                         */
 
-                        /**
-                         * Every users starts as a list view.
-                         */
-                        var currentViewSetting = 'list';
+                    <div id="article-hub" class="">
+                        <div id="aticle-holder">
+                            <div class="col-md-12 article-way-back-section">
+                                <a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a>
+                            </div>
 
-                        /**
-                         * Handles setting event triggers onto the minimal control features.
-                         */
-                        $(document).ready(function () {
-                            $('#tile-btn').click(function (e) {
+                            <div class="article-page col-md-12 text-center">
+                                <img src="http://static2.businessinsider.com/image/58d9f43e2dfbdb1c008b47c2-1190-625/a-chinese-conglomerate-is-in-talks-to-buy-a-controlling-stake-in-forbes.jpg"
+                                     class="img-responsive">
 
-                                if (!currentViewSetting === 'tile') {
-                                    return;
-                                }
+                                <div class="article-page-info">
+                                    <p>Author | Publisher | Publishing Time | Category</p>
+                                </div>
 
-                                //handle the prevention of normal transfer.
-                                e.preventDefault();
+                                <div class="article-page-minimal-controls">
+                                    <a href=""><i class="fa fa-twitter"></i></a>
+                                    <a href=""><i class="fa fa-facebook"></i></a>
+                                    <a href=""><i class="fa fa-google-plus"></i></a>
+                                    <a href=""><i class="fa fa-reddit"></i></a>
+                                    <a href=""><i class="fa fa-thumb-tack"></i></a>
+                                </div>
 
-                                //handle changing all articles to col-md-6 using tiles
-                                $('.article').each(function (i, obj) {
-                                    $(obj).removeClass('col-md-12');
-                                    $(obj).addClass('col-md-6 news-tile-half');
-                                });
+                                <h1>Article Header goes somewhere here</h1>
+                                <h2>Description text goes here</h2>
+                                <a id="articleViewBtn" href=""><i class="fa fa-link"></i>View Full Article Here</a>
 
-                                currentViewSetting = 'tile';
-                                thisWebsite.setCurrentViewType('tile');
+                            </div>
+                        </div>
+                    </div>
+                    <div id="loading-div">
 
+                    </div>
 
-                            });
-
-                            $('#list-btn').click(function (e) {
-                                if (!currentViewSetting === 'list') {
-                                    return;
-                                }
-
-                                //handle the prevention of normal transfer.
-                                e.preventDefault();
-
-                                //handle changing all articles to col-md-6 using tiles
-                                $('.article').each(function (i, obj) {
-                                    $(obj).removeClass('col-md-6');
-                                    $(obj).addClass('col-md-12');
-                                    $(obj).removeClass('news-tile-half');
-                                });
-
-                                currentViewSetting = 'list';
-                                thisWebsite.setCurrentViewType('list');
-
-                            });
-
-                            $('#aboutBtn').click((e) => {
-                                e.preventDefault();
-
-                                window.removeEventListener('scroll', scrollEvent);
-
-                                $('#home-panel').addClass('hidden');
-                            });
-
-                            $('#homeBtn').click((e) => {
-                                e.preventDefault();
-                                $('#home-panel').removeClass('hidden');
-                            });
-
-                            var loginState = 'dashboard';
-
-                            $('#login-btn').click((e) => {
-                                e.preventDefault();
-                                if (loginState === 'dashboard') {
-                                    //Make user panel
-
-                                    $('#login-btn').text('Back');
-                                    $('#user-dashboard').addClass('hidden');
-                                    $('#login-panel').removeClass('hidden');
-                                    loginState = 'login';
-                                } else {
-                                    $('#login-btn').text('Sign In');
-                                    $('#user-dashboard').removeClass('hidden');
-                                    $('#login-panel').addClass('hidden');
-                                    loginState = 'dashboard';
-                                }
-                            });
-
-                            $('#submit-btn').click((e) => {
-                                e.preventDefault();
-                                //handle the login process with sockets.
-
-                            });
-
-
-                            $('#logo-link').click((e) => {
-                                e.preventDefault();
-                                $('html,body').scrollTop(0);
-                            })
-
-                            $('#refresh-btn').click((e) => {
-                                e.preventDefault();
-                                if (thisWebsite.getUnloadedArticles().length > 0) {
-                                    //There are articles to be loaded.
-                                    thisWebsite.loadNewArticles();
-                                }
-                            });
-
-                        });
-
-
-                    </script>
 
                 </div>
             </div>

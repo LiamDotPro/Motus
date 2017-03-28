@@ -1,0 +1,169 @@
+/**
+ * Created by li on 28/03/2017.
+ */
+
+
+function Website() {
+
+    var self = this;
+    this.articleList = [];
+    this.loadedArticleIds = [];
+    this.unloadedArticles = [];
+    this.currentViewType = 'list';
+
+    this.setArticleList = function (arrOfArticles) {
+        this.articleList = arrOfArticles;
+    };
+
+    this.getArticleList = function () {
+        return this.articleList;
+    };
+
+    /**
+     * Initial load function that loads articles into the dom
+     */
+    this.websiteLoadArticles = function (amount) {
+
+        //stop loader.
+        $('#loader').css('display', 'block');
+
+        //load normal logo
+        $('#logo').addClass('hidden');
+
+        const newsHub = document.getElementById("news-hub");
+
+        var x = 0;
+
+        //add all of the new articles to the page
+        for (var i = this.loadedArticleIds.length; x < amount; x++) {
+            if (this.articleList.length != i) {
+                if (this.currentViewType === 'tile') {
+                    this.loadedArticleIds.push(this.articleList[i].getId());
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    i++;
+                } else {
+                    this.loadedArticleIds.push(this.articleList[i].getId());
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    i++;
+                }
+            }
+        }
+
+        //Set time out to let dom elements render efficiently.
+        setTimeout(function () {
+            //stop loader.
+            $('#loader').css('display', 'none');
+
+            //load normal logo
+            $('#logo').removeClass('hidden');
+        }, 300);
+
+    };
+
+    /**
+     * Checks to see if an image string is null, if true returns the default image.
+     */
+    function checkImageForNull(imageString) {
+        if (imageString === null) {
+            return 'public/images/default/news/default1.jpg'
+        } else {
+            return imageString;
+        }
+    }
+
+    /**
+     * Sets the current view type for the website (Tiles / List view).
+     */
+    this.setCurrentViewType = function (newType) {
+        this.currentViewType = newType;
+    };
+
+    this.setupArticleCollector = function (socket) {
+        setInterval(function () {
+
+            var currentId;
+
+            if (self.getUnloadedArticles().length > 0) {
+                currentId = self.getUnloadedArticles()[0].id;
+            } else {
+                currentId = self.getArticleList()[0].id;
+            }
+
+            socket.emit('checkForNewArticles', {
+                latestId: currentId
+            });
+        }, 60000);
+    };
+
+    /**
+     * Sorts the current article list by ID - Id is the newest article within the database.
+     */
+    this.sortArticlesById = () => {
+        this.articleList.sort(function (a, b) {
+            return b.id - a.id;
+        });
+    };
+
+    /**
+     * Sorts the Unloaded articles by ID - Id is the newest article within the database.
+     */
+    this.sortUnloadedArticlesById = () => {
+        this.unloadedArticles.sort(function (a, b) {
+            return b.id - a.id;
+        });
+    };
+
+    this.pushNewArticle = (newArticle) => {
+        this.unloadedArticles.push(newArticle);
+    };
+
+    this.getUnloadedArticles = () => {
+        return this.unloadedArticles;
+    };
+
+    this.configureNewsLabel = () => {
+        if (this.unloadedArticles.length > 0) {
+            //configure label to show how many items we have to load.
+            $('#news-notification-label').removeClass('hidden');
+            $('#news-notification-label').text(this.unloadedArticles.length);
+        } else {
+            //no new articles to be pushed.
+            $('#news-notification-label').addClass('hidden');
+        }
+    };
+
+    /**
+     * Loads articles from the unloaded articles into the news hub.
+     */
+    this.loadNewArticles = () => {
+
+        this.sortUnloadedArticlesById();
+
+        const newsHub = document.getElementById("news-hub");
+
+        if (this.unloadedArticles.length > 0) {
+            for (var x in this.unloadedArticles) {
+                if (this.currentViewType === 'tile') {
+                    newsHub.innerHTML = ' <div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
+                } else {
+                    newsHub.innerHTML = '<div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
+                }
+
+                this.articleList.push(this.unloadedArticles[x]);
+
+            }
+        } else {
+            console.log("nothing new to load");
+        }
+
+        //sort the article list now unloaded entities have been loaded.
+        this.sortArticlesById();
+
+        //empty the array so it's ready for use again.
+        this.unloadedArticles = [];
+
+        //configure news label after changes
+        this.configureNewsLabel();
+
+    }
+}
