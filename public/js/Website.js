@@ -102,7 +102,7 @@ function Website() {
             var currentId;
 
             if (self.getUnloadedArticles().length > 0) {
-                currentId = self.getUnloadedArticles()[0].id;
+                currentId = self.getUnloadedArticles()[self.getUnloadedArticles().length - 1].id;
             } else {
                 currentId = self.getArticleList()[0].id;
             }
