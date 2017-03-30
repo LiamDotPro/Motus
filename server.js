@@ -35,15 +35,25 @@ dataStore.getArticles(pool);
 //make the public resources static
 app.use(express.static(__dirname + '/'));
 
-app.get('/*', function (req, res) {
+app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
-    //console.log('express serves homepage');
 });
 
-// app.get('/about', function (req, res) {
-//     res.sendFile(path.join(__dirname + '/public/index.html'));
-//     //console.log('express serves homepage');
-// });
+app.get('/home', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
+
+app.get('/about', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
+
+app.get('/mission', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
+
+app.get('/register', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/register.html'));
+});
 
 
 server.listen(80, function () {
