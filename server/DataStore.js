@@ -3,15 +3,19 @@
  */
 
 var Client = require('./Client.js');
+var User = require('./User.js');
 var UUID = require('./UUID.js');
 
 var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
 
-var dataStore = function () {
+var passwordHash = require('password-hash');
+
+var DataStore = function () {
 
     var self = this;
     this.pool = null;
+    this.users = new Map();
     this.clientArr = new Map();
     this.uuid = new UUID();
     this.articleBank = new ArticleBank();
@@ -58,7 +62,7 @@ var dataStore = function () {
 
     /**
      * Ref to self which can be used in context inside the outer lexical scope.
-     * @returns {dataStore}
+     * @returns {DataStore}
      */
     this.getSelf = function () {
         return self;
@@ -203,8 +207,83 @@ var dataStore = function () {
 
     this.getArticleBank = function () {
         return this.articleBank;
+    };
+
+    this.addUser = function (key, value) {
+        this.users.set(key, value);
+    };
+
+    /**
+     * Loads all of the users from the database into the server map.
+     */
+    this.loadUsers = function () {
+        this.pool.query('SELECT * FROM `users`').then(function (rows) {
+            for (var i in rows) {
+                var tempUser = new User();
+                tempUser.setId(rows[i].id);
+                tempUser.setEmail(rows[i].email);
+                tempUser.setCanvasData(rows[i].canvasData);
+                tempUser.setAdmin(rows[i].admin);
+                self.addUser(rows[i].email, tempUser);
+            }
+        }).then(function () {
+            console.log('loaded all users from database into store.');
+        }).catch(function (e) {
+            console.log(e);
+        });
+    };
+
+    /**
+     * Attempts to register a new account for a user.
+     * @param canvasHash
+     * @param email
+     * @param password
+     * @param admin
+     */
+    this.registerNewUser = function (canvasHash, admin, email, password) {
+
+        //Checking to see if the user is already registered.
+        if (this.users.has(email.toLowerCase())) {
+            return "Email Already Registered";
+        }
+
+        var adminObj = {};
+
+        if (admin === true) {
+            adminObj = {
+                Access: true
+            }
+        } else {
+            adminObj = {
+                Access: false
+            }
+        }
+
+        var canvasObj = {
+            hashes: [canvasHash]
+        };
+
+        var jsonAdmin = JSON.stringify(adminObj);
+        var jsonCanvas = JSON.stringify(canvasObj);
+
+        var hashedPassword = passwordHash.generate(password);
+        var poolRef = this.pool;
+
+
+        poolRef.query('INSERT INTO `users` (email, password, admin, canvasHash) VALUES (?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas]);
+
+        var tempUser = new User();
+
+        tempUser.setEmail(email);
+        tempUser.setCanvasData(jsonCanvas);
+        tempUser.setAdmin(jsonAdmin);
+
+        this.addUser(email, tempUser);
+
+        console.log("New User created");
+        return "User Created";
     }
 
 };
 
-module.exports = dataStore;
+module.exports = DataStore;

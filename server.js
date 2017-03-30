@@ -29,8 +29,8 @@ var pool = mysql.createPool({
 
 dataStore.setPool(pool);
 dataStore.loadExp();
+dataStore.loadUsers();
 dataStore.getArticles(pool);
-
 
 //make the public resources static
 app.use(express.static(__dirname + '/'));
@@ -241,6 +241,30 @@ io.on('connection', function (socket) {
             });
         }
 
+
+    });
+
+    /**
+     * triggered when a user attempt to create a new user from the register form.
+     */
+    socket.on('registerNewUser', (data) => {
+        console.log("request to create a new user incoming");
+
+        //canvas hash, boolean, email address, password.
+        var result = dataStore.registerNewUser(data.hash, data.admin, data.email, data.password);
+
+        switch (result) {
+            case 'Email Already Registered':
+                socket.emit('emailAlreadyRegistered', {
+                    message: "Email Already registered"
+                });
+                break;
+            case 'User Created':
+                socket.emit('newUserCreated', {
+                    message: "New Account created - Login available via the homepage"
+                });
+                break;
+        }
 
     });
 

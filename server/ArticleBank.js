@@ -20,7 +20,7 @@ var ArticleBank = function () {
 
     /**
      * Ref to self which can be used in context inside the outer lexical scope.
-     * @returns {dataStore}
+     * @returns {DataStore}
      */
     this.getSelf = function () {
         return self;

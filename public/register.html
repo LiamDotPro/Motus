@@ -73,6 +73,13 @@
 <script>
     var socket = io();
 
+    socket.on('emailAlreadyRegistered', function (data) {
+        $('#resultTxt').text(data.message);
+    });
+
+    socket.on('newUserCreated', function (data) {
+        $('#resultTxt').text(data.message);
+    });
 
     /**
      * Handles setting event triggers onto the minimal control features.
@@ -81,6 +88,26 @@
 
         $('#loader').addClass('hidden');
         $('#logo').removeClass('hidden');
+
+        $('#submit-btn').click((e) => {
+            e.preventDefault();
+
+            //Canvas Hashing for user plus other data.
+            new Fingerprint2().get(function (result, components) {
+
+                var pw = $('#passwordBox').val();
+                var email = $('#emailBox').val();
+
+                socket.emit('registerNewUser', {
+                    email: email,
+                    password: pw,
+                    admin: false,
+                    hash: result
+                });
+
+            });
+
+        });
 
     });
 
@@ -106,22 +133,25 @@
                                 <div class="manual-register-form">
                                     <div class="form-group col-xs-6">
                                         <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1"
+                                        <input type="email" class="form-control" id="emailBox"
                                                placeholder="Email">
                                     </div>
                                 </div>
                                 <div class="form-group col-xs-6">
                                     <label for="exampleInputPassword1">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1"
+                                    <input type="password" class="form-control" id="passwordBox"
                                            placeholder="Password">
                                 </div>
 
                                 <div class="form-group col-xs-12">
-                                    <button id="submit-btn" type="submit" class="btn btn-default">Register a new account</button>
+                                    <button id="submit-btn" type="submit" class="btn btn-default">Register a new
+                                        account
+                                    </button>
                                 </div>
                             </form>
                         </div>
                     </div>
+                    <h2 id="resultTxt"></h2>
                 </div>
             </div>
         </div>
