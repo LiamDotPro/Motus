@@ -8,6 +8,7 @@ var UUID = require('./UUID.js');
 
 var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
+var Promise = require("bluebird");
 
 var passwordHash = require('password-hash');
 
@@ -282,6 +283,52 @@ var DataStore = function () {
 
         console.log("New User created");
         return "User Created";
+    };
+
+    /**
+     * Verifies a users login credentials.
+     * @param email
+     * @param password
+     * @param socket
+     * @returns {boolean}
+     */
+    this.verifyUser = function (email, password, socket) {
+        if (this.users.has(email.toLowerCase())) {
+            let loginPromise = new Promise((resolve, reject) => {
+                var poolRef = this.pool;
+                poolRef.query('Select * FROM `users` WHERE email="' + email + '"').then((row) => {
+                    if (passwordHash.verify(password, row[0].password)) {
+                        let user = self.getUserByEmail(email);
+                        user.setStatus("online");
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                });
+            });
+
+            loginPromise.then((outcome) => {
+                if (outcome) {
+                    let user = self.getUserByEmail(email);
+                    let accessObj = JSON.parse(user.getAdmin());
+                    console.log(user);
+                    console.log(accessObj);
+                    console.log(email);
+                    socket.emit('successfulLogin', {
+                        access: accessObj.Access
+                    });
+                } else {
+                    socket.emit('incorrectLogin', {});
+                }
+            })
+        } else {
+            return false;
+        }
+
+    };
+
+    this.getUserByEmail = (email) => {
+        return this.users.get(email);
     }
 
 };

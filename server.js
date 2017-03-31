@@ -268,6 +268,10 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on('loginAttempt', (data) => {
+        dataStore.verifyUser(data.email, data.password, socket);
+    });
+
 
 });
 

@@ -8,6 +8,7 @@ var User = function () {
     this.email = '';
     this.admin = {};
     this.canvasData = {};
+    this.status = 'offline';
 
     this.getId = () => {
         return this.id;
@@ -39,6 +40,14 @@ var User = function () {
 
     this.setCanvasData = (newCanvasDataObj) => {
         this.canvasData = newCanvasDataObj;
+    };
+
+    /**
+     * Sets a new status for the user.
+     * @param newStatus
+     */
+    this.setStatus = (newStatus) => {
+        this.status = newStatus;
     }
 };
 

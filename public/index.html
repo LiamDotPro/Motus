@@ -55,7 +55,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav main-links navbar-nav navbar-left">
                         <li><a id="homeBtn" href="/home">Home</a></li>
-                        <li><a id="aboutBtn" href="/about">About</a></li>
+                        <li><a id="trendsBtn" href="/trends">Trends</a></li>
                         <li><a id="missonBtn" href="/mission">Mission Statement</a></li>
                     </ul>
                     <ul class="nav social-links navbar-nav navbar-right">
@@ -231,6 +231,26 @@
         }
     });
 
+    /**
+     * Triggered when a successful login has been processed.
+     */
+    socket.on('successfulLogin', (data) => {
+
+        $('#login-btn').addClass('hidden');
+        $('#login-panel').addClass('hidden');
+        $('#register-user').addClass('hidden');
+        $('#user-dashboard').removeClass('hidden');
+        $('#logout-btn').removeClass('hidden');
+
+        if (data.access) {
+            $('#dashboard-btn').removeClass('hidden');
+        }
+    });
+
+    socket.on('incorrectLogin', () => {
+        console.log("Unsuccessful login attempt.");
+    })
+
     function scrollEvent() {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             thisWebsite.websiteLoadArticles(10);
@@ -294,10 +314,10 @@
 
         });
 
-        $('#aboutBtn').click((e) => {
+        $('#trendsBtn').click((e) => {
             //push state
             var stateObj = {previousLoc: window.location.pathname};
-            history.pushState(stateObj, "about page", "/about");
+            history.pushState(stateObj, "trends page", "/trends");
 
             //Actions to take below
             e.preventDefault();
@@ -356,6 +376,11 @@
         $('#submit-btn').click((e) => {
             e.preventDefault();
             //handle the login process with sockets.
+            console.log("attempting to login");
+            socket.emit('loginAttempt', {
+                email: $('#email-input').val(),
+                password: $('#password-input').val()
+            });
 
         });
 
@@ -421,9 +446,11 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="user-actions text-center">
+                            <div id="user-actions" class="user-actions text-center">
                                 <a id="register-user" class="btn btn-action" href="/register">Register</a>
                                 <a id="login-btn" class="btn btn-action" href="">Sign In</a>
+                                <a id="dashboard-btn" class="btn btn-action hidden" href="">Dashboard</a>
+                                <a id="logout-btn" class="btn btn-action hidden" href="">Logout</a>
                             </div>
                         </div>
                     </div>
