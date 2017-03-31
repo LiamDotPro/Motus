@@ -55,6 +55,9 @@ app.get('/register', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/register.html'));
 });
 
+app.get('/dashboard', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/dashboard.html'));
+});
 
 server.listen(80, function () {
     console.log('Server Started');
@@ -178,8 +181,10 @@ io.on('connection', function (socket) {
     socket.on('updateUserAreaSettings', function (data) {
         console.log('area settings received');
 
+        console.log(data.createdLocation);
+
         //notify datastore to handle updating area settings.
-        dataStore.updateClientAreaSettings(data.id, [data.ip, data.county, data.country]);
+        dataStore.updateClientAreaSettings(data.id, [data.ip, data.county, data.country, data.createdLocation]);
 
     });
 

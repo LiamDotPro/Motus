@@ -12,6 +12,7 @@ var Client = function () {
     this.tabs = 0;
     this.sessions = [];
     this.CanvasData = {};
+    this.startingLoc = '';
 
     this.addSession = function (path) {
         var sessionId = this.sessions.count();
@@ -33,6 +34,7 @@ var Client = function () {
         this.ip = data[0];
         this.county = data[1];
         this.country = data[2];
+        this.startingLoc = data[3];
     };
 
     /**
@@ -134,6 +136,14 @@ var Client = function () {
     this.getCanvasData = function () {
         return this.CanvasData;
     };
+
+    this.setStartLoc = function (newLoc) {
+        this.startingLoc = newLoc;
+    };
+
+    this.getStartingLocation = function () {
+        return this.startingLoc;
+    }
 
 };
 

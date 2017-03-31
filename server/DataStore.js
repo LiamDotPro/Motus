@@ -139,12 +139,12 @@ var DataStore = function () {
      */
     this.updateClientAreaSettings = function (id, data) {
         if (this.clientArr.has(id)) {
-            this.pool.query('UPDATE `exp` SET county="' + data[1] + '" , country="' + data[2] + '" , ip="' + data[0] + '" WHERE uuid="' + id + '"').then(function () {
+            this.pool.query('UPDATE `exp` SET county="' + data[1] + '" , country="' + data[2] + '" , ip="' + data[0] + '", startingLoc="' + data[3] + '"  WHERE uuid="' + id + '"').then(function () {
                 console.log('area settings updated in the database for: ' + id);
             });
 
             var client = this.clientArr.get(id);
-            client.setDefaultClientData([data[0], data[1], data[2]]);
+            client.setDefaultClientData([data[0], data[1], data[2], data[3]]);
             console.log('area settings updated within the datastore for: ' + id);
 
         } else {
@@ -311,10 +311,9 @@ var DataStore = function () {
                 if (outcome) {
                     let user = self.getUserByEmail(email);
                     let accessObj = JSON.parse(user.getAdmin());
-                    console.log(user);
-                    console.log(accessObj);
-                    console.log(email);
+
                     socket.emit('successfulLogin', {
+                        email: email,
                         access: accessObj.Access
                     });
                 } else {

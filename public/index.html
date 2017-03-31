@@ -77,8 +77,12 @@
     var thisClient = new Client(socket);
     var thisWebsite = new Website();
 
+    
+    console.log(document.cookie);
+
     thisClient.checkForCookie();
     thisWebsite.setupArticleCollector(socket);
+
 
 
     //Self executing annoymous function used as a loader.
@@ -245,6 +249,12 @@
         if (data.access) {
             $('#dashboard-btn').removeClass('hidden');
         }
+
+        //adding the users email as a form of identifcation to the cookie.
+        thisClient.addUserDetailsToCookie(data.email);
+
+        console.log(document.cookie);
+
     });
 
     socket.on('incorrectLogin', () => {
@@ -406,6 +416,7 @@
         });
 
 
+
     });
 
 
@@ -449,7 +460,7 @@
                             <div id="user-actions" class="user-actions text-center">
                                 <a id="register-user" class="btn btn-action" href="/register">Register</a>
                                 <a id="login-btn" class="btn btn-action" href="">Sign In</a>
-                                <a id="dashboard-btn" class="btn btn-action hidden" href="">Dashboard</a>
+                                <a id="dashboard-btn" class="btn btn-action hidden" href="/dashboard">Dashboard</a>
                                 <a id="logout-btn" class="btn btn-action hidden" href="">Logout</a>
                             </div>
                         </div>

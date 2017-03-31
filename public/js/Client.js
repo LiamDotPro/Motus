@@ -5,11 +5,16 @@
 function Client(socket) {
 
     this.id = null;
+    this.clientSessionCreatedAt = null;
     this.referrer = document.referrer;
     this.reso = [window.screen.availHeight, window.screen.availWidth];
 
     this.setId = function (id) {
         this.id = id;
+    };
+
+    this.setClientCreatedAt = function (createdAt) {
+        this.clientSessionCreatedAt = createdAt;
     };
 
     /**
@@ -45,7 +50,9 @@ function Client(socket) {
 
             //getting cookie from previous session.
             var id = decipherCookie('id');
+            var createdAt = decipherCookie('createdAt');
             this.setId(id);
+            this.setClientCreatedAt(createdAt);
 
             //emit the ID found in the cookie and also the path we received.
             socket.emit('assignOldUser', {
@@ -58,7 +65,7 @@ function Client(socket) {
      * When registering a new user we take there initial settings and using the ip info api also make note of
      * there outlined geo ip.
      */
-    function updateAreaSettings(id) {
+    function updateAreaSettings(id, createdAt) {
 
         $.get("http://ipinfo.io", function (response) {
             /**
@@ -68,7 +75,8 @@ function Client(socket) {
                 ip: response.ip,
                 county: response.city,
                 country: response.region,
-                id: id
+                id: id,
+                createdLocation: createdAt
             });
 
         }, "jsonp");
@@ -78,12 +86,15 @@ function Client(socket) {
      * Adds a new cookie for the user to track them across the website
      */
     this.addCookie = function (id) {
-        document.cookie = 'id=' + id + ';' + ' createdAt=' + window.location.pathname + ';';
+        document.cookie = 'id=' + id + ';';
+        document.cookie = 'createdAt=' + window.location.pathname + ';';
         this.id = id;
         console.log("new cookie generated for user's session");
 
+        console.log(document.cookie);
+
         // attempt to grab area data about our new user.
-        updateAreaSettings(id);
+        updateAreaSettings(id, window.location.pathname);
 
         //Attempt to collect canvas data
         this.collectCanvasData();
@@ -104,6 +115,9 @@ function Client(socket) {
                 break;
             case 'createdAt':
                 return resultCookieArr[1][1];
+                break;
+            case 'user':
+                return resultCookieArr[2][1];
                 break;
         }
     }
@@ -153,6 +167,14 @@ function Client(socket) {
         var language = navigator.languages && navigator.languages[0] ||
             navigator.language ||
             navigator.userLanguage;
+    };
+
+    /**
+     * When a user is logged in there user details are appended to the cookie.
+     * @param email
+     */
+    this.addUserDetailsToCookie = function (email) {
+        document.cookie = " user=" + email + ";";
     }
 
 }
