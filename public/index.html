@@ -33,6 +33,11 @@
     <script src="/public/js/Article.js"></script>
 </head>
 <body>
+
+<div id="alert-div">
+
+</div>
+
 <header class="header-sticky">
     <nav class="navbar navbar-lg main-navbar" role="navigation" id="top-navigation">
         <div class="container nopad">
@@ -77,12 +82,11 @@
     var thisClient = new Client(socket);
     var thisWebsite = new Website();
 
-    
+
     console.log(document.cookie);
 
     thisClient.checkForCookie();
     thisWebsite.setupArticleCollector(socket);
-
 
 
     //Self executing annoymous function used as a loader.
@@ -104,7 +108,6 @@
 
                 case "/about":
                     loadState('silent');
-
                     break;
 
                 case "/mission":
@@ -175,7 +178,6 @@
     socket.on('loadArticles', function (data) {
 
         console.log(data);
-        console.log(data.articles.length);
 
         var tempArr = [];
 
@@ -191,6 +193,7 @@
             tempArticle.setPublishedAt(data.articles[x].publishedAt);
             tempArticle.setArticleScore(data.articles[x].score);
             tempArticle.setCategory(data.articles[x].category);
+            tempArticle.setWebSafeLink(data.articles[x].webSafeLink);
             tempArr.push(tempArticle);
         }
 
@@ -258,8 +261,13 @@
     });
 
     socket.on('incorrectLogin', () => {
-        console.log("Unsuccessful login attempt.");
-    })
+        var alertDiv = document.getElementById('alert-div');
+        alertDiv.innerHTML = '<div class="alert alert-danger alert-dismissable animated fadeIn loginAlert">' +
+            '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+            '<strong>Incorrect login try again!</strong> Attempt: 0' +
+            '</div>';
+
+    });
 
     function scrollEvent() {
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
@@ -317,6 +325,7 @@
                 $(obj).removeClass('col-md-6');
                 $(obj).addClass('col-md-12');
                 $(obj).removeClass('news-tile-half');
+
             });
 
             currentViewSetting = 'list';
@@ -411,10 +420,17 @@
         $(document).on('click', '.article-link', (e) => {
             e.preventDefault();
 
-            console.log("found article click");
+            var link = $(e.target).parent().attr("href");
+            var article = thisWebsite.getArticleByName(link);
+
+            var articleHub = document.getElementById('article-hub');
+            articleHub.innerHTML = '<div id="aticle-holder"><div class="col-md-12 article-way-back-section"><a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a><a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a></div><div class="col-md-12 nopad"><img src="' + article.getUrlToImage() + '"' + 'class="img-responsive article-full-image"></div><div class="article-page col-md-12 text-center"><div class="article-page-minimal-controls"><a href=""><i class="fa fa-twitter"></i></a><a href=""><i class="fa fa-facebook"></i></a><a href=""><i class="fa fa-google-plus"></i></a><a href=""><i class="fa fa-reddit"></i></a></div><div class="article-page-info"><p>' + article.getAuthor() + ' | ' + article.getSource() + ' | ' + article.getPublishedAt() + ' | ' + article.getCategory() + '</p></div><h1>' + article.getTitle() + '</h1><h2>' + article.getDesc() + '</h2><div class="article-page-link"><a id="articleViewBtn" href="' + article.getUrl() + '"><i class="fa fa-link"></i>View Full Article Here</a></div></div></div>';
+
+            $('#news-hub').addClass('hidden');
+            $('#minimal-Controls').addClass('hidden');
+            $('#article-hub').removeClass('hidden');
 
         });
-
 
 
     });
@@ -510,9 +526,7 @@
 
 
                 <div class="col-xs-9 home-pane-main nopad">
-
                     <style>
-
                         .row-flex, .row-flex > div[class*='col-'] {
                             display: -webkit-box;
                             display: -moz-box;
@@ -548,7 +562,6 @@
                         .news-tile-half .news-tile-image img {
                             transform: translateY(0%);
                         }
-
                     </style>
 
                     <div id="minimal-Controls" class="row hidden">
@@ -648,43 +661,8 @@
 
                     </div>
 
-
                     <div id="article-hub" class="hidden">
-                        <div id="aticle-holder">
-                            <div class="col-md-12 article-way-back-section">
-                                <a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a>
-                                <a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a>
-                            </div>
 
-                            <div class="col-md-12 nopad">
-                                <img src="http://static2.businessinsider.com/image/58d9f43e2dfbdb1c008b47c2-1190-625/a-chinese-conglomerate-is-in-talks-to-buy-a-controlling-stake-in-forbes.jpg"
-                                     class="img-responsive">
-                            </div>
-                            <div class="article-page col-md-12 text-center">
-
-
-                                <div class="article-page-minimal-controls">
-                                    <a href=""><i class="fa fa-twitter"></i></a>
-                                    <a href=""><i class="fa fa-facebook"></i></a>
-                                    <a href=""><i class="fa fa-google-plus"></i></a>
-                                    <a href=""><i class="fa fa-reddit"></i></a>
-                                </div>
-
-
-                                <div class="article-page-info">
-                                    <p>Author | Publisher | Publishing Time | Category</p>
-                                </div>
-
-                                <div class="article-page-link">
-                                    <a id="articleViewBtn" href=""><i class="fa fa-link"></i>View Full Article Here</a>
-                                </div>
-
-                                <h1>Article Header goes somewhere here</h1>
-                                <h2>Description text goes here</h2>
-
-
-                            </div>
-                        </div>
                     </div>
 
                     <div class="hidden" id="loading-div">
@@ -729,5 +707,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <!-- momentjs-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+<!--antimate.css-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css"></script>
+
 </body>
 </html>

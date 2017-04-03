@@ -1,15 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Motus is a news sharing website that personalises itself to the user not the audience.">
+    <meta property="og:description"
+          content="Motus is a news sharing website that personalises itself to the user not the audience."/>
+    <meta property="og:image" content="preview.jpg"/>
+    <meta name="author" content="Liam Read">
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <!-- Custom Meta title tags -->
+    <meta property="og:title" content="Motus - Very Personal News"/>
     <title>Dashboard | Motus</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="/public/css/style.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="http://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="http://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
+    <script src="/public/js/Client.js"></script>
 </head>
 <body>
 
 <script>
-    console.log(document.cookie);
+
+    var socket = io();
+
+    //Setting up website for viewing.
+    var thisClient = new Client(socket);
+
+    var loggedInUser = null;
+
+    if (thisClient.decipherCookie('user') !== 'undefined') {
+        console.log("user was found");
+    } else {
+        //user does not have the correct token, redirect to the homepage.
+
+    }
 
 </script>
+<!--- /PAGE WRAPPER  --->
 
+<!-- Custom Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+<!-- Bootstrap -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- Animate.css -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" type="text/css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- momentjs-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+</body>
 </body>
 </html>

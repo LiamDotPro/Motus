@@ -99,7 +99,6 @@ function Article() {
         this.websafelink = newLink;
     };
 
-
     this.getWebSafeLink = function () {
         return this.websafelink;
     };

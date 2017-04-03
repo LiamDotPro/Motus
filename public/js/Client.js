@@ -49,8 +49,8 @@ function Client(socket) {
             console.log("Cookie from previous session found");
 
             //getting cookie from previous session.
-            var id = decipherCookie('id');
-            var createdAt = decipherCookie('createdAt');
+            var id = this.decipherCookie('id');
+            var createdAt = this.decipherCookie('createdAt');
             this.setId(id);
             this.setClientCreatedAt(createdAt);
 
@@ -104,7 +104,7 @@ function Client(socket) {
      * Deciphers a cookie string into a use able javascript array.
      * @param ref the cookies ref we are looking to extract.
      */
-    function decipherCookie(ref) {
+    this.decipherCookie = function (ref) {
         const decodedCookie = decodeURIComponent(document.cookie);
         const cookieArr = decodedCookie.split(';');
         const resultCookieArr = chunkArrOfPieces(cookieArr);
@@ -120,7 +120,7 @@ function Client(socket) {
                 return resultCookieArr[2][1];
                 break;
         }
-    }
+    };
 
     /**
      * Helper function that takes an array splits the values by = and then returns a multi dimensional array with

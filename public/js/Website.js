@@ -204,7 +204,12 @@ function Website() {
     };
 
     this.getArticleByName = (str) => {
-
+        for (var x = 0; x < this.articleList.length; x++) {
+            if (this.articleList[x].getWebSafeLink() === str) {
+                return this.articleList[x];
+            }
+        }
+        return false;
     }
 
 }
