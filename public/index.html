@@ -190,11 +190,15 @@
             tempArticle.setDesc(data.articles[x].desc);
             tempArticle.setUrl(data.articles[x].url);
             tempArticle.setUrlToImage(data.articles[x].urlToImage);
-            tempArticle.setPublishedAt(data.articles[x].publishedAt);
+            tempArticle.setPublishedAt(formatDate(data.articles[x].publishedAt));
             tempArticle.setArticleScore(data.articles[x].score);
             tempArticle.setCategory(data.articles[x].category);
             tempArticle.setWebSafeLink(data.articles[x].webSafeLink);
             tempArr.push(tempArticle);
+        }
+
+        function formatDate(str) {
+            return moment(str).format("Do MMMM YYYY, h:mm:ss a");
         }
 
         thisWebsite.setArticleList(tempArr);
@@ -227,7 +231,7 @@
                 tempArticle.setDesc(articles[x].desc);
                 tempArticle.setUrl(articles[x].url);
                 tempArticle.setUrlToImage(articles[x].urlToImage);
-                tempArticle.setPublishedAt(articles[x].publishedAt);
+                tempArticle.setPublishedAt(formatDate(articles[x].publishedAt));
                 tempArticle.setArticleScore(articles[x].articleScore);
                 tempArticle.setCategory(articles[x].category);
                 tempArticle.setWebSafeLink(articles[x].websafelink);
@@ -235,6 +239,10 @@
             }
             thisWebsite.sortUnloadedArticlesById();
             thisWebsite.configureNewsLabel();
+        }
+
+        function formatDate(str) {
+            return moment(str).format("Do MMMM YYYY, h:mm:ss a");
         }
     });
 
@@ -424,7 +432,7 @@
             var article = thisWebsite.getArticleByName(link);
 
             var articleHub = document.getElementById('article-hub');
-            articleHub.innerHTML = '<div id="aticle-holder"><div class="col-md-12 article-way-back-section"><a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a><a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a></div><div class="col-md-12 nopad"><img src="' + article.getUrlToImage() + '"' + 'class="img-responsive article-full-image"></div><div class="article-page col-md-12 text-center"><div class="article-page-minimal-controls"><a href=""><i class="fa fa-twitter"></i></a><a href=""><i class="fa fa-facebook"></i></a><a href=""><i class="fa fa-google-plus"></i></a><a href=""><i class="fa fa-reddit"></i></a></div><div class="article-page-info"><p>' + article.getAuthor() + ' | ' + article.getSource() + ' | ' + article.getPublishedAt() + ' | ' + article.getCategory() + '</p></div><h1>' + article.getTitle() + '</h1><h2>' + article.getDesc() + '</h2><div class="article-page-link"><a id="articleViewBtn" href="' + article.getUrl() + '"><i class="fa fa-link"></i>View Full Article Here</a></div></div></div>';
+            articleHub.innerHTML = '<div id="aticle-holder"><div class="col-md-12 article-way-back-section"><a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a><a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a></div><div class="col-md-12 nopad"><img src="' + article.getUrlToImage() + '"' + 'class="img-responsive article-full-image"></div><div class="article-page col-md-12 text-center"><div class="article-page-minimal-controls"><a href=""><i class="fa fa-twitter"></i></a><a href=""><i class="fa fa-facebook"></i></a><a href=""><i class="fa fa-google-plus"></i></a><a href=""><i class="fa fa-reddit"></i></a></div><div class="article-page-info"><p>' + article.getAuthor() + ' | ' + article.getSource() + ' | ' + article.getPublishedAt() + ' | ' + article.getCategory() + '</p></div><h1>' + article.getTitle() + '</h1><h2>' + article.getDesc() + '</h2><div class="article-page-link"><a id="articleViewBtn" href="' + article.getUrl() + '" target="_blank"><i class="fa fa-link"></i>View Full Article Here</a></div></div></div>';
 
             $('#news-hub').addClass('hidden');
             $('#minimal-Controls').addClass('hidden');
