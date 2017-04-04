@@ -106,12 +106,17 @@
                     readyHomePage();
                     break;
 
-                case "/about":
+                case "/trends":
                     loadState('silent');
                     break;
 
                 case "/mission":
                     loadState('silent');
+                    break;
+
+                default:
+                    loadState('load');
+                    readyHomePage();
                     break;
             }
         } else {
@@ -294,6 +299,8 @@
      * Every users starts as a list view.
      */
     var currentViewSetting = 'list';
+    var scrollTop = 0;
+
 
     /**
      * Handles setting event triggers onto the minimal control features.
@@ -320,6 +327,30 @@
 
         });
 
+        $(document).on('click', '#backToArticlesBtn', function (e) {
+            //push state
+            var stateObj = {previousLoc: window.location.pathname};
+            history.pushState(stateObj, "home page", "/home");
+
+            //Actions to take below
+            e.preventDefault();
+            $('#minimal-Controls').removeClass('hidden');
+            $('#news-hub').removeClass('hidden');
+            $('#article-hub').addClass('hidden');
+
+            $(window).scrollTop(scrollTop);
+
+            if (thisWebsite.getScrolling() === false) {
+                //no scrolling currently attached.
+                window.addEventListener('scroll', scrollEvent);
+            }
+
+            if (thisWebsite.loadedArticleIds.length === 0) {
+                thisWebsite.websiteLoadArticles(10);
+            }
+        })
+
+
         $('#list-btn').click(function (e) {
             if (!currentViewSetting === 'list') {
                 return;
@@ -342,6 +373,7 @@
         });
 
         $('#trendsBtn').click((e) => {
+            scrollTop = $(window).scrollTop();
             //push state
             var stateObj = {previousLoc: window.location.pathname};
             history.pushState(stateObj, "trends page", "/trends");
@@ -352,6 +384,7 @@
 
             $('#minimal-Controls').addClass('hidden');
             $('#news-hub').addClass('hidden');
+            $('#article-hub').addClass('hidden');
 
             if (thisWebsite.getScrolling() === true) {
                 //no scrolling currently attached.
@@ -369,6 +402,7 @@
             e.preventDefault();
             $('#minimal-Controls').removeClass('hidden');
             $('#news-hub').removeClass('hidden');
+            $('#article-hub').addClass('hidden');
 
             if (thisWebsite.getScrolling() === false) {
                 //no scrolling currently attached.
@@ -378,6 +412,9 @@
             if (thisWebsite.loadedArticleIds.length === 0) {
                 thisWebsite.websiteLoadArticles(10);
             }
+
+            thisWebsite.setScrolling(true);
+
 
         });
 
@@ -425,14 +462,35 @@
             }
         });
 
+        //programtic handling of click event on articles
         $(document).on('click', '.article-link', (e) => {
+
+            //grab scroll bar height first
+            scrollTop = $(window).scrollTop();
+
             e.preventDefault();
 
             var link = $(e.target).parent().attr("href");
             var article = thisWebsite.getArticleByName(link);
 
+            if (article === false) {
+                console.log(thisWebsite.getArticleList());
+            }
+
+            //set history state object
+            var stateObj = {previousLoc: window.location.pathname};
+            history.pushState(stateObj, "trends page", "/article/" + link);
+
+            //remove scrolling
+            if (thisWebsite.getScrolling() === true) {
+                //no scrolling currently attached.
+                window.removeEventListener('scroll', scrollEvent);
+            }
+            thisWebsite.setScrolling(false);
+
+            //build article stub
             var articleHub = document.getElementById('article-hub');
-            articleHub.innerHTML = '<div id="aticle-holder"><div class="col-md-12 article-way-back-section"><a id="backToArticlesBtn" href=""><i class="fa fa-arrow-left"></i> Back to Articles</a><a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a></div><div class="col-md-12 nopad"><img src="' + article.getUrlToImage() + '"' + 'class="img-responsive article-full-image"></div><div class="article-page col-md-12 text-center"><div class="article-page-minimal-controls"><a href=""><i class="fa fa-twitter"></i></a><a href=""><i class="fa fa-facebook"></i></a><a href=""><i class="fa fa-google-plus"></i></a><a href=""><i class="fa fa-reddit"></i></a></div><div class="article-page-info"><p>' + article.getAuthor() + ' | ' + article.getSource() + ' | ' + article.getPublishedAt() + ' | ' + article.getCategory() + '</p></div><h1>' + article.getTitle() + '</h1><h2>' + article.getDesc() + '</h2><div class="article-page-link"><a id="articleViewBtn" href="' + article.getUrl() + '" target="_blank"><i class="fa fa-link"></i>View Full Article Here</a></div></div></div>';
+            articleHub.innerHTML = '<div id="aticle-holder"><div class="col-md-12 article-way-back-section"><a id="backToArticlesBtn" href="/home"><i class="fa fa-arrow-left"></i> Back to Articles</a><a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a></div><div class="col-md-12 nopad"><img src="' + article.getUrlToImage() + '"' + 'class="img-responsive article-full-image"></div><div class="article-page col-md-12 text-center"><div class="article-page-minimal-controls"><a href=""><i class="fa fa-twitter"></i></a><a href=""><i class="fa fa-facebook"></i></a><a href=""><i class="fa fa-google-plus"></i></a><a href=""><i class="fa fa-reddit"></i></a></div><div class="article-page-info"><p>' + article.getAuthor() + ' | ' + article.getSource() + ' | ' + article.getPublishedAt() + ' | ' + article.getCategory() + '</p></div><h1>' + article.getTitle() + '</h1><h2>' + article.getDesc() + '</h2><div class="article-page-link"><a id="articleViewBtn" href="' + article.getUrl() + '" target="_blank"><i class="fa fa-link"></i>View Full Article Here</a></div></div></div>';
 
             $('#news-hub').addClass('hidden');
             $('#minimal-Controls').addClass('hidden');

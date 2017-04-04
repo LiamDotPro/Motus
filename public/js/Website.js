@@ -62,19 +62,20 @@ function Website() {
         //Hide the loading div once articles are loaded into the DOM.
         $('#loading-div').addClass("hidden");
 
-        function createNavSafeLink(str) {
-            var tempStr = str.toLowerCase();
-
-            //remove unsafe apostrophes
-            tempStr = tempStr.replace(/'/g, "");
-            tempStr = tempStr.replace(/"/g, "");
-
-            //remove spacing and return web safe link.
-            return tempStr.replace(/ /g, "-");
-
-        }
 
     };
+
+    function createNavSafeLink(str) {
+        var tempStr = str.toLowerCase();
+
+        //remove unsafe apostrophes
+        tempStr = tempStr.replace(/'/g, "");
+        tempStr = tempStr.replace(/"/g, "");
+
+        //remove spacing and return web safe link.
+        return tempStr.replace(/ /g, "-");
+
+    }
 
     /**
      * Checks to see if an image string is null, if true returns the default image.
@@ -96,8 +97,6 @@ function Website() {
 
     this.setupArticleCollector = function (socket) {
         setInterval(function () {
-
-            console.log("unloaded length: " + self.getUnloadedArticles().length);
 
             var currentId;
 
@@ -164,9 +163,9 @@ function Website() {
         if (this.unloadedArticles.length > 0) {
             for (var x in this.unloadedArticles) {
                 if (this.currentViewType === 'tile') {
-                    newsHub.innerHTML = ' <div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
+                    newsHub.innerHTML = ' <div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.unloadedArticles[x].getTitle()) + '"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
                 } else {
-                    newsHub.innerHTML = '<div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap" href="#"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
+                    newsHub.innerHTML = '<div id="article' + this.unloadedArticles[x].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.unloadedArticles[x].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.unloadedArticles[x].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.unloadedArticles[x].getTitle()) + '"> <span class="news-time-date">' + this.unloadedArticles[x].getSource() + ' | ' + this.unloadedArticles[x].getPublishedAt() + ' | ' + this.unloadedArticles[x].getCategory() + ' </span> <h2>' + this.unloadedArticles[x].getTitle() + '</h2> </a> </div> </div> </div> </div>' + newsHub.innerHTML;
                 }
 
                 this.articleList.push(this.unloadedArticles[x]);
