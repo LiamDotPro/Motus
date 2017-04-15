@@ -60,7 +60,7 @@ app.get('/dashboard', function (req, res) {
 });
 
 app.all('*', function (req, res) {
-   res.redirect("/");
+    res.redirect("/");
 });
 
 server.listen(80, function () {
@@ -134,6 +134,8 @@ io.on('connection', function (socket) {
                     type: data.type
                 });
             }
+
+
         }
     });
 
@@ -214,6 +216,15 @@ io.on('connection', function (socket) {
             console.log("err");
         }
 
+        socket.emit('pinnedArticleList', {
+            arrOfPinnedArticles: context.getPinnedArticles()
+        })
+
+
+    });
+
+    socket.on('addNewPinnedArticle', (data) => {
+
     });
 
     socket.on('clientCanvasData', function (data) {
@@ -223,7 +234,6 @@ io.on('connection', function (socket) {
 
     socket.on('checkForNewArticles', function (data) {
         var latestID = data.latestId;
-        console.log("Incoming request for new articles: " + latestID);
 
         var articleMap = dataStore.getArticleBank().getAllArticles();
 
@@ -249,7 +259,6 @@ io.on('connection', function (socket) {
                 arrOfNewArticles: resultArr
             });
         }
-
 
     });
 
@@ -279,6 +288,14 @@ io.on('connection', function (socket) {
 
     socket.on('loginAttempt', (data) => {
         dataStore.verifyUser(data.email, data.password, socket);
+    });
+
+    socket.on('newPinnedArticle', (data) => {
+
+        //context is the actual client class we are operating on.
+        var context = dataStore.getClient(connectedClient);
+
+
     });
 
 

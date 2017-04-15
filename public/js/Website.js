@@ -40,11 +40,11 @@ function Website() {
             if (this.articleList.length != i) {
                 if (this.currentViewType === 'tile') {
                     this.loadedArticleIds.push(this.articleList[i].getId());
-                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.articleList[i].getTitle()) + '"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i id="' + this.articleList[i].getId() + '" class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.articleList[i].getTitle()) + '"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
                     i++;
                 } else {
                     this.loadedArticleIds.push(this.articleList[i].getId());
-                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a  href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.articleList[i].getTitle()) + '"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
+                    newsHub.innerHTML = newsHub.innerHTML + ' <div id="article' + this.articleList[i].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a  href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.articleList[i].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i id="' + this.articleList[i].getId() + '" class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.articleList[i].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.articleList[i].getTitle()) + '"> <span class="news-time-date">' + this.articleList[i].getSource() + ' | ' + this.articleList[i].getPublishedAt() + ' | ' + this.articleList[i].getCategory() + ' </span> <h2>' + this.articleList[i].getTitle() + '</h2> </a> </div> </div> </div> </div>';
                     i++;
                 }
             }
@@ -209,6 +209,17 @@ function Website() {
             }
         }
         return false;
-    }
+    };
+
+    this.getArticleById = (id) => {
+        console.log(id);
+        for (var x = 0; x < this.articleList.length; x++) {
+            if (this.articleList[x].getId() == id) {
+                return this.articleList[x];
+            }
+        }
+
+        return false;
+    };
 
 }

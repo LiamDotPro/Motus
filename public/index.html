@@ -82,6 +82,8 @@
     var thisClient = new Client(socket);
     var thisWebsite = new Website();
 
+    //    thisClient.deleteCookie('id');
+    //    thisClient.deleteCookie('createdAt');
 
     console.log(document.cookie);
 
@@ -288,6 +290,12 @@
         }
     }
 
+    socket.on('pinnedArticleList', (data) => {
+        for (var x = 0; x < data.arrOfPinnedArticles.length; x++) {
+            console.log(data.arrOfPinnedArticles[x]);
+        }
+    });
+
     /**
      * Handles all of the Javascript involved with changing and interacting with UI logic.
      * All of the event driven button logic is contained here and makes for a catalogue of
@@ -340,15 +348,18 @@
 
             $(window).scrollTop(scrollTop);
 
+            console.log(thisWebsite.getScrolling());
+
             if (thisWebsite.getScrolling() === false) {
                 //no scrolling currently attached.
                 window.addEventListener('scroll', scrollEvent);
+                thisWebsite.setScrolling(true);
             }
 
             if (thisWebsite.loadedArticleIds.length === 0) {
                 thisWebsite.websiteLoadArticles(10);
             }
-        })
+        });
 
 
         $('#list-btn').click(function (e) {
@@ -468,6 +479,10 @@
             //grab scroll bar height first
             scrollTop = $(window).scrollTop();
 
+            $(window).scrollTop(0);
+
+            console.log(thisWebsite.getScrolling());
+
             e.preventDefault();
 
             var link = $(e.target).parent().attr("href");
@@ -486,6 +501,7 @@
                 //no scrolling currently attached.
                 window.removeEventListener('scroll', scrollEvent);
             }
+
             thisWebsite.setScrolling(false);
 
             //build article stub
@@ -498,6 +514,19 @@
 
         });
 
+        //handles pinning of articles to the list of pinned articles
+        $(document).on('click', '.pushpin', (e) => {
+            e.preventDefault();
+
+            var article = thisWebsite.getArticleById(e.target.id);
+
+            console.log(article);
+//            socket.emit('addNewPinnedArticle', {
+//                article: article
+//            });
+
+
+        });
 
     });
 

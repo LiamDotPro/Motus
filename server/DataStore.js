@@ -46,6 +46,7 @@ var DataStore = function () {
                 clientObj.setIp(rows[i].ip);
                 clientObj.setCountry(rows[i].country);
                 clientObj.setCounty(rows[i].county);
+                clientObj.setPinnedArticles(rows[i].pinnedArticles);
                 self.addClient(rows[i].uuid, clientObj);
             }
         }).then(function () {
@@ -98,7 +99,6 @@ var DataStore = function () {
      */
     this.addClient = function (id, client) {
         this.clientArr.set(id, client);
-        //console.log(this.getClientList());
     };
 
     /**
@@ -122,12 +122,13 @@ var DataStore = function () {
         //add the newly created client to the datastore.
         this.clientArr.set(uniqueId, clientInstance);
 
+        let emptyArr = [];
+
+        var pinnedArticles = JSON.stringify(emptyArr);
+
         var resStr = res[1] + "x" + res[0];
 
-        this.pool.query('INSERT INTO `exp` (uuid, ref, screenRes) VALUES ("' + uniqueId + '", "' + ref + '", "' + resStr + '")');
-
-        ///client list call.
-        //console.log(this.getClientList());
+        this.pool.query('INSERT INTO `exp` (uuid, ref, screenRes, pinnedArticles) VALUES ("' + uniqueId + '", "' + ref + '", "' + resStr + '","' + pinnedArticles + '")');
 
         return uniqueId;
     };
