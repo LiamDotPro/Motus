@@ -84,7 +84,6 @@
 
     //    thisClient.deleteCookie('id');
     //    thisClient.deleteCookie('createdAt');
-
     console.log(document.cookie);
 
     thisClient.checkForCookie();
@@ -270,7 +269,8 @@
 
         //adding the users email as a form of identifcation to the cookie.
         thisClient.addUserDetailsToCookie(data.email);
-
+        thisClient.setUser(data.user);
+        console.log(thisClient.getUser());
         console.log(document.cookie);
 
     });
@@ -294,6 +294,11 @@
         for (var x = 0; x < data.arrOfPinnedArticles.length; x++) {
             console.log(data.arrOfPinnedArticles[x]);
         }
+    });
+
+    socket.on('recUserObj', (data) => {
+        thisClient.setUser(data.obj);
+        console.log(thisClient.getUser());
     });
 
     /**
@@ -525,6 +530,18 @@
 //                article: article
 //            });
 
+
+        });
+
+        $(document).on('click', '#logout-btn', (e) => {
+            e.preventDefault();
+            //remove user privs
+            thisClient.deleteCookie('user');
+
+            $('#logout-btn').addClass('hidden');
+            $('#logout-btn').val("Sign In");
+            $('#login-btn').removeClass('hidden');
+            $('#register-user').removeClass('hidden');
 
         });
 

@@ -4,10 +4,20 @@
 
 function Client(socket) {
 
+    var self = this;
     this.id = null;
     this.clientSessionCreatedAt = null;
     this.referrer = document.referrer;
     this.reso = [window.screen.availHeight, window.screen.availWidth];
+    this.user = null;
+
+    this.setUser = (userObj) => {
+        this.user = userObj;
+    };
+
+    this.getUser = () => {
+        return this.user;
+    };
 
     this.setId = function (id) {
         this.id = id;
@@ -48,16 +58,41 @@ function Client(socket) {
         } else {
             console.log("Cookie from previous session found");
 
-            //getting cookie from previous session.
-            var id = this.decipherCookie('id');
-            var createdAt = this.decipherCookie('createdAt');
-            this.setId(id);
-            this.setClientCreatedAt(createdAt);
+            if (this.decipherCookie('user') !== false) {
+                //reassign logged in user
+                console.log("logged in user found");
 
-            //emit the ID found in the cookie and also the path we received.
-            socket.emit('assignOldUser', {
-                id: this.id
-            });
+                console.log(this.decipherCookie('user'));
+
+                //request user obj
+                socket.emit('getUserObject', {
+                    user: this.decipherCookie('user')
+                });
+
+                //assign normal settings for client instance.
+                //getting cookie from previous session.
+                var id = self.decipherCookie('id');
+                var createdAt = self.decipherCookie('createdAt');
+                this.setId(id);
+                this.setClientCreatedAt(createdAt);
+
+                //emit the ID found in the cookie and also the path we received.
+                socket.emit('assignOldUser', {
+                    id: this.id
+                });
+            } else {
+
+                //getting cookie from previous session.
+                var id = self.decipherCookie('id');
+                var createdAt = self.decipherCookie('createdAt');
+                this.setId(id);
+                this.setClientCreatedAt(createdAt);
+
+                //emit the ID found in the cookie and also the path we received.
+                socket.emit('assignOldUser', {
+                    id: this.id
+                });
+            }
         }
     };
 
@@ -117,7 +152,11 @@ function Client(socket) {
                 return resultCookieArr[1][1];
                 break;
             case 'user':
-                return resultCookieArr[2][1];
+                if (cookieArr.length > 2) {
+                    return resultCookieArr[2][1];
+                } else {
+                    return false;
+                }
                 break;
         }
     };

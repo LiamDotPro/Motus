@@ -216,13 +216,19 @@ io.on('connection', function (socket) {
             console.log("err");
         }
 
-        socket.emit('pinnedArticleList', {
-            arrOfPinnedArticles: context.getPinnedArticles()
-        })
-
-
     });
 
+    socket.on('getUserObject', (data) => {
+        let user = dataStore.getUserByEmail(data.user);
+
+        socket.emit('recUserObj', {
+            obj: user
+        });
+    });
+
+    /**
+     * Pushes a new instance of pinned article to the user.
+     */
     socket.on('addNewPinnedArticle', (data) => {
 
     });

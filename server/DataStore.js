@@ -46,7 +46,6 @@ var DataStore = function () {
                 clientObj.setIp(rows[i].ip);
                 clientObj.setCountry(rows[i].country);
                 clientObj.setCounty(rows[i].county);
-                clientObj.setPinnedArticles(rows[i].pinnedArticles);
                 self.addClient(rows[i].uuid, clientObj);
             }
         }).then(function () {
@@ -122,13 +121,9 @@ var DataStore = function () {
         //add the newly created client to the datastore.
         this.clientArr.set(uniqueId, clientInstance);
 
-        let emptyArr = [];
-
-        var pinnedArticles = JSON.stringify(emptyArr);
-
         var resStr = res[1] + "x" + res[0];
 
-        this.pool.query('INSERT INTO `exp` (uuid, ref, screenRes, pinnedArticles) VALUES ("' + uniqueId + '", "' + ref + '", "' + resStr + '","' + pinnedArticles + '")');
+        this.pool.query('INSERT INTO `exp` (uuid, ref, screenRes) VALUES ("' + uniqueId + '", "' + ref + '", "' + resStr + '")');
 
         return uniqueId;
     };
@@ -226,6 +221,7 @@ var DataStore = function () {
                 tempUser.setEmail(rows[i].email);
                 tempUser.setCanvasData(rows[i].canvasData);
                 tempUser.setAdmin(rows[i].admin);
+                tempUser.setPinnedArticles(rows[i].pinnedArticles);
                 self.addUser(rows[i].email, tempUser);
             }
         }).then(function () {
@@ -271,8 +267,11 @@ var DataStore = function () {
         var hashedPassword = passwordHash.generate(password);
         var poolRef = this.pool;
 
+        let emptyArr = [];
 
-        poolRef.query('INSERT INTO `users` (email, password, admin, canvasHash) VALUES (?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas]);
+        var pinnedArticles = JSON.stringify(emptyArr);
+
+        poolRef.query('INSERT INTO `users` (email, password, admin, canvasHash, pinnedArticles) VALUES (?,?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas, pinnedArticles]);
 
         var tempUser = new User();
 
@@ -315,7 +314,8 @@ var DataStore = function () {
 
                     socket.emit('successfulLogin', {
                         email: email,
-                        access: accessObj.Access
+                        access: accessObj.Access,
+                        user: user
                     });
                 } else {
                     socket.emit('incorrectLogin', {});

@@ -13,19 +13,6 @@ var Client = function () {
     this.sessions = [];
     this.CanvasData = {};
     this.startingLoc = '';
-    this.pinnedArticles = [];
-
-    this.getPinnedArticles = () => {
-        return this.pinnedArticles;
-    };
-
-    this.setPinnedArticles = (articleJSON) => {
-        this.pinnedArticles = JSON.parse(articleJSON);
-    };
-
-    this.addPinnedArticle = (articleID) => {
-        this.pinnedArticles.push(articleID);
-    };
 
     this.addSession = function (path) {
         var sessionId = this.sessions.count();

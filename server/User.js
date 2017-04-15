@@ -8,7 +8,19 @@ var User = function () {
     this.email = '';
     this.admin = {};
     this.canvasData = {};
-    this.status = 'offline';
+    this.pinnedArticles = [];
+
+    this.getPinnedArticles = () => {
+        return this.pinnedArticles;
+    };
+
+    this.setPinnedArticles = (articleJSON) => {
+        this.pinnedArticles = JSON.parse(articleJSON);
+    };
+
+    this.addPinnedArticle = (articleID) => {
+        this.pinnedArticles.push(articleID);
+    };
 
     this.getId = () => {
         return this.id;
