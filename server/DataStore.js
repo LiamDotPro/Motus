@@ -220,7 +220,8 @@ var DataStore = function () {
                 tempUser.setId(rows[i].id);
                 tempUser.setEmail(rows[i].email);
                 tempUser.setCanvasData(rows[i].canvasData);
-                tempUser.setAdmin(rows[i].admin);
+                var admin = JSON.parse(rows[i].admin);
+                tempUser.setAdmin(admin.Access);
                 tempUser.setPinnedArticles(rows[i].pinnedArticles);
                 self.addUser(rows[i].email, tempUser);
             }
@@ -230,6 +231,8 @@ var DataStore = function () {
             console.log(e);
         });
     };
+
+
 
     /**
      * Attempts to register a new account for a user.

@@ -263,7 +263,7 @@
         $('#user-dashboard').removeClass('hidden');
         $('#logout-btn').removeClass('hidden');
 
-        if (data.access) {
+        if (data.user.admin) {
             $('#dashboard-btn').removeClass('hidden');
         }
 
@@ -290,15 +290,16 @@
         }
     }
 
-    socket.on('pinnedArticleList', (data) => {
-        for (var x = 0; x < data.arrOfPinnedArticles.length; x++) {
-            console.log(data.arrOfPinnedArticles[x]);
-        }
-    });
-
+    /**
+     * Recieves the user object from the server and appends it to the client.
+     */
     socket.on('recUserObj', (data) => {
         thisClient.setUser(data.obj);
-        console.log(thisClient.getUser());
+
+        if(thisClient.getUser().admin === true){
+            $('#dashboard-btn').removeClass('hidden');
+        }
+
     });
 
     /**
@@ -353,7 +354,6 @@
 
             $(window).scrollTop(scrollTop);
 
-            console.log(thisWebsite.getScrolling());
 
             if (thisWebsite.getScrolling() === false) {
                 //no scrolling currently attached.
@@ -486,8 +486,6 @@
 
             $(window).scrollTop(0);
 
-            console.log(thisWebsite.getScrolling());
-
             e.preventDefault();
 
             var link = $(e.target).parent().attr("href");
@@ -535,13 +533,17 @@
 
         $(document).on('click', '#logout-btn', (e) => {
             e.preventDefault();
+
             //remove user privs
             thisClient.deleteCookie('user');
 
+            loginState = 'dashboard';
+
             $('#logout-btn').addClass('hidden');
-            $('#logout-btn').val("Sign In");
+            $('#login-btn').text("Sign In");
             $('#login-btn').removeClass('hidden');
             $('#register-user').removeClass('hidden');
+            $('#dashboard-btn').addClass('hidden');
 
         });
 

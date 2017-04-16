@@ -61,8 +61,16 @@ function Client(socket) {
             if (this.decipherCookie('user') !== false) {
                 //reassign logged in user
                 console.log("logged in user found");
-
                 console.log(this.decipherCookie('user'));
+
+                $(document).ready(() => {
+                    $('#login-btn').addClass('hidden');
+                    $('#login-panel').addClass('hidden');
+                    $('#register-user').addClass('hidden');
+                    $('#user-dashboard').removeClass('hidden');
+                    $('#logout-btn').removeClass('hidden');
+                });
+
 
                 //request user obj
                 socket.emit('getUserObject', {
