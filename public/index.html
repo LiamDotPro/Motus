@@ -296,7 +296,7 @@
     socket.on('recUserObj', (data) => {
         thisClient.setUser(data.obj);
 
-        if(thisClient.getUser().admin === true){
+        if (thisClient.getUser().admin === true) {
             $('#dashboard-btn').removeClass('hidden');
         }
 
@@ -596,18 +596,41 @@
                         </div>
                     </div>
 
+                    <style>
+
+                        #notLoggedInList{
+                            padding-top: 50px;
+                        }
+
+                        #notLoggedInList i {
+                            font-size: 28px;
+                            color: #ef242d;
+                        }
+
+                        #notLoggedInList h2{
+                            margin-top: 0;
+                            font-size: 20px;
+                        }
+                    </style>
+
                     <div class="col-md-12 user-reading-col">
                         <div class="user-tile">
                             <div class="text-center">
                                 <h3>Your Pinned Articles</h3>
                             </div>
                             <div class="pinned-articles">
-                                <ul>
-                                    <li>
-                                        <a href="">Hello World</a>
-                                        <p> - A short introduction to life</p>
-                                    </li>
-                                </ul>
+                                <div class="hidden">
+                                    <ul>
+                                        <li>
+                                            <a href="">Hello World</a>
+                                            <p> - A short introduction to life</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div id="notLoggedInList" class="text-center">
+                                    <i class="fa fa-thumb-tack"></i>
+                                    <h2>Login or register to start collecting articles</h2>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -815,8 +838,6 @@
 <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 <!-- Bootstrap -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
-<!-- Animate.css -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" type="text/css" rel="stylesheet">
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <!-- momentjs-->

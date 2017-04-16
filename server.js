@@ -296,14 +296,6 @@ io.on('connection', function (socket) {
         dataStore.verifyUser(data.email, data.password, socket);
     });
 
-    socket.on('newPinnedArticle', (data) => {
-
-        //context is the actual client class we are operating on.
-        var context = dataStore.getClient(connectedClient);
-
-
-    });
-
 
 });
 
