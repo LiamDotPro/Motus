@@ -27,6 +27,25 @@ function Client(socket) {
         this.clientSessionCreatedAt = createdAt;
     };
 
+    this.addPinnedArticleToUser = (articleToAdd) => {
+        this.user.pinnedArticles.push(articleToAdd);
+    };
+
+    this.getPinnedArticlesArr = () => {
+        return this.user.pinnedArticles;
+    };
+
+    this.checkPinnedStatus = (articleId) => {
+
+        let output = this.user.pinnedArticles.filter((e) => {
+            return e.getId() == articleId;
+        });
+
+        return output <= 0;
+
+
+    };
+
     /**
      * Returns a referral address if one exists otherwise nothing is passed.
      */

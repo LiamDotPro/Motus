@@ -143,11 +143,16 @@ function Website() {
             //configure label to show how many items we have to load.
             $('#news-notification-label').removeClass('hidden');
             $('#news-notification-label').text(this.unloadedArticles.length);
+
+            document.title = "(" + this.unloadedArticles.length + ")" + " Motus";
+
             $('#refresh-btn').css("color", "#000");
         } else {
             //no new articles to be pushed.
             $('#news-notification-label').addClass('hidden');
             $('#refresh-btn').css("color", "#dcdcdc");
+
+            document.title = "Motus";
         }
     };
 
@@ -212,14 +217,26 @@ function Website() {
     };
 
     this.getArticleById = (id) => {
-        console.log(id);
+
         for (var x = 0; x < this.articleList.length; x++) {
             if (this.articleList[x].getId() == id) {
                 return this.articleList[x];
             }
         }
 
+        console.log(this.articleList);
+
         return false;
+    };
+
+    this.updatePinnedArticleList = () => {
+
+    };
+
+    this.addPinnedArticleToList = (article) => {
+        $(document).ready(() => {
+            $('#pinlist-ul').append('<li><a href="/article/'+ article.getWebSafeLink() +'">'+ article.getTitle() +'</a></li>');
+        });
     };
 
 }

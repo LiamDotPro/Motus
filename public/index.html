@@ -273,6 +273,9 @@
         console.log(thisClient.getUser());
         console.log(document.cookie);
 
+        $('#pinlist').removeClass('hidden');
+        $('#notLoggedInList').addClass('hidden');
+
     });
 
     socket.on('incorrectLogin', () => {
@@ -299,6 +302,11 @@
         if (thisClient.getUser().admin === true) {
             $('#dashboard-btn').removeClass('hidden');
         }
+
+        $(document).ready(() => {
+            $('#pinlist').removeClass('hidden');
+            $('#notLoggedInList').addClass('hidden');
+        });
 
     });
 
@@ -405,6 +413,7 @@
             if (thisWebsite.getScrolling() === true) {
                 //no scrolling currently attached.
                 window.removeEventListener('scroll', scrollEvent);
+                thisWebsite.setScrolling(false);
             }
 
         });
@@ -523,10 +532,16 @@
 
             var article = thisWebsite.getArticleById(e.target.id);
 
-            console.log(article);
-//            socket.emit('addNewPinnedArticle', {
-//                article: article
-//            });
+
+            if (thisClient.getUser() !== null) {
+                if (thisClient.checkPinnedStatus(e.target.id)) {
+                    console.log("Adding pinned article");
+                    thisClient.addPinnedArticleToUser(article);
+                    thisWebsite.addPinnedArticleToList(article);
+                }
+            } else {
+                console.log("User not logged in");
+            }
 
 
         });
@@ -544,6 +559,9 @@
             $('#login-btn').removeClass('hidden');
             $('#register-user').removeClass('hidden');
             $('#dashboard-btn').addClass('hidden');
+
+            $('#pinlist').addClass('hidden');
+            $('#notLoggedInList').removeClass('hidden');
 
         });
 
@@ -598,7 +616,7 @@
 
                     <style>
 
-                        #notLoggedInList{
+                        #notLoggedInList {
                             padding-top: 50px;
                         }
 
@@ -607,7 +625,7 @@
                             color: #ef242d;
                         }
 
-                        #notLoggedInList h2{
+                        #notLoggedInList h2 {
                             margin-top: 0;
                             font-size: 20px;
                         }
@@ -619,12 +637,9 @@
                                 <h3>Your Pinned Articles</h3>
                             </div>
                             <div class="pinned-articles">
-                                <div class="hidden">
-                                    <ul>
-                                        <li>
-                                            <a href="">Hello World</a>
-                                            <p> - A short introduction to life</p>
-                                        </li>
+                                <div id="pinlist" class="hidden">
+                                    <ul id="pinlist-ul">
+
                                     </ul>
                                 </div>
                                 <div id="notLoggedInList" class="text-center">
@@ -639,17 +654,10 @@
                         <div class="user-tile">
                             <div class="text-center">
                                 <div>
-                                    <h3>Questionnaire</h3>
+                                    <h3>Trends</h3>
                                 </div>
-                                <div class="question-container">
-                                    <p>How personal is too personal?</p>
-                                    <div class="form-group">
-                                        <div class="col-md-12 question-text-box">
-                                            <input type="text" placeholder="Answer here" class="form-control"
-                                                   id="input-question-area">
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-default">Submit</button>
+                                <div class="">
+
                                 </div>
                             </div>
                         </div>
