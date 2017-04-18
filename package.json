@@ -4,7 +4,8 @@
   "description": "Motus Personal News",
   "main": "server.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

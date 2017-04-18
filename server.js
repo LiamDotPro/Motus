@@ -230,7 +230,9 @@ io.on('connection', function (socket) {
      * Pushes a new instance of pinned article to the user.
      */
     socket.on('addNewPinnedArticle', (data) => {
+        if (dataStore.pushPinnedArticles(data.email, data.article)) {
 
+        }
     });
 
     socket.on('clientCanvasData', function (data) {

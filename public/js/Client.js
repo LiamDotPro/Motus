@@ -29,6 +29,13 @@ function Client(socket) {
 
     this.addPinnedArticleToUser = (articleToAdd) => {
         this.user.pinnedArticles.push(articleToAdd);
+
+        console.log(this.user);
+
+        socket.emit('addNewPinnedArticle', {
+            email: this.user.email,
+            article: articleToAdd
+        });
     };
 
     this.getPinnedArticlesArr = () => {

@@ -18,8 +18,8 @@ var User = function () {
         this.pinnedArticles = JSON.parse(articleJSON);
     };
 
-    this.addPinnedArticle = (articleID) => {
-        this.pinnedArticles.push(articleID);
+    this.addPinnedArticle = (article) => {
+        this.pinnedArticles.push(article);
     };
 
     this.getId = () => {
@@ -43,7 +43,7 @@ var User = function () {
     };
 
     this.setEmail = (newEmail) => {
-
+        this.email = newEmail;
     };
 
     this.setAdmin = (newAdminObj) => {
@@ -60,7 +60,11 @@ var User = function () {
      */
     this.setStatus = (newStatus) => {
         this.status = newStatus;
-    }
+    };
+
+    this.getPinnedArticlesAsJson = () =>{
+      return JSON.stringify(this.pinnedArticles);
+    };
 };
 
 module.exports = User;

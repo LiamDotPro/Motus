@@ -233,7 +233,6 @@ var DataStore = function () {
     };
 
 
-
     /**
      * Attempts to register a new account for a user.
      * @param canvasHash
@@ -332,6 +331,31 @@ var DataStore = function () {
 
     this.getUserByEmail = (email) => {
         return this.users.get(email);
+    };
+
+    /**
+     *
+     * @param email
+     * @param article
+     * @returns {boolean}
+     */
+    this.pushPinnedArticles = (email, article) => {
+        let user = this.getUserByEmail(email);
+        let poolRef = this.pool;
+
+        //Check to see if the article already exists within the list.
+        for (let x = 0; x < user.getPinnedArticles().length; x++) {
+            if (user.getPinnedArticles()[x].id === article.id) {
+                return false;
+            }
+        }
+
+        //Push new articles to the live model and also update database model
+        user.addPinnedArticle(article);
+
+        poolRef.query('UPDATE `users` SET pinnedArticles=? WHERE email=? ;',[user.getPinnedArticlesAsJson(), email]);
+
+        return true;
     }
 
 };
