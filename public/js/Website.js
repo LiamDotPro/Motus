@@ -235,7 +235,7 @@ function Website() {
 
     this.addPinnedArticleToList = (article) => {
         $(document).ready(() => {
-            $('#pinlist-ul').append('<li><a href="/article/' + article.getWebSafeLink() + '">' + article.getTitle() + '</a></li>');
+            $('#pinlist-ul').prepend('<li><a href="/article/' + article.getWebSafeLink() + '">' + article.getTitle() + '</a></li>');
         });
     };
 

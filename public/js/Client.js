@@ -12,7 +12,15 @@ function Client(socket) {
     this.user = null;
 
     this.setUser = (userObj) => {
-        this.user = userObj;
+
+        console.log(userObj);
+
+        this.user = new User();
+        this.user.setId(userObj.id);
+        this.user.setEmail(userObj.email);
+        this.user.setAdmin(userObj.admin);
+        this.user.setArticleObjects(userObj.pinnedArticles);
+
     };
 
     this.getUser = () => {
@@ -44,12 +52,13 @@ function Client(socket) {
 
     this.checkPinnedStatus = (articleId) => {
 
+        console.log(this.user.pinnedArticles);
+
         let output = this.user.pinnedArticles.filter((e) => {
             return e.getId() == articleId;
         });
 
         return output <= 0;
-
 
     };
 
@@ -248,6 +257,14 @@ function Client(socket) {
      */
     this.addUserDetailsToCookie = function (email) {
         document.cookie = " user=" + email + ";";
+    };
+
+    this.appendPinnedArticles = () => {
+
+        var articleArr = this.user.pinnedArticles;
+        for (var x = articleArr.length; x > 0; x--) {
+            $('#pinlist-ul').append('<li><a href="' + articleArr[x - 1].webSafeLink + '">' + articleArr[x - 1].title + '</a></li>');
+        }
     }
 
 }

@@ -31,6 +31,7 @@
     <script src="/public/js/Website.js"></script>
     <script src="/public/js/Client.js"></script>
     <script src="/public/js/Article.js"></script>
+    <script src="/public/js/User.js"></script>
 </head>
 <body>
 
@@ -270,11 +271,15 @@
         //adding the users email as a form of identifcation to the cookie.
         thisClient.addUserDetailsToCookie(data.email);
         thisClient.setUser(data.user);
+
         console.log(thisClient.getUser());
         console.log(document.cookie);
 
         $('#pinlist').removeClass('hidden');
         $('#notLoggedInList').addClass('hidden');
+
+        //appends existing saved articles to the list.
+        thisClient.appendPinnedArticles();
 
     });
 
@@ -299,7 +304,9 @@
     socket.on('recUserObj', (data) => {
         thisClient.setUser(data.obj);
 
-        if (thisClient.getUser().admin === true) {
+        console.log(thisClient.getUser().getId());
+
+        if (thisClient.getUser().getAdmin() === true) {
             $('#dashboard-btn').removeClass('hidden');
         }
 
@@ -307,6 +314,10 @@
             $('#pinlist').removeClass('hidden');
             $('#notLoggedInList').addClass('hidden');
         });
+
+        //appends existing saved articles to the list.
+        thisClient.appendPinnedArticles();
+
 
     });
 
