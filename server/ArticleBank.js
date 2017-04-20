@@ -73,12 +73,18 @@ var ArticleBank = function () {
             this.requestArticles('techcrunch', 'technology', 'https://newsapi.org/v1/articles?source=techcrunch&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('abc-news', 'general', 'https://newsapi.org/v1/articles?source=abc-news-au&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('ars-technica', 'technology', 'https://newsapi.org/v1/articles?source=ars-technica&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
-            //this.requestArticles('blid', 'general', 'https://newsapi.org/v1/articles?source=bild&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('Bloomberg', 'business', 'https://newsapi.org/v1/articles?source=bloomberg&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('bloomberg', 'business', 'https://newsapi.org/v1/articles?source=bloomberg&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('Business Insider', 'business', ' https://newsapi.org/v1/articles?source=business-insider&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('Business Insider (UK)', 'business', 'https://newsapi.org/v1/articles?source=business-insider-uk&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('Buzzfeed', 'entertainment', 'https://newsapi.org/v1/articles?source=buzzfeed&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
-
+            this.requestArticles('business Insider (UK)', 'business', 'https://newsapi.org/v1/articles?source=business-insider-uk&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('buzzfeed', 'entertainment', 'https://newsapi.org/v1/articles?source=buzzfeed&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('recode', 'technology', 'https://newsapi.org/v1/articles?source=recode&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('national-geographic', 'science-and-nature', 'https://newsapi.org/v1/articles?source=national-geographic&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('the-wall-street-journal', 'business', 'https://newsapi.org/v1/articles?source=the-wall-street-journal&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('google-news', 'general', 'https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('mtv-news-uk', 'general', 'https://newsapi.org/v1/articles?source=mtv-news-uk&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('new-york-magazine', 'general', 'https://newsapi.org/v1/articles?source=new-york-magazine&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('the-huffington-post', 'general', 'https://newsapi.org/v1/articles?source=the-huffington-post&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('the-lad-bible','entertainment', 'https://newsapi.org/v1/articles?source=the-lad-bible&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b')
         ]).then(() => {
             console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;

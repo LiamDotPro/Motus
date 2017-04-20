@@ -122,7 +122,8 @@
                     break;
             }
         } else {
-            //Article has been found, setup page for article viewing.
+           console.log("Article Link Found");
+           
 
         }
 
@@ -408,24 +409,7 @@
         });
 
         $('#trendsBtn').click((e) => {
-            scrollTop = $(window).scrollTop();
-            //push state
-            var stateObj = {previousLoc: window.location.pathname};
-            history.pushState(stateObj, "trends page", "/trends");
 
-            //Actions to take below
-            e.preventDefault();
-            window.removeEventListener('scroll', scrollEvent);
-
-            $('#minimal-Controls').addClass('hidden');
-            $('#news-hub').addClass('hidden');
-            $('#article-hub').addClass('hidden');
-
-            if (thisWebsite.getScrolling() === true) {
-                //no scrolling currently attached.
-                window.removeEventListener('scroll', scrollEvent);
-                thisWebsite.setScrolling(false);
-            }
 
         });
 

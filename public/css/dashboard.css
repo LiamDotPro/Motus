@@ -1,0 +1,45 @@
+.nopad {
+    padding: 0 0 0 0 !important;
+}
+
+body {
+    font-family: "Raleway", sans-serif;
+    background: #f4f4f4;
+}
+
+#page-content-wrapper {
+    padding: 0;
+    position: relative;
+}
+
+#page-header {
+    height: 71px;
+    background-color: #ef242d;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-default {
+    background: #ef242d;
+    border-color: #ef242d;
+}
+
+.navbar-logo img {
+    padding-top: 10px;
+    padding-left: 15px;
+}
+
+.navbar-logo {
+    width: 85px;
+    text-align: center;
+    display: inline-block;
+    float: left;
+}

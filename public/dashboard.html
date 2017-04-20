@@ -16,7 +16,7 @@
     <meta property="og:title" content="Motus - Very Personal News"/>
     <title>Dashboard | Motus</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="/public/css/style.css" rel="stylesheet">
+    <link href="/public/css/dashboard.css" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="http://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="http://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -28,8 +28,38 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
     <script src="/public/js/Client.js"></script>
+    <script src="/public/js/Dashboard.js"></script>
+    <script src="/public/js/User.js"></script>
 </head>
 <body>
+
+<div id="page-wrapper">
+    <div id="page-header">
+        <header>
+            <nav class="navbar navbar-default" role="navigation">
+                <a class="navbar-logo" href="/dashboard">
+                    <img class="img-responsive" src="/public/images/logos/logo.png" alt="motus CMS brand logo">
+                </a>
+            </nav>
+        </header>
+    </div>
+    <div id="page-sidebar">
+
+    </div>
+
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-12 nopad">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <script>
 
@@ -37,15 +67,27 @@
 
     //Setting up website for viewing.
     var thisClient = new Client(socket);
-
-    var loggedInUser = null;
+    var thisDashboard = new Dashboard(socket);
 
     if (thisClient.decipherCookie('user') !== 'undefined') {
         console.log("user was found");
+        thisDashboard.getUserObj(thisClient.decipherCookie('user'));
     } else {
         //user does not have the correct token, redirect to the homepage.
-
+        window.location.replace("/");
     }
+
+    socket.on('recUserObj', (data) => {
+        console.log(data.obj);
+        thisDashboard.setupUserObj(data.obj);
+
+        if (thisDashboard.checkAdminStatus() !== true) {
+            window.location.replace("/");
+        } else {
+            console.log("Admin rights found");
+        }
+
+    });
 
 </script>
 <!--- /PAGE WRAPPER  --->

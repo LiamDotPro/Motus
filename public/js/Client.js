@@ -12,15 +12,11 @@ function Client(socket) {
     this.user = null;
 
     this.setUser = (userObj) => {
-
-        console.log(userObj);
-
         this.user = new User();
         this.user.setId(userObj.id);
         this.user.setEmail(userObj.email);
         this.user.setAdmin(userObj.admin);
         this.user.setArticleObjects(userObj.pinnedArticles);
-
     };
 
     this.getUser = () => {

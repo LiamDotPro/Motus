@@ -51,6 +51,10 @@ app.get('/mission', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
+app.get('/article/*', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
+
 app.get('/register', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/register.html'));
 });
