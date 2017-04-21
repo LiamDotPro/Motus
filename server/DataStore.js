@@ -353,11 +353,26 @@ var DataStore = function () {
         //Push new articles to the live model and also update database model
         user.addPinnedArticle(article);
 
-        poolRef.query('UPDATE `users` SET pinnedArticles=? WHERE email=? ;',[user.getPinnedArticlesAsJson(), email]);
+        poolRef.query('UPDATE `users` SET pinnedArticles=? WHERE email=? ;', [user.getPinnedArticlesAsJson(), email]);
 
         return true;
-    }
+    };
 
+    /**
+     * gets the total User Count
+     * @returns {number}
+     */
+    this.getUserCount = () => {
+        return this.users.size;
+    };
+
+    /**
+     * gets the total client count
+     * @returns {number}
+     */
+    this.getClientCount = () => {
+        return this.clientArr.size;
+    };
 };
 
 module.exports = DataStore;

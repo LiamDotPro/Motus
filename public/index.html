@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
@@ -306,6 +305,8 @@
         thisClient.setUser(data.obj);
 
         console.log(thisClient.getUser().getId());
+
+        console.log(thisClient.getUser());
 
         if (thisClient.getUser().getAdmin() === true) {
             $('#dashboard-btn').removeClass('hidden');

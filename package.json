@@ -19,9 +19,11 @@
   "homepage": "https://github.com/LiamDotPro/Motus#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "chart.js": "^2.5.0",
     "express": "^4.15.0",
     "geode": "^1.0.0",
     "mysql": "^2.13.0",
+    "node-schedule": "^1.2.1",
     "path": "^0.12.7",
     "promise-mysql": "^3.0.0",
     "request": "^2.81.0",

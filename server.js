@@ -59,8 +59,32 @@ app.get('/register', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/register.html'));
 });
 
+/**
+ * Dashboard Routing
+ */
+
 app.get('/dashboard', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/dashboard.html'));
+});
+
+app.get('/dashboard/home', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/dashboard.html'));
+});
+
+app.get('/dashboard/users', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/dashboard/users.html'));
+});
+
+app.get('/dashboard/articles', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/dashboard/articles.html'));
+});
+
+app.get('/dashboard/trends', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/dashboard/trends.html'));
+});
+
+app.get('/dashboard/settings', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public/dashboard/settings.html'));
 });
 
 app.all('*', function (req, res) {
@@ -300,6 +324,27 @@ io.on('connection', function (socket) {
 
     socket.on('loginAttempt', (data) => {
         dataStore.verifyUser(data.email, data.password, socket);
+    });
+
+    socket.on('getArticleCount', () => {
+        let len = dataStore.getAllArticles().size;
+        socket.emit('recArticleCount', {
+            count: len
+        });
+    });
+
+    socket.on('getUserCount', () => {
+        let len = dataStore.getUserCount();
+        socket.emit('recUserCount', {
+            count: len
+        })
+    });
+
+    socket.on('getClientCount', () => {
+        let len = dataStore.getClientCount();
+        socket.emit('recClientCount', {
+            count: len
+        })
     });
 
 

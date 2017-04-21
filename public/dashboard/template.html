@@ -25,16 +25,12 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <!--Chart.js-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
-
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
     <script src="/public/js/Client.js"></script>
     <script src="/public/js/Dashboard.js"></script>
     <script src="/public/js/User.js"></script>
-    <script src="/public/js/DashboardAnalytics.js"></script>
 </head>
 <body>
 
@@ -60,44 +56,15 @@
 
     <div id="page-content-wrapper">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-lg-12 nopad">
-
-                    <div class="col-lg-2">
-                        <div class="content-squares total-articles text-center">
-                            <img src="/public/images/dashboard/newspaper.png"/>
-                            <h2>Articles:</h2>
-                            <h1 id="articleCount"></h1>
+                    <div class="content-squares">
+                        <div>
 
                         </div>
                     </div>
-                    <div class="col-lg-2">
-                        <div class="content-squares total-articles text-center">
-                            <img src="/public/images/dashboard/man.png"/>
-                            <h2>Users:</h2>
-                            <h1 id="userCount"></h1>
-
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="content-squares total-articles text-center">
-                            <img src="/public/images/dashboard/bag-on-head.png"/>
-                            <h2>Clients:</h2>
-                            <h1 id="clientCount"></h1>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="content-squares articles-chart">
-                            <canvas id="myChart" width="500" height="175"></canvas>
-                        </div>
-                    </div>
-
-
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -110,10 +77,9 @@
     //Setting up website for viewing.
     var thisClient = new Client(socket);
     var thisDashboard = new Dashboard(socket);
-    var analytics = new DashboardAnalytics(socket);
 
-    if (thisClient.decipherCookie('user') !== 'undefined' && thisClient.decipherCookie('user') != false) {
-        console.log(thisClient.decipherCookie('user'));
+    if (thisClient.decipherCookie('user') !== 'undefined') {
+        console.log("user was found");
         thisDashboard.getUserObj(thisClient.decipherCookie('user'));
     } else {
         //user does not have the correct token, redirect to the homepage.
@@ -124,66 +90,13 @@
         console.log(data.obj);
         thisDashboard.setupUserObj(data.obj);
 
-        console.log(thisDashboard.checkAdminStatus());
-
         if (thisDashboard.checkAdminStatus() !== true) {
             window.location.replace("/");
         } else {
             console.log("Admin rights found");
         }
 
-        analytics.init();
-
     });
-
-    socket.on('recArticleCount', (data) => {
-        $('#articleCount').text(data.count);
-    });
-
-    socket.on('recUserCount', (data) => {
-        $('#userCount').text(data.count);
-    });
-
-    socket.on('recClientCount', (data) => {
-        $('#clientCount').text(data.count);
-    });
-
-    /**
-     * Chart JS settings
-     */
-
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            datasets: [
-                {
-                    label: "Cataloged Articles  ",
-                    fill: true,
-                    lineTension: 0.1,
-                    backgroundColor: "rgba(239, 36, 45,0.4)",
-                    borderColor: "rgba(175, 28, 33,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "#000",
-                    pointBackgroundColor: "#000",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#000",
-                    pointHoverBorderColor: "#fff",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data: [3000, 3200, 3400, 4000, 4200, 4500, 4600, 4700],
-                    spanGaps: false,
-                }
-            ]
-        },
-    });
-
 
 </script>
 <!--- /PAGE WRAPPER  --->
@@ -199,7 +112,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <!-- momentjs-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
-
 
 </body>
 </html>
