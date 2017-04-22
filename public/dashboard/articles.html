@@ -1,10 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Motus is a news sharing website that personalises itself to the user not the audience.">
+    <meta property="og:description"
+          content="Motus is a news sharing website that personalises itself to the user not the audience."/>
+    <meta property="og:image" content="preview.jpg"/>
+    <meta name="author" content="Liam Read">
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <!-- Custom Meta title tags -->
+    <meta property="og:title" content="Motus - Very Personal News"/>
+    <title>Dashboard | Motus</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="/public/css/dashboard.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="http://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="http://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!--Chart.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
+    <script src="/public/js/Client.js"></script>
+    <script src="/public/js/Dashboard.js"></script>
+    <script src="/public/js/User.js"></script>
+    <script src="/public/js/DashboardArticles.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs/dt-1.10.15/sc-1.4.2/datatables.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.15/sc-1.4.2/datatables.min.js"></script>
+
 </head>
 <body>
+
+<div id="page-wrapper">
+    <div id="page-header">
+        <header>
+            <nav class="navbar navbar-default" role="navigation">
+                <a class="navbar-logo" href="/dashboard">
+                    <img class="img-responsive" src="/public/images/logos/logo.png" alt="motus CMS brand logo">
+                </a>
+                <ul class="pull-right top-nav-list">
+                    <li>
+                        <a href="/">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+    <div id="page-sidebar">
+        <ul>
+            <li><a href="/dashboard/home"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li><a href="/dashboard/users"><i class="fa fa-users"></i> Users</a></li>
+            <li><a href="/dashboard/articles"><i class="fa fa-newspaper-o"></i> Articles</a></li>
+            <li><a href="/dashboard/trends"><i class="fa fa-line-chart"></i> trends</a></li>
+            <li><a href="/dashboard/settings"><i class="fa fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="articles-header row">
+                        <h1>Articles Stats and Data</h1>
+                    </div>
+
+
+                    <div class="row">
+                        <div id="articlesDataView" class="articles-datatables">
+
+                        </div>
+                    </div>
+
+                    <div class="sources-stats row">
+                        <div class="col-lg-12">
+                            <div class="content-squares">
+                                <canvas id="myBar" width="500" height="175"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var socket = io();
+
+    //Setting up website for viewing.
+    var thisClient = new Client(socket);
+    var thisDashboard = new Dashboard(socket);
+    var dashboardArticles = new DashboardArticles(socket);
+
+    if (thisClient.decipherCookie('user') !== 'undefined') {
+        console.log("user was found");
+        thisDashboard.getUserObj(thisClient.decipherCookie('user'));
+    } else {
+        //user does not have the correct token, redirect to the homepage.
+        window.location.replace("/");
+    }
+
+    socket.on('recUserObj', (data) => {
+        console.log(data.obj);
+        thisDashboard.setupUserObj(data.obj);
+
+        if (thisDashboard.checkAdminStatus() !== true) {
+            window.location.replace("/");
+        } else {
+            console.log("Admin rights found");
+        }
+
+        dashboardArticles.getData();
+
+    });
+
+    socket.on("recArticlesTableData", (data) => {
+        $(document).ready(function () {
+
+            $('#articlesDataView').append('<table id="article-table" class="table table-striped table-bordered display"><thead><tr><th></th><th>source</th><th>title</th><th>Publish Date</th><th>Article Score</th></tr></thead>' + data.str + '<tbody id="tableData"> </tbody></table>');
+
+            $('#article-table').DataTable();
+        });
+    });
+
+    socket.on("recArticleSourceData", (data) => {
+
+        var bar = dashboardArticles
+
+        var ctx = document.getElementById("myBar");
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: data = {
+                labels: ["test"],
+                datasets: [
+                    {
+                        label: "Word Count",
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(9,116,165,0.2)',
+                            'rgba(176,63,102,0.2)',
+                            'rgba(23,209,88,0.2)',
+                            'rgba(241,221,194,0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(9,116,165,1)',
+                            'rgba(176,63,102,1)',
+                            'rgba(23,209,88,1)',
+                            'rgba(241,221,194,1)'
+                        ],
+                        borderWidth: 1,
+                        data: [222],
+                    }
+                ]
+            }
+        });
+
+    });
+
+
+</script>
+<!--- /PAGE WRAPPER  --->
+
+<!-- Custom Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+<!-- Bootstrap -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- Animate.css -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" type="text/css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- momentjs-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
 
 </body>
 </html>

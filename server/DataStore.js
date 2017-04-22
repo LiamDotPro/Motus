@@ -10,6 +10,7 @@ var WordFilter = require('./Words.js');
 var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
 var Promise = require("bluebird");
+var moment = require("moment");
 
 var passwordHash = require('password-hash');
 
@@ -302,7 +303,6 @@ var DataStore = function () {
                 poolRef.query('Select * FROM `users` WHERE email="' + email + '"').then((row) => {
                     if (passwordHash.verify(password, row[0].password)) {
                         let user = self.getUserByEmail(email);
-                        user.setStatus("online");
                         resolve(true);
                     } else {
                         resolve(false);
@@ -390,7 +390,7 @@ var DataStore = function () {
         let poolRef = this.pool;
         let result = [];
 
-        poolRef.query('SELECT * FROM `articlecounter` ORDER BY id ASC').then((rows) => {
+        poolRef.query('SELECT * FROM `articlecounter` ORDER BY id DESC').then((rows) => {
             var arr = [];
 
             for (let x = 0; x < 7; x++) {
@@ -416,7 +416,9 @@ var DataStore = function () {
             technology: 0,
             business: 0,
             entertainment: 0,
-            science_and_nature: 0
+            science_and_nature: 0,
+            gaming: 0,
+            music: 0,
         };
 
         //Go through entire instance.
@@ -440,6 +442,12 @@ var DataStore = function () {
                     break;
                 case "science-and-nature":
                     dataObj.science_and_nature++;
+                    break;
+                case"music":
+                    dataObj.music++;
+                    break;
+                case "gaming":
+                    dataObj.gaming++;
                     break;
             }
         }
@@ -468,6 +476,72 @@ var DataStore = function () {
     this.getTop100Words = () => {
         return this.filter.getTop100();
     };
+
+    this.getArticlesReadyForTables = (range) => {
+        let resultStr = "";
+
+        var c = 0;
+
+        for (x of this.getAllArticles().values()) {
+            if (c <= range) {
+                resultStr += "<tr><td><a href='/articles/" + x.websafelink + "'><i class='fa fa-eye'></i></a></td><td>" + x.source + "</td><td>" + x.title + "</td><td>" + moment(x.publishedAt).format("DD MM YYYY - h:mm a") + "</td><td>" + x.articleScore + "</td></tr>";
+                c++;
+            } else {
+                break;
+            }
+        }
+
+        return resultStr;
+    };
+
+    this.getSourcesData = () => {
+
+        let articleMap = this.getAllArticles();
+
+        let dataObj = {
+            general: 0,
+            sport: 0,
+            technology: 0,
+            business: 0,
+            entertainment: 0,
+            science_and_nature: 0,
+            gaming: 0,
+            music: 0,
+        };
+
+        //Go through entire instance.
+
+        for (let i of articleMap.values()) {
+            switch (i.category) {
+                case "general":
+                    dataObj.general++;
+                    break;
+                case "sport":
+                    dataObj.sport++;
+                    break;
+                case "technology":
+                    dataObj.technology++;
+                    break;
+                case "business":
+                    dataObj.business++;
+                    break;
+                case "entertainment":
+                    dataObj.entertainment++;
+                    break;
+                case "science-and-nature":
+                    dataObj.science_and_nature++;
+                    break;
+                case"music":
+                    dataObj.music++;
+                    break;
+                case "gaming":
+                    dataObj.gaming++;
+                    break;
+            }
+        }
+
+        return dataObj;
+    }
 
 };
 

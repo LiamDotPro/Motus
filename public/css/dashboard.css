@@ -103,6 +103,10 @@ header {
     background: #fff;
 }
 
+.content-squares h2 {
+    margin-top: 0;
+}
+
 .articles-chart {
     margin-top: 15px;
     min-height: 250px;
@@ -150,6 +154,24 @@ header {
     padding-top: 10px;
     margin-top: 0;
 }
+
+.articles-header {
+    padding-left: 25px;
+}
+
+.articles-datatables {
+    padding: 35px 20px 35px 20px;
+    background: #fff;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.sources-stats {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
 
 /**
 pace

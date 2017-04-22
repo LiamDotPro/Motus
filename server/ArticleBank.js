@@ -80,10 +80,35 @@ var ArticleBank = function () {
             this.requestArticles('national-geographic', 'science-and-nature', 'https://newsapi.org/v1/articles?source=national-geographic&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('the-wall-street-journal', 'business', 'https://newsapi.org/v1/articles?source=the-wall-street-journal&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('google-news', 'general', 'https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('mtv-news-uk', 'general', 'https://newsapi.org/v1/articles?source=mtv-news-uk&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('mtv-news-uk', 'music', 'https://newsapi.org/v1/articles?source=mtv-news-uk&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('new-york-magazine', 'general', 'https://newsapi.org/v1/articles?source=new-york-magazine&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
             this.requestArticles('the-huffington-post', 'general', 'https://newsapi.org/v1/articles?source=the-huffington-post&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
-            this.requestArticles('the-lad-bible','entertainment', 'https://newsapi.org/v1/articles?source=the-lad-bible&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b')
+            this.requestArticles('the-lad-bible', 'entertainment', 'https://newsapi.org/v1/articles?source=the-lad-bible&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('al-jazeera-english', 'general', 'https://newsapi.org/v1/articles?source=al-jazeera-english&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('associated-press', 'general', 'https://newsapi.org/v1/articles?source=associated-press&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('breitbart-news', 'general', 'https://newsapi.org/v1/articles?source=breitbart-news&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('cnbc', 'business', 'https://newsapi.org/v1/articles?source=cnbc&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('cnn', 'general', 'https://newsapi.org/v1/articles?source=cnn&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('daily-mail', 'entertainment', 'https://newsapi.org/v1/articles?source=daily-mail&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('engadget', 'technology', 'https://newsapi.org/v1/articles?source=engadget&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('entertainment-weekly', 'entertainment', 'https://newsapi.org/v1/articles?source=entertainment-weekly&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('espn', 'sport', 'https://newsapi.org/v1/articles?source=espn&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('espn-cric-info', 'sport', 'https://newsapi.org/v1/articles?source=espn-cric-info&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('financial-times', 'business', 'https://newsapi.org/v1/articles?source=financial-times&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('fortune', 'business', 'https://newsapi.org/v1/articles?source=fortune&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('four-four-two', 'sport', 'https://newsapi.org/v1/articles?source=four-four-two&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('fox-sports', 'sport', 'https://newsapi.org/v1/articles?source=fox-sports&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('ign', 'gaming', 'https://newsapi.org/v1/articles?source=ign&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('independent', 'general', 'https://newsapi.org/v1/articles?source=independent&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('mashable', 'entertainment', 'https://newsapi.org/v1/articles?source=mashable&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('metro', 'general', 'https://newsapi.org/v1/articles?source=metro&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('mirror', 'general', 'https://newsapi.org/v1/articles?source=mirror&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('mtv-news', 'music', 'https://newsapi.org/v1/articles?source=mtv-news&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('new-scientist', 'science-and-nature', 'https://newsapi.org/v1/articles?source=new-scientist&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('newsweek', 'general', 'https://newsapi.org/v1/articles?source=newsweek&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('nfl-news', 'sport', 'https://newsapi.org/v1/articles?source=nfl-news&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('polygon', 'gaming', 'https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=cfe8990468894b4a96882692c13f063b'),
+            this.requestArticles('talksport', 'sport', 'https://newsapi.org/v1/articles?source=talksport&sortBy=latest&apiKey=cfe8990468894b4a96882692c13f063b')
         ]).then(() => {
             console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;
@@ -107,7 +132,11 @@ var ArticleBank = function () {
                 json.articles
                     .filter(article => !self.articles.has(article.title) && checkValueWith(article))
                     .map(article => {
-                        const values = [json.source, article.author, article.title, article.description, article.url, article.urlToImage, article.publishedAt, type, 0, createWebSafeLink(article.title)];
+                        var desc;
+                        if (article.description != null) {
+                            desc = article.description.replace(/[^\x20-\x7E]+/g, '');
+                        }
+                        const values = [json.source, article.author, article.title, desc, article.url, article.urlToImage, article.publishedAt, type, 0, createWebSafeLink(article.title)];
                         return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category,articleScore,webSafeLink) VALUES (?,?,?,?,?,?,?,?,?,?)', values);
                     })
             ).then(() => {
@@ -127,7 +156,6 @@ var ArticleBank = function () {
     function checkValueWith(articleData) {
         for (var [key, value] of self.articles) {
             if (value.getPublishedAt() === articleData.publishedAt && value.getUrl() === articleData.url) {
-                console.log("Previous article found");
                 return false;
             }
         }

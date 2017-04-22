@@ -401,5 +401,17 @@ io.on('connection', function (socket) {
         })
     });
 
+    socket.on('getArticleDataForTables', () => {
+        let result = dataStore.getArticlesReadyForTables(100);
+
+        socket.emit('recArticlesTableData', {
+            str: result
+        })
+    });
+
+    socket.on('getSourcesGraphData', () => {
+        let result = dataStore.getSourcesData();
+    });
+
 });
 
