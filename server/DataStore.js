@@ -5,6 +5,7 @@
 var Client = require('./Client.js');
 var User = require('./User.js');
 var UUID = require('./UUID.js');
+var WordFilter = require('./Words.js');
 
 var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
@@ -20,6 +21,7 @@ var DataStore = function () {
     this.clientArr = new Map();
     this.uuid = new UUID();
     this.articleBank = new ArticleBank();
+    this.filter = new WordFilter();
 
 
     this.getAllArticles = function () {
@@ -444,6 +446,27 @@ var DataStore = function () {
 
         return dataObj;
 
+    };
+
+    /**
+     * Updates the word filtering stat count
+     */
+    this.getWordStats = () => {
+
+        for (var i of this.getAllArticles().values()) {
+            this.filter.checkString(i.title);
+        }
+
+        this.filter.getArrOfTopWords();
+
+    };
+
+    this.getTop10Words = () => {
+        return this.filter.getTop10();
+    };
+
+    this.getTop100Words = () => {
+        return this.filter.getTop100();
     };
 
 };

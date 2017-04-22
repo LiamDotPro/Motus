@@ -15,6 +15,7 @@ function DashboardAnalytics(socket) {
         this.getClients();
         this.getGraphData();
         this.getPieChartData();
+        this.getTrendingWords();
 
         /**
          * Interval Calls
@@ -48,6 +49,10 @@ function DashboardAnalytics(socket) {
 
     this.getPieChartData = () => {
         socket.emit('getCategoryData', {});
+    };
+
+    this.getTrendingWords = () => {
+        socket.emit('getTrendingWords', {});
     };
 
     this.formatGraphData = (arr, currentCount) => {
@@ -86,5 +91,18 @@ function DashboardAnalytics(socket) {
 
 
     };
+
+    this.formatBarData = (arr) => {
+
+        let tempLabelArr = [];
+        let tempCountArr = [];
+
+        for (let x of arr) {
+            tempLabelArr.push(x.word);
+            tempCountArr.push(x.count);
+        }
+
+        return [tempLabelArr, tempCountArr];
+    }
 
 }

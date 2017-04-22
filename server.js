@@ -104,13 +104,42 @@ rule.dayOfWeek = [new schedule.Range(0, 7)];
 rule.hour = 23;
 rule.minute = 40;
 
-var j = schedule.scheduleJob(rule, () => {
-    console.log("Collecting stat's for the day!");
+var articleStatsSchedule = schedule.scheduleJob(rule, () => {
+    console.log("Collecting article stat's for the day!");
 
     var check = moment();
     dataStore.logArticleStats(check.format('D'), check.format('M'), check.format('YYYY'));
 
 });
+
+var rule2 = new schedule.rescheduleJob();
+rule2.dayOfWeek = [new schedule.Range(0, 7)];
+rule2.hour = 23;
+rule2.minute = 50;
+
+var wordStatsSchedule = schedule.scheduleJob(rule2, () => {
+    console.log("Collecting word stat's for the day!");
+    dataStore.getWordStats();
+});
+
+ensureDataIsAvailable().then(() => {
+    dataStore.getWordStats();
+});
+
+function ensureDataIsAvailable() {
+    return new Promise(function (resolve, reject) {
+        waitForData(resolve);
+    });
+}
+
+function waitForData(resolve) {
+    if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
+        console.log(dataStore.getArticleBank().getLoadedArticlesBool());
+        setTimeout(waitForData.bind(this, resolve), 300);
+    } else {
+        resolve();
+    }
+}
 
 io.on('connection', function (socket) {
 
@@ -133,13 +162,7 @@ io.on('connection', function (socket) {
     }
 
     socket.on('websiteLoad', function (data) {
-
-        if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
-            console.log("Database or view is not ready for rendering yet, hold tight.");
-            ensureDataIsAvailable().then(function () {
-                console.log("Database is ready.");
-            });
-        } else {
+        ensureDataIsAvailable().then(function () {
             //Database is ready for view to be extracted.
             var view = dataStore.getArticleBank().getAllArticles();
             var arrOfArticles = [];
@@ -175,9 +198,7 @@ io.on('connection', function (socket) {
                     type: data.type
                 });
             }
-
-
-        }
+        });
     });
 
     //disconnect event
@@ -366,7 +387,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('getCategoryData', () => {
-        console.log("getting category data");
         let result = dataStore.getPieData();
 
         socket.emit('recCategoryData', {
@@ -374,6 +394,12 @@ io.on('connection', function (socket) {
         });
     });
 
+    socket.on('getTrendingWords', () => {
+        let result = dataStore.getTop10Words();
+        socket.emit('recTrendingWords', {
+            arr: result
+        })
+    });
 
 });
 
