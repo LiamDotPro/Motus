@@ -25,10 +25,10 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <!--Chart.js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
     <script src="/public/js/Client.js"></script>
@@ -45,6 +45,13 @@
                 <a class="navbar-logo" href="/dashboard">
                     <img class="img-responsive" src="/public/images/logos/logo.png" alt="motus CMS brand logo">
                 </a>
+                <ul class="pull-right top-nav-list">
+                    <li>
+                        <a href="/">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </a>
+                    </li>
+                </ul>
             </nav>
         </header>
     </div>
@@ -62,43 +69,59 @@
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-lg-12 nopad">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="content-squares total-articles text-center">
+                                <img src="/public/images/dashboard/newspaper.png"/>
+                                <h2>Articles:</h2>
+                                <h1 id="articleCount"></h1>
 
-                    <div class="col-lg-2">
-                        <div class="content-squares total-articles text-center">
-                            <img src="/public/images/dashboard/newspaper.png"/>
-                            <h2>Articles:</h2>
-                            <h1 id="articleCount"></h1>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="content-squares total-articles text-center">
+                                <img src="/public/images/dashboard/man.png"/>
+                                <h2>Users:</h2>
+                                <h1 id="userCount"></h1>
 
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="content-squares total-articles text-center">
+                                <img src="/public/images/dashboard/bag-on-head.png"/>
+                                <h2>Clients:</h2>
+                                <h1 id="clientCount"></h1>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-2">
-                        <div class="content-squares total-articles text-center">
-                            <img src="/public/images/dashboard/man.png"/>
-                            <h2>Users:</h2>
-                            <h1 id="userCount"></h1>
-
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="content-squares articles-chart">
+                                <canvas id="myChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-2">
-                        <div class="content-squares total-articles text-center">
-                            <img src="/public/images/dashboard/bag-on-head.png"/>
-                            <h2>Clients:</h2>
-                            <h1 id="clientCount"></h1>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="content-squares articles-chart">
-                            <canvas id="myChart" width="500" height="175"></canvas>
-                        </div>
-                    </div>
-
-
                 </div>
-            </div>
+                <div class="col-lg-6">
+                    <div class="content-squares pie-chart text-center">
+                        <h2>Articles by categories</h2>
+                        <canvas id="myPie" width="500" height="175"></canvas>
+                    </div>
+                </div>
 
+                <div class="col-lg-6">
+                    <div class="content-squares pie-chart text-center">
+                        <div id="map">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
+
     </div>
 </div>
 
@@ -138,6 +161,15 @@
 
     socket.on('recArticleCount', (data) => {
         $('#articleCount').text(data.count);
+
+        if (analytics.getGraphInstance() !== null) {
+            let instance = analytics.getGraphInstance();
+            instance.data.datasets[0].data[7] = data.count;
+            console.log("updating Chart");
+        } else {
+            console.log("chart not inited");
+        }
+
     });
 
     socket.on('recUserCount', (data) => {
@@ -148,41 +180,95 @@
         $('#clientCount').text(data.count);
     });
 
-    /**
-     * Chart JS settings
-     */
+    socket.on('recGraphData', (data) => {
 
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            datasets: [
-                {
-                    label: "Cataloged Articles  ",
-                    fill: true,
-                    lineTension: 0.1,
-                    backgroundColor: "rgba(239, 36, 45,0.4)",
-                    borderColor: "rgba(175, 28, 33,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "#000",
-                    pointBackgroundColor: "#000",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#000",
-                    pointHoverBorderColor: "#fff",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data: [3000, 3200, 3400, 4000, 4200, 4500, 4600, 4700],
-                    spanGaps: false,
+        var graph = analytics.formatGraphData(data.arr, data.currentCount);
+
+        /**
+         * Chart JS settings
+         */
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: graph[0],
+                datasets: [
+                    {
+                        label: "Cataloged Articles",
+                        fill: true,
+                        lineTension: 0.1,
+                        backgroundColor: "rgba(239, 36, 45,0.4)",
+                        borderColor: "rgba(175, 28, 33,1)",
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: "#000",
+                        pointBackgroundColor: "#000",
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: "#000",
+                        pointHoverBorderColor: "#fff",
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: graph[1],
+                        spanGaps: false,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        interval: 7
+                    }]
                 }
-            ]
-        },
+            }
+        });
+
+        analytics.setGraphInstance(myChart);
     });
+
+    socket.on('recCategoryData', (data) => {
+
+        var pie = analytics.formatPieData(data.obj);
+
+        var ctx = document.getElementById("myPie");
+        var myPie = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: pie[0],
+                datasets: [
+                    {
+                        data: pie[1],
+                        backgroundColor: [
+                            "#3C8D2F",
+                            "#36A2EB",
+                            "#FDD414",
+                            "#F62217",
+                            "#F64217",
+                            "#4DD414"
+
+                        ],
+                        hoverBackgroundColor: [
+                            "#3C8D2F",
+                            "#36A2EB",
+                            "#FDD414",
+                            "#F62217",
+                            "#F64217",
+                            "#4DD414"
+                        ]
+                    }]
+            },
+            options: {
+                animation: {
+                    animateScale: true
+                }
+            }
+        });
+    });
+
+    
 
 
 </script>
@@ -199,7 +285,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <!-- momentjs-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
-
 
 </body>
 </html>

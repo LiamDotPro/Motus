@@ -9,7 +9,8 @@ var io = require('socket.io')(server);
 var mysql = require('promise-mysql');
 var request = require('request-promise');
 var Promise = require("bluebird");
-
+var schedule = require('node-schedule');
+var moment = require('moment');
 
 //api key for news api - cfe8990468894b4a96882692c13f063b - newsapi.org
 
@@ -98,6 +99,18 @@ server.listen(80, function () {
 
 server.listen(80);
 
+var rule = new schedule.rescheduleJob();
+rule.dayOfWeek = [new schedule.Range(0, 7)];
+rule.hour = 23;
+rule.minute = 40;
+
+var j = schedule.scheduleJob(rule, () => {
+    console.log("Collecting stat's for the day!");
+
+    var check = moment();
+    dataStore.logArticleStats(check.format('D'), check.format('M'), check.format('YYYY'));
+
+});
 
 io.on('connection', function (socket) {
 
@@ -344,7 +357,21 @@ io.on('connection', function (socket) {
         let len = dataStore.getClientCount();
         socket.emit('recClientCount', {
             count: len
-        })
+        });
+    });
+
+    socket.on('getGraphData', () => {
+        var check = moment();
+        dataStore.getGraphData(check.format('D'), check.format('M'), check.format('YYYY'), socket);
+    });
+
+    socket.on('getCategoryData', () => {
+        console.log("getting category data");
+        let result = dataStore.getPieData();
+
+        socket.emit('recCategoryData', {
+            obj: result
+        });
     });
 
 

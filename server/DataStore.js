@@ -20,7 +20,6 @@ var DataStore = function () {
     this.clientArr = new Map();
     this.uuid = new UUID();
     this.articleBank = new ArticleBank();
-    this.loadedExspierences = false;
 
 
     this.getAllArticles = function () {
@@ -334,7 +333,7 @@ var DataStore = function () {
     };
 
     /**
-     *
+     * pushes a new pinned article object onto a user.
      * @param email
      * @param article
      * @returns {boolean}
@@ -373,6 +372,80 @@ var DataStore = function () {
     this.getClientCount = () => {
         return this.clientArr.size;
     };
+
+    /**
+     * Inserts a record for the amount of articles collected and live at this point.
+     * @param day
+     * @param month
+     * @param year
+     */
+    this.logArticleStats = (day, month, year) => {
+        let poolRef = this.pool;
+        poolRef.query('INSERT INTO `articlecounter` (day,month,year,count) VALUES (?,?,?,?)', [day, month, year, this.getAllArticles().size]);
+    };
+
+    this.getGraphData = (day, month, year, socket) => {
+        let poolRef = this.pool;
+        let result = [];
+
+        poolRef.query('SELECT * FROM `articlecounter` ORDER BY id ASC').then((rows) => {
+            var arr = [];
+
+            for (let x = 0; x < 7; x++) {
+                arr.push([rows[x].day, rows[x].month, rows[x].year, rows[x].count]);
+            }
+
+            return arr;
+
+        }).then((arr) => {
+            socket.emit('recGraphData', {
+                arr: arr,
+                currentCount: self.getAllArticles().size
+            });
+        });
+    };
+
+    this.getPieData = () => {
+        let articleMap = this.getAllArticles();
+
+        let dataObj = {
+            general: 0,
+            sport: 0,
+            technology: 0,
+            business: 0,
+            entertainment: 0,
+            science_and_nature: 0
+        };
+
+        //Go through entire instance.
+
+        for (let i of articleMap.values()) {
+            switch (i.category) {
+                case "general":
+                    dataObj.general++;
+                    break;
+                case "sport":
+                    dataObj.sport++;
+                    break;
+                case "technology":
+                    dataObj.technology++;
+                    break;
+                case "business":
+                    dataObj.business++;
+                    break;
+                case "entertainment":
+                    dataObj.entertainment++;
+                    break;
+                case "science-and-nature":
+                    dataObj.science_and_nature++;
+                    break;
+            }
+        }
+
+        return dataObj;
+
+    };
+
 };
 
 module.exports = DataStore;

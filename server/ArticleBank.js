@@ -16,7 +16,6 @@ var ArticleBank = function () {
     this.tags = ['general', 'technology', 'sport', 'business', 'entertainment', 'music', 'science-and-nature', 'gaming'];
     this.pool = null;
     this.loadedArticles = false;
-    this.newArticles = [];
 
     /**
      * Ref to self which can be used in context inside the outer lexical scope.
