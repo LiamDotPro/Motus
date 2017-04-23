@@ -4,8 +4,11 @@
 
 var Client = require('./Client.js');
 var User = require('./User.js');
+var Source = require('./Source.js');
 var UUID = require('./UUID.js');
-var WordFilter = require('./Words.js');
+var WordsFilter = require('./Words.js');
+var SourceAnalytics = require('./SourceAnalytics.js');
+var CategoryFilter = require('./CategoryFilter.js');
 
 var ArticleBank = require('./ArticleBank.js');
 var mysql = require('promise-mysql');
@@ -20,11 +23,19 @@ var DataStore = function () {
     this.pool = null;
     this.users = new Map();
     this.clientArr = new Map();
+    this.sourceArr = new Map();
     this.uuid = new UUID();
     this.articleBank = new ArticleBank();
-    this.filter = new WordFilter();
+    this.wordsFilter = new WordsFilter();
+    this.sourceFilter = new SourceAnalytics();
+    this.categoryFilter = new CategoryFilter();
+    this.sourcesLoaded = false;
 
 
+    /**
+     * Gets all articles from the articlebank.
+     * @returns {DataStore}
+     */
     this.getAllArticles = function () {
         return this.articleBank.getAllArticles();
     };
@@ -35,6 +46,34 @@ var DataStore = function () {
      */
     this.setPool = function (pool) {
         this.pool = pool;
+    };
+
+    /**
+     * Loads all of the sources
+     */
+    this.loadSources = () => {
+        this.pool.query('SELECT * FROM `sources`').then(function (rows) {
+            for (var i in rows) {
+                var clientObj = new Source();
+                clientObj.setId(rows[i].id);
+                clientObj.setCat(rows[i].category);
+                clientObj.setName(rows[i].name);
+                clientObj.setKey(rows[i].key);
+                self.addSource(rows[i].id, clientObj);
+            }
+        }).then(function () {
+            console.log("loaded all sources from database into store");
+            self.sourcesLoaded = true;
+        });
+    };
+
+    /**
+     * Adds a new instance of source to the sourceArr Map.
+     * @param id
+     * @param sourceObj
+     */
+    this.addSource = (id, sourceObj) => {
+        this.sourceArr.set(id, sourceObj);
     };
 
     /**
@@ -60,7 +99,7 @@ var DataStore = function () {
     this.getArticles = function (pool) {
         this.articleBank.setPool(pool);
         this.articleBank.loadArticlesFromDatabase();
-        this.articleBank.StartCollectingArticles();
+        this.articleBank.StartCollectingArticles(this.sourceArr);
     };
 
     /**
@@ -457,24 +496,24 @@ var DataStore = function () {
     };
 
     /**
-     * Updates the word filtering stat count
+     * Updates the word filtering stat count - node scheduled for daily updates.
      */
     this.getWordStats = () => {
 
         for (var i of this.getAllArticles().values()) {
-            this.filter.checkString(i.title);
+            this.wordsFilter.checkString(i.title);
         }
 
-        this.filter.getArrOfTopWords();
+        this.wordsFilter.getArrOfTopWords();
 
     };
 
     this.getTop10Words = () => {
-        return this.filter.getTop10();
+        return this.wordsFilter.getTop10();
     };
 
     this.getTop100Words = () => {
-        return this.filter.getTop100();
+        return this.wordsFilter.getTop100();
     };
 
     this.getArticlesReadyForTables = (range) => {
@@ -496,51 +535,19 @@ var DataStore = function () {
 
     this.getSourcesData = () => {
 
-        let articleMap = this.getAllArticles();
+    };
 
-        let dataObj = {
-            general: 0,
-            sport: 0,
-            technology: 0,
-            business: 0,
-            entertainment: 0,
-            science_and_nature: 0,
-            gaming: 0,
-            music: 0,
-        };
+    this.getSourceStats = () => {
 
-        //Go through entire instance.
+    };
 
-        for (let i of articleMap.values()) {
-            switch (i.category) {
-                case "general":
-                    dataObj.general++;
-                    break;
-                case "sport":
-                    dataObj.sport++;
-                    break;
-                case "technology":
-                    dataObj.technology++;
-                    break;
-                case "business":
-                    dataObj.business++;
-                    break;
-                case "entertainment":
-                    dataObj.entertainment++;
-                    break;
-                case "science-and-nature":
-                    dataObj.science_and_nature++;
-                    break;
-                case"music":
-                    dataObj.music++;
-                    break;
-                case "gaming":
-                    dataObj.gaming++;
-                    break;
-            }
-        }
 
-        return dataObj;
+    /**
+     * Gets the current state of the loaded sources.
+     * @returns {boolean}
+     */
+    this.getLoadedSourceBool = () => {
+        return this.sourcesLoaded;
     }
 
 };

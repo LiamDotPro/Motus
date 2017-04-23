@@ -51,7 +51,7 @@ function Client(socket) {
 
         console.log(this.user.pinnedArticles);
 
-        let output = this.user.pinnedArticles.filter((e) => {
+        let output = this.user.pinnedArticles.wordFilter((e) => {
             return e.getId() == articleId;
         });
 

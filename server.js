@@ -27,11 +27,35 @@ var pool = mysql.createPool({
     database: 'motus',
     connectionLimit: 100
 });
+Promise.all([dataStore.setPool(pool),
+    dataStore.loadSources(),
+    dataStore.loadExp(),
+    dataStore.loadUsers()
+]).then(() => {
 
-dataStore.setPool(pool);
-dataStore.loadExp();
-dataStore.loadUsers();
-dataStore.getArticles(pool);
+    /**
+     * Checking to make sure that the sources have been updated via bool.
+     */
+    ensureDataIsAvailable().then(() => {
+        dataStore.getArticles(pool);
+    });
+
+    function ensureDataIsAvailable() {
+        return new Promise(function (resolve, reject) {
+            waitForData(resolve);
+        });
+    }
+
+    function waitForData(resolve) {
+        if (!dataStore.getLoadedSourceBool()) {
+            setTimeout(waitForData.bind(this, resolve), 300);
+        } else {
+            resolve();
+        }
+    }
+
+});
+
 
 //make the public resources static
 app.use(express.static(__dirname + '/'));
@@ -121,6 +145,17 @@ var wordStatsSchedule = schedule.scheduleJob(rule2, () => {
     console.log("Collecting word stat's for the day!");
     dataStore.getWordStats();
 });
+
+var rule3 = new schedule.rescheduleJob();
+rule3.dayOfWeek = [new schedule.Range(0, 7)];
+rule3.hour = 23;
+rule3.minute = 30;
+
+var sourceStatsSchedule = schedule.scheduleJob(rule3, () => {
+    console.log("Collecting source stat's for the day!");
+    dataStore.getSourceStats();
+});
+
 
 ensureDataIsAvailable().then(() => {
     dataStore.getWordStats();
@@ -414,4 +449,3 @@ io.on('connection', function (socket) {
     });
 
 });
-
