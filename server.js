@@ -488,6 +488,15 @@ io.on('connection', function (socket) {
         socket.emit('recUserTableData', {
             str: result
         })
-    })
+    });
+
+    socket.on('getSourcesToggleData', () => {
+        let result = dataStore.getSourcesToggleInfo();
+
+        socket.emit('recSourcesToggleData', {
+            arr: result
+        });
+
+    });
 
 });

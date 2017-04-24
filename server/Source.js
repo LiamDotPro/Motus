@@ -27,7 +27,7 @@ var Source = function () {
     };
 
     this.setState = (newState) => {
-
+        this.state = newState;
     };
 
     this.getId = () => {
@@ -47,7 +47,7 @@ var Source = function () {
     };
 
     this.getState = () => {
-      return this.state;
+        return this.state;
     };
 
 };

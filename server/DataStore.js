@@ -547,6 +547,21 @@ var DataStore = function () {
 
     };
 
+    /**
+     * Gets the information about sources for data toggles.
+     */
+    this.getSourcesToggleInfo = () => {
+
+        let arrOfSources = [];
+
+        for (let x of this.sourceArr.values()) {
+            arrOfSources.push([x.id, x.name, x.state]);
+        }
+
+        return arrOfSources;
+
+    };
+
 };
 
 module.exports = DataStore;
