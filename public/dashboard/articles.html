@@ -140,48 +140,59 @@
         });
     });
 
-    socket.on("recArticleSourceData", (data) => {
+    socket.on("recSourcesGraphData", (data) => {
 
-        var bar = dashboardArticles
+        var bar = dashboardArticles.formatSourceData(data.obj);
 
         var ctx = document.getElementById("myBar");
         var myBarChart = new Chart(ctx, {
             type: 'bar',
             data: data = {
-                labels: ["test"],
+                labels: bar[0],
                 datasets: [
                     {
-                        label: "Word Count",
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(9,116,165,0.2)',
-                            'rgba(176,63,102,0.2)',
-                            'rgba(23,209,88,0.2)',
-                            'rgba(241,221,194,0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(9,116,165,1)',
-                            'rgba(176,63,102,1)',
-                            'rgba(23,209,88,1)',
-                            'rgba(241,221,194,1)'
-                        ],
+                        label: "Articles",
+                        backgroundColor: gradient(1),
+                        borderColor: border(0.2),
                         borderWidth: 1,
-                        data: [222],
+                        data: bar[1],
                     }
                 ]
             }
         });
+
+        function gradient(opacity) {
+
+            let colorBin = [];
+
+            let r = 255 % 256;
+            let g = 0 % 256;
+            let b = 0 % 256;
+
+            for (let i = 0; i < bar[0].length; i++) {
+                r += 7;
+                g += 7;
+                b += 7;
+                colorBin.push("rgba(" + r + "," + g + "," + b + "," + opacity + ")");
+            }
+
+            return colorBin;
+        }
+
+        function border(opacity) {
+
+            let colorBin = [];
+
+            let r = 0 % 256;
+            let g = 0 % 256;
+            let b = 0 % 256;
+
+            for (let i = 0; i < bar[0].length; i++) {
+                colorBin.push("rgba(" + r + "," + g + "," + b + "," + opacity + ")");
+            }
+
+            return colorBin;
+        }
 
     });
 

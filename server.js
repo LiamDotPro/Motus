@@ -27,6 +27,11 @@ var pool = mysql.createPool({
     database: 'motus',
     connectionLimit: 100
 });
+
+/**
+ * Startup process that ensures data is available for the application while preventing loading of the application
+ * until data is available.
+ */
 Promise.all([dataStore.setPool(pool),
     dataStore.loadSources(),
     dataStore.loadExp(),
@@ -123,6 +128,14 @@ server.listen(80, function () {
 
 server.listen(80);
 
+/**
+ * Node Scheduling - Scheduled events that occur at specific hours.
+ */
+
+/**
+ *
+ * @type {*}
+ */
 var rule = new schedule.rescheduleJob();
 rule.dayOfWeek = [new schedule.Range(0, 7)];
 rule.hour = 23;
@@ -156,9 +169,24 @@ var sourceStatsSchedule = schedule.scheduleJob(rule3, () => {
     dataStore.getSourceStats();
 });
 
+var rule4 = new schedule.rescheduleJob();
+rule4.dayOfWeek = [new schedule.Range(0, 7)];
+rule4.hour = 23;
+rule4.minute = 20;
 
+var sourceStatsSchedule = schedule.scheduleJob(rule4, () => {
+    console.log("Collecting Category stat's for the day!");
+    dataStore.processCatData();
+});
+
+
+/**
+ * Grabs the data once the server is started.
+ */
 ensureDataIsAvailable().then(() => {
     dataStore.getWordStats();
+    dataStore.getSourcesData();
+    dataStore.processCatData();
 });
 
 function ensureDataIsAvailable() {
@@ -169,13 +197,15 @@ function ensureDataIsAvailable() {
 
 function waitForData(resolve) {
     if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
-        console.log(dataStore.getArticleBank().getLoadedArticlesBool());
         setTimeout(waitForData.bind(this, resolve), 300);
     } else {
         resolve();
     }
 }
 
+/**
+ * Socket.io events below.
+ */
 io.on('connection', function (socket) {
 
     //Holds the Unique ID of this client session for retrieval from the datastore.
@@ -445,7 +475,19 @@ io.on('connection', function (socket) {
     });
 
     socket.on('getSourcesGraphData', () => {
-        let result = dataStore.getSourcesData();
+        let result = dataStore.getSourceStats();
+        socket.emit("recSourcesGraphData", {
+            obj: result
+        });
     });
+
+    socket.on('getUserTableData', () => {
+
+        let result = dataStore.getUsersReadyForTables();
+
+        socket.emit('recUserTableData', {
+            str: result
+        })
+    })
 
 });

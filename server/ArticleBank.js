@@ -6,6 +6,7 @@ var Article = require('./Article.js');
 var mysql = require('promise-mysql');
 var request = require('request-promise');
 var Promise = require("bluebird");
+var ProgressBar = require('progress');
 
 var ArticleBank = function () {
 
@@ -83,19 +84,29 @@ var ArticleBank = function () {
         });
     };
 
-    this.getNewSources = function (sourceMap) {
+    this.getNewSources = function () {
+        var bar = new ProgressBar('0% :bar :percent', {total: this.getSourceMap().size});
+        var timer = setInterval(function () {
+            if (bar.complete) {
+                clearInterval(timer);
+            }
+        }, 50);
+
+        function updateProgressBar() {
+            bar.tick()
+        }
 
         let promiseArr = [];
         for (let x of this.getSourceMap().values()) {
-            promiseArr.push(this.requestArticles(x.getName(), x.getCat(), x.getKey()));
+            promiseArr.push(this.requestArticles(x.getName(), x.getCat(), x.getKey()).then(value => {
+                updateProgressBar();
+                return value;
+            }));
         }
 
         return Promise.all(promiseArr).then(() => {
             console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;
-            console.log('all sources updated');
-            console.log(this.articleCount);
-            console.log(this.articles.size);
         }).catch(e => {
             console.log(e);
         });

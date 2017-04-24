@@ -9,8 +9,8 @@ var UUID = require('./UUID.js');
 var WordsFilter = require('./Words.js');
 var SourceAnalytics = require('./SourceAnalytics.js');
 var CategoryFilter = require('./CategoryFilter.js');
-
 var ArticleBank = require('./ArticleBank.js');
+
 var mysql = require('promise-mysql');
 var Promise = require("bluebird");
 var moment = require("moment");
@@ -59,6 +59,7 @@ var DataStore = function () {
                 clientObj.setCat(rows[i].category);
                 clientObj.setName(rows[i].name);
                 clientObj.setKey(rows[i].key);
+                clientObj.setState(rows[i].avalible);
                 self.addSource(rows[i].id, clientObj);
             }
         }).then(function () {
@@ -447,52 +448,13 @@ var DataStore = function () {
     };
 
     this.getPieData = () => {
+        return this.categoryFilter.getDataObj();
+    };
+
+    this.processCatData = () => {
         let articleMap = this.getAllArticles();
-
-        let dataObj = {
-            general: 0,
-            sport: 0,
-            technology: 0,
-            business: 0,
-            entertainment: 0,
-            science_and_nature: 0,
-            gaming: 0,
-            music: 0,
-        };
-
-        //Go through entire instance.
-
-        for (let i of articleMap.values()) {
-            switch (i.category) {
-                case "general":
-                    dataObj.general++;
-                    break;
-                case "sport":
-                    dataObj.sport++;
-                    break;
-                case "technology":
-                    dataObj.technology++;
-                    break;
-                case "business":
-                    dataObj.business++;
-                    break;
-                case "entertainment":
-                    dataObj.entertainment++;
-                    break;
-                case "science-and-nature":
-                    dataObj.science_and_nature++;
-                    break;
-                case"music":
-                    dataObj.music++;
-                    break;
-                case "gaming":
-                    dataObj.gaming++;
-                    break;
-            }
-        }
-
-        return dataObj;
-
+        this.categoryFilter.processArticles(articleMap);
+        console.log("Collected Category Stas");
     };
 
     /**
@@ -505,6 +467,8 @@ var DataStore = function () {
         }
 
         this.wordsFilter.getArrOfTopWords();
+
+        console.log("Collected Word Stats");
 
     };
 
@@ -535,10 +499,33 @@ var DataStore = function () {
 
     this.getSourcesData = () => {
 
+        /**
+         * Adds all source names to source object for processing.
+         */
+        for (let y of this.sourceArr.values()) {
+            this.sourceFilter.addSourceProp(y.getName())
+        }
+
+        let ArrOfCalls = [];
+
+        for (let x of this.getAllArticles().values()) {
+            ArrOfCalls.push(this.sourceFilter.processSourceData(x.getSource()));
+        }
+
+        return Promise.all(ArrOfCalls).then(() => {
+            console.log("Collected Sources Stats");
+        }).catch(e => {
+            console.log(e);
+        });
+
     };
 
+    /**
+     * Gets the source information from the source filter.
+     * @returns {{}|*}
+     */
     this.getSourceStats = () => {
-
+        return this.sourceFilter.getSourceData();
     };
 
 
@@ -548,7 +535,17 @@ var DataStore = function () {
      */
     this.getLoadedSourceBool = () => {
         return this.sourcesLoaded;
-    }
+    };
+
+    this.getUsersReadyForTables = () => {
+        let resultStr = "";
+        for (x of this.users.values()) {
+            resultStr += "<tr><td>" + x.id + "</td><td>" + x.email + "</td><td>" + x.admin + "</td></tr>";
+        }
+
+        return resultStr;
+
+    };
 
 };
 

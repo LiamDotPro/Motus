@@ -171,7 +171,11 @@ header {
     padding-bottom: 10px;
 }
 
-
+.table-header h2 {
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 
 /**
 pace
@@ -215,4 +219,5 @@ pace
 
 .pace-inactive {
     display: block;
+    position: fixed;
 }
