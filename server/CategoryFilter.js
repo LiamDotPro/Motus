@@ -34,7 +34,7 @@ var CategoryFilter = function () {
                 case "entertainment":
                     this.dataObj.entertainment++;
                     break;
-                case "science-and-nature":
+                case "science_and_nature":
                     this.dataObj.science_and_nature++;
                     break;
                 case"music":

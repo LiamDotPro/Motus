@@ -123,10 +123,13 @@ var ArticleBank = function () {
                 json.articles
                     .filter(article => !self.articles.has(article.title) && checkValueWith(article))
                     .map(article => {
+
                         var desc;
+
                         if (article.description != null) {
                             desc = article.description.replace(/[^\x20-\x7E]+/g, '');
                         }
+
                         const values = [json.source, article.author, article.title, desc, article.url, article.urlToImage, article.publishedAt, type, 0, createWebSafeLink(article.title)];
                         return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category,articleScore,webSafeLink) VALUES (?,?,?,?,?,?,?,?,?,?)', values);
                     })
@@ -170,6 +173,60 @@ var ArticleBank = function () {
      */
     this.getLoadedArticlesBool = function () {
         return this.loadedArticles;
+    };
+
+    this.queryArticleByLink = (link, socket) => {
+        this.pool.query('SELECT * FROM `articles` WHERE webSafeLink="' + link + '";').then(function (rows) {
+            for (var i in rows) {
+                const articleObj = new Article();
+                articleObj.setId(rows[i].id);
+                articleObj.setSource(rows[i].source);
+                articleObj.setAuthor(rows[i].author);
+                articleObj.setTitle(rows[i].title);
+                articleObj.setDesc(rows[i].articleDesc);
+                articleObj.setUrl(rows[i].url);
+                articleObj.setUrlToImage(rows[i].urlToImage);
+                articleObj.setPublishedAt(rows[i].publishedAt);
+                articleObj.setArticleScore(rows[i].articleScore);
+                articleObj.setCategory(rows[i].category);
+                articleObj.setWebSafeLink(rows[i].webSafeLink);
+
+                socket.emit('recSingleArticle', {
+                    article: articleObj
+                });
+
+            }
+        });
+    };
+
+    this.queryForMoreArticles = (id, socket) => {
+        this.pool.query('SELECT * FROM articles WHERE id < ' + id + ' order by id DESC limit 100;').then(function (rows) {
+
+            const tempArr = [];
+
+            for (var i in rows) {
+                const articleObj = new Article();
+                articleObj.setId(rows[i].id);
+                articleObj.setSource(rows[i].source);
+                articleObj.setAuthor(rows[i].author);
+                articleObj.setTitle(rows[i].title);
+                articleObj.setDesc(rows[i].articleDesc);
+                articleObj.setUrl(rows[i].url);
+                articleObj.setUrlToImage(rows[i].urlToImage);
+                articleObj.setPublishedAt(rows[i].publishedAt);
+                articleObj.setArticleScore(rows[i].articleScore);
+                articleObj.setCategory(rows[i].category);
+                articleObj.setWebSafeLink(rows[i].webSafeLink);
+
+                tempArr.push(articleObj);
+            }
+
+            return tempArr;
+        }).then((arr) => {
+            socket.emit('recFurtherArticles', {
+                arr: arr
+            });
+        });
     };
 
 

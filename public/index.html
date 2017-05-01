@@ -24,6 +24,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.0/fingerprint2.min.js"></script>
@@ -31,6 +33,7 @@
     <script src="/public/js/Client.js"></script>
     <script src="/public/js/Article.js"></script>
     <script src="/public/js/User.js"></script>
+    <script src="/public/js/LearningAlgorithm.js"></script>
 </head>
 <body>
 
@@ -80,7 +83,7 @@
 
     //Setting up website for viewing.
     var thisClient = new Client(socket);
-    var thisWebsite = new Website();
+    var thisWebsite = new Website(socket);
 
     //    thisClient.deleteCookie('id');
     //    thisClient.deleteCookie('createdAt');
@@ -90,7 +93,7 @@
     thisWebsite.setupArticleCollector(socket);
 
 
-    //Self executing annoymous function used as a loader.
+    //Self executing anonymous function used as a loader.
     (() => {
 
         var path = window.location.pathname.toLowerCase();
@@ -121,8 +124,10 @@
                     break;
             }
         } else {
-           console.log("Article Link Found");
-           
+            loadState('silent');
+            socket.emit('getSingleArticleByLink', {
+                link: path.replace("/article/", "")
+            });
 
         }
 
@@ -182,6 +187,10 @@
         thisClient.addCookie(data.id);
     });
 
+    function formatDate(str) {
+        return moment(str).format("Do MMMM YYYY, h:mm:ss a");
+    }
+
     socket.on('loadArticles', function (data) {
 
         console.log(data);
@@ -204,13 +213,10 @@
             tempArr.push(tempArticle);
         }
 
-        function formatDate(str) {
-            return moment(str).format("Do MMMM YYYY, h:mm:ss a");
-        }
 
         thisWebsite.setArticleList(tempArr);
-        thisWebsite.sortArticlesById();
 
+        thisWebsite.sortByLearning();
 
         if (data.type === 'load') {
             thisWebsite.websiteLoadArticles(10);
@@ -223,6 +229,41 @@
         }
 
 
+    });
+
+    /**
+     * Receives and loads a single article to the website.
+     */
+    socket.on('recSingleArticle', (data) => {
+        console.log(data.article);
+        var article = data.article;
+
+        //set history state object
+        var stateObj = {previousLoc: window.location.pathname};
+        history.pushState(stateObj, "Article Page", "/article/" + article.websafelink);
+
+        //remove scrolling
+        if (thisWebsite.getScrolling() === true) {
+            //no scrolling currently attached.
+            window.removeEventListener('scroll', scrollEvent);
+            thisWebsite.setScrolling(false);
+        }
+
+
+        //build article stub
+        var articleHub = document.getElementById('article-hub');
+        articleHub.innerHTML = '<div id="aticle-holder"><div class="col-md-12 article-way-back-section"><a id="backToArticlesBtn" href="/home"><i class="fa fa-arrow-left"></i> Back to Articles</a><a id="articleTackBtn" class="pull-right" href=""><i class="fa fa-thumb-tack"></i></a></div><div class="col-md-12 nopad"><img src="' + article.urlToImage + '"' + ' class="img-responsive article-full-image"></div><div class="article-page col-md-12 text-center"><div class="article-page-minimal-controls"><a href=""><i class="fa fa-twitter"></i></a><a href=""><i class="fa fa-facebook"></i></a><a href=""><i class="fa fa-google-plus"></i></a><a href=""><i class="fa fa-reddit"></i></a></div><div class="article-page-info"><p>' + article.author + ' | ' + article.source + ' | ' + article.publishedAt + ' | ' + article.category + '</p></div><h1>' + article.title + '</h1><h2>' + article.desc + '</h2><div class="article-page-link"><a id="articleViewBtn" href="' + article.url + '" target="_blank"><i class="fa fa-link"></i>View Full Article Here</a></div></div></div>';
+
+        $('#news-hub').addClass('hidden');
+        $('#minimal-Controls').addClass('hidden');
+        $('#article-hub').removeClass('hidden');
+    });
+
+    /**
+     * Returned when no article was found for display from link.
+     */
+    socket.on('articleNotFound', () => {
+        window.location.replace('/');
     });
 
     socket.on('addNewArticles', function (data) {
@@ -320,6 +361,32 @@
         //appends existing saved articles to the list.
         thisClient.appendPinnedArticles();
 
+
+    });
+
+    /**
+     * When further articles are received this is done.
+     */
+    socket.on('recFurtherArticles', (data) => {
+        var tempArr = data.arr;
+
+        thisWebsite.setLastId(tempArr[tempArr.length - 1].id);
+
+        for (var x = 0; x < tempArr.length; x++) {
+            var tempArticle = new Article();
+            tempArticle.setId(tempArr[x].id);
+            tempArticle.setSource(tempArr[x].source);
+            tempArticle.setAuthor(tempArr[x].author);
+            tempArticle.setTitle(tempArr[x].title);
+            tempArticle.setDesc(tempArr[x].desc);
+            tempArticle.setUrl(tempArr[x].url);
+            tempArticle.setUrlToImage(tempArr[x].urlToImage);
+            tempArticle.setPublishedAt(formatDate(tempArr[x].publishedAt));
+            tempArticle.setArticleScore(tempArr[x].score);
+            tempArticle.setCategory(tempArr[x].category);
+            tempArticle.setWebSafeLink(tempArr[x].websafelink);
+            thisWebsite.pushFurtherArticle(tempArticle);
+        }
 
     });
 
@@ -561,6 +628,13 @@
 
             $('#pinlist-ul').empty();
 
+        });
+
+        /**
+         * Sets the category values from the server.
+         */
+        socket.on('recCategoryValues', (data) => {
+           thisWebsite.getLearning().setCategoryValues(data.valuesObj);
         });
 
     });

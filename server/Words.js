@@ -34,7 +34,7 @@ var Words = function () {
 
     this.getArrOfTopWords = () => {
 
-        let bannedWords = new Set(["stuff", "never", "still", "making", "today", "actually", "getting", "better"]);
+        let bannedWords = new Set(["stuff", "never", "still", "making", "today", "actually", "getting", "better", "about", "sports", "after", "could"]);
         let testWords = this.wordArr.filter(_ => !bannedWords.has(_));
 
         let counts = testWords.reduce((acc, cur) => {

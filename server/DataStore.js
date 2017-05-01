@@ -562,6 +562,14 @@ var DataStore = function () {
 
     };
 
+    this.getSingleArticle = (link, socket) => {
+        this.articleBank.queryArticleByLink(link, socket);
+    };
+
+    this.requestNext100 = (id, socket) => {
+        this.articleBank.queryForMoreArticles(id, socket);
+    };
+
 };
 
 module.exports = DataStore;

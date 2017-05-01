@@ -11,6 +11,11 @@ var request = require('request-promise');
 var Promise = require("bluebird");
 var schedule = require('node-schedule');
 var moment = require('moment');
+var memwatch = require('memwatch-next');
+
+memwatch.on('leak', function (info) {
+    console.log(info)
+});
 
 //api key for news api - cfe8990468894b4a96882692c13f063b - newsapi.org
 
@@ -133,7 +138,7 @@ server.listen(80);
  */
 
 /**
- *
+ * Article Stats schedule rules and function.
  * @type {*}
  */
 var rule = new schedule.rescheduleJob();
@@ -229,28 +234,31 @@ io.on('connection', function (socket) {
     socket.on('websiteLoad', function (data) {
         ensureDataIsAvailable().then(function () {
             //Database is ready for view to be extracted.
-            var view = dataStore.getArticleBank().getAllArticles();
+            var articleArr = Array.from(dataStore.getArticleBank().getAllArticles());
+
+            articleArr.sort(function (a, b) {
+                return b[1].id - a[1].id;
+            });
+
             var arrOfArticles = [];
 
-            view.forEach(function (value, key) {
-
+            for (var x = 0; x < 100; x++) {
                 var articleObj = {
-                    id: value.getId(),
-                    source: value.getSource(),
-                    author: value.getAuthor(),
-                    title: value.getTitle(),
-                    desc: value.getDesc(),
-                    url: value.getUrl(),
-                    urlToImage: value.getUrlToImage(),
-                    publishedAt: value.getPublishedAt(),
-                    score: value.getArticleScore(),
-                    category: value.getCategory(),
-                    webSafeLink: value.getWebSafeLink()
+                    id: articleArr[x][1].id,
+                    source: articleArr[x][1].source,
+                    author: articleArr[x][1].author,
+                    title: articleArr[x][1].title,
+                    desc: articleArr[x][1].desc,
+                    url: articleArr[x][1].url,
+                    urlToImage: articleArr[x][1].urlToImage,
+                    publishedAt: articleArr[x][1].publishedAt,
+                    score: articleArr[x][1].articleScore,
+                    category: articleArr[x][1].category,
+                    webSafeLink: articleArr[x][1].getWebSafeLink()
                 };
 
                 arrOfArticles.push(articleObj);
-
-            });
+            }
 
             if (data.type === 'silent') {
                 socket.emit('loadArticles', {
@@ -263,6 +271,11 @@ io.on('connection', function (socket) {
                     type: data.type
                 });
             }
+
+            socket.emit('recCategoryValues', {
+                valuesObj: dataStore.getPieData()
+            });
+
         });
     });
 
@@ -497,6 +510,16 @@ io.on('connection', function (socket) {
             arr: result
         });
 
+    });
+
+    socket.on('getSingleArticleByLink', (data) => {
+        let result = dataStore.getSingleArticle(data.link, socket);
+    });
+
+    socket.on('getFurtherArticles', (data) => {
+        let id = data.lastId;
+
+        dataStore.requestNext100(id, socket);
     });
 
 });

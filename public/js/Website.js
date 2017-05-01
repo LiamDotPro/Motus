@@ -3,7 +3,7 @@
  */
 
 
-function Website() {
+function Website(socket) {
 
     var self = this;
     this.articleList = [];
@@ -11,9 +11,21 @@ function Website() {
     this.unloadedArticles = [];
     this.currentViewType = 'list';
     this.scrolling = false;
+    this.loadCount = 0;
+    this.lastId = 0;
+    this.learning = new LearningAlgorithm(socket);
+
+    this.getLearning = () => {
+        return this.learning;
+    };
+
+    this.sortByLearning = () => {
+         this.learning.orderDataBasedOnValues(this.articleList);
+    };
 
     this.setArticleList = function (arrOfArticles) {
         this.articleList = arrOfArticles;
+        this.lastId = this.articleList[this.articleList.length - 1].getId();
     };
 
     this.getArticleList = function () {
@@ -48,6 +60,18 @@ function Website() {
                     i++;
                 }
             }
+            this.loadCount++;
+        }
+
+        if (this.loadCount > 98) {
+
+            this.loadCount = 0;
+
+            console.log("found load amount");
+
+            socket.emit('getFurtherArticles', {
+                lastId: this.articleList[this.articleList.length - 1].getId()
+            })
         }
 
         //Set time out to let dom elements render efficiently.
@@ -132,6 +156,10 @@ function Website() {
 
     this.pushNewArticle = (newArticle) => {
         this.unloadedArticles.push(newArticle);
+    };
+
+    this.pushFurtherArticle = (article) => {
+        this.articleList.push(article);
     };
 
     this.getUnloadedArticles = () => {
@@ -229,8 +257,8 @@ function Website() {
         return false;
     };
 
-    this.updatePinnedArticleList = () => {
-
+    this.setLastId = (newID) => {
+        this.lastId = newID;
     };
 
     this.addPinnedArticleToList = (article) => {
