@@ -24,7 +24,6 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.0/list.min.js"></script>
@@ -33,6 +32,7 @@
     <script src="/public/js/Client.js"></script>
     <script src="/public/js/Article.js"></script>
     <script src="/public/js/User.js"></script>
+    <script src="/public/js/js-weighted-list.js"></script>
     <script src="/public/js/LearningAlgorithm.js"></script>
 </head>
 <body>
@@ -267,7 +267,7 @@
     });
 
     socket.on('addNewArticles', function (data) {
-        console.log("recieved new articles");
+        console.log("received new articles");
         if (data.arrOfNewArticles.length > 0) {
             var articles = data.arrOfNewArticles;
             for (var x in articles) {
@@ -382,7 +382,7 @@
             tempArticle.setUrl(tempArr[x].url);
             tempArticle.setUrlToImage(tempArr[x].urlToImage);
             tempArticle.setPublishedAt(formatDate(tempArr[x].publishedAt));
-            tempArticle.setArticleScore(tempArr[x].score);
+            tempArticle.setArticleScore(tempArr[x].articleScore);
             tempArticle.setCategory(tempArr[x].category);
             tempArticle.setWebSafeLink(tempArr[x].websafelink);
             thisWebsite.pushFurtherArticle(tempArticle);
@@ -550,7 +550,7 @@
             }
         });
 
-        //programtic handling of click event on articles
+        //programmatic handling of click event on articles
         $(document).on('click', '.article-link', (e) => {
 
             //grab scroll bar height first
@@ -634,7 +634,7 @@
          * Sets the category values from the server.
          */
         socket.on('recCategoryValues', (data) => {
-           thisWebsite.getLearning().setCategoryValues(data.valuesObj);
+            thisWebsite.getLearning().setCategoryValues(data.valuesObj);
         });
 
     });

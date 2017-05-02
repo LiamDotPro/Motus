@@ -33,14 +33,6 @@ var DataStore = function () {
 
 
     /**
-     * Gets all articles from the articlebank.
-     * @returns {DataStore}
-     */
-    this.getAllArticles = function () {
-        return this.articleBank.getAllArticles();
-    };
-
-    /**
      * sets the connection pool.
      * @param pool
      */
@@ -99,7 +91,6 @@ var DataStore = function () {
 
     this.getArticles = function (pool) {
         this.articleBank.setPool(pool);
-        this.articleBank.loadArticlesFromDatabase();
         this.articleBank.StartCollectingArticles(this.sourceArr);
     };
 
@@ -423,7 +414,7 @@ var DataStore = function () {
      */
     this.logArticleStats = (day, month, year) => {
         let poolRef = this.pool;
-        poolRef.query('INSERT INTO `articlecounter` (day,month,year,count) VALUES (?,?,?,?)', [day, month, year, this.getAllArticles().size]);
+        poolRef.query('INSERT INTO `articlecounter` (day,month,year,count) VALUES (?,?,?,?)', [day, month, year, this.getArticleBank().getArticlesSize()]);
     };
 
     this.getGraphData = (day, month, year, socket) => {
@@ -442,7 +433,7 @@ var DataStore = function () {
         }).then((arr) => {
             socket.emit('recGraphData', {
                 arr: arr,
-                currentCount: self.getAllArticles().size
+                currentCount: self.getArticleBank().getArticlesSize()
             });
         });
     };
@@ -452,9 +443,10 @@ var DataStore = function () {
     };
 
     this.processCatData = () => {
-        let articleMap = this.getAllArticles();
-        this.categoryFilter.processArticles(articleMap);
-        console.log("Collected Category Stas");
+        this.getArticleBank().getAllArticles().then((res) => {
+            this.categoryFilter.processArticles(res);
+            console.log("Collected Category Stats");
+        });
     };
 
     /**
@@ -462,14 +454,14 @@ var DataStore = function () {
      */
     this.getWordStats = () => {
 
-        for (var i of this.getAllArticles().values()) {
-            this.wordsFilter.checkString(i.title);
-        }
-
-        this.wordsFilter.getArrOfTopWords();
-
-        console.log("Collected Word Stats");
-
+        this.getArticleBank().getAllArticles().then((arr) => {
+            for (let i of arr) {
+                this.wordsFilter.checkString(i.title);
+            }
+        }).then(() => {
+            this.wordsFilter.getArrOfTopWords();
+            console.log("Collected Word Stats");
+        });
     };
 
     this.getTop10Words = () => {
@@ -483,18 +475,21 @@ var DataStore = function () {
     this.getArticlesReadyForTables = (range) => {
         let resultStr = "";
 
-        var c = 0;
 
-        for (x of this.getAllArticles().values()) {
-            if (c <= range) {
-                resultStr += "<tr><td><a href='/articles/" + x.websafelink + "'><i class='fa fa-eye'></i></a></td><td>" + x.source + "</td><td>" + x.title + "</td><td>" + moment(x.publishedAt).format("DD MM YYYY - h:mm a") + "</td><td>" + x.articleScore + "</td></tr>";
-                c++;
-            } else {
-                break;
+        this.getArticleBank().getAllArticles().then((res) => {
+            let c = 0;
+            for (x of res) {
+                if (c <= range) {
+                    resultStr += "<tr><td><a href='/articles/" + x.websafelink + "'><i class='fa fa-eye'></i></a></td><td>" + x.source + "</td><td>" + x.title + "</td><td>" + moment(x.publishedAt).format("DD MM YYYY - h:mm a") + "</td><td>" + x.articleScore + "</td></tr>";
+                    c++;
+                } else {
+                    break;
+                }
             }
-        }
 
-        return resultStr;
+            return resultStr;
+        });
+
     };
 
     this.getSourcesData = () => {
@@ -506,17 +501,21 @@ var DataStore = function () {
             this.sourceFilter.addSourceProp(y.getName())
         }
 
-        let ArrOfCalls = [];
+        this.getArticleBank().getAllArticles().then((res) => {
+            let ArrOfCalls = [];
 
-        for (let x of this.getAllArticles().values()) {
-            ArrOfCalls.push(this.sourceFilter.processSourceData(x.getSource()));
-        }
+            for (let x of res) {
+                ArrOfCalls.push(this.sourceFilter.processSourceData(x.getSource()));
+            }
 
-        return Promise.all(ArrOfCalls).then(() => {
-            console.log("Collected Sources Stats");
-        }).catch(e => {
-            console.log(e);
+            return Promise.all(ArrOfCalls).then(() => {
+                console.log("Collected Sources Stats");
+            }).catch(e => {
+                console.log(e);
+            });
+
         });
+
 
     };
 
@@ -569,6 +568,7 @@ var DataStore = function () {
     this.requestNext100 = (id, socket) => {
         this.articleBank.queryForMoreArticles(id, socket);
     };
+
 
 };
 

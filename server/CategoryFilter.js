@@ -16,8 +16,8 @@ var CategoryFilter = function () {
     };
 
 
-    this.processArticles = (articleMap) => {
-        for (let i of articleMap.values()) {
+    this.processArticles = (articleArr) => {
+        for (let i of articleArr) {
             switch (i.category) {
                 case "general":
                     this.dataObj.general++;

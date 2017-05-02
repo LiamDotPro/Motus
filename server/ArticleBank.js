@@ -12,9 +12,6 @@ var ArticleBank = function () {
 
     var self = this;
 
-    this.articles = new Map();
-    this.articleCount = 0;
-    this.tags = ['general', 'technology', 'sport', 'business', 'entertainment', 'music', 'science-and-nature', 'gaming'];
     this.pool = null;
     this.loadedArticles = false;
     this.sourceMap = null;
@@ -35,44 +32,12 @@ var ArticleBank = function () {
         return this.sourceMap;
     };
 
-    /**
-     * Ref to self which can be used in context inside the outer lexical scope.
-     * @returns {DataStore}
-     */
-    this.getSelf = function () {
-        return self;
-    };
-
-    this.getAllArticles = function () {
-        return this.articles;
+    this.getArticlesSize = () => {
+        return this.articleCount;
     };
 
     this.setPool = function (poolRef) {
         this.pool = poolRef;
-    };
-
-    this.loadArticlesFromDatabase = function () {
-        return this.pool.query('SELECT * FROM `articles` ORDER BY id DESC').then((rows) => {
-            return rows
-                .filter(row => !this.articles.has(row.title))
-                .map((row) => {
-                    const articleObj = new Article();
-                    articleObj.setId(row.id);
-                    articleObj.setSource(row.source);
-                    articleObj.setAuthor(row.author);
-                    articleObj.setTitle(row.title);
-                    articleObj.setDesc(row.articleDesc);
-                    articleObj.setUrl(row.url);
-                    articleObj.setUrlToImage(row.urlToImage);
-                    articleObj.setPublishedAt(row.publishedAt);
-                    articleObj.setArticleScore(row.articleScore);
-                    articleObj.setCategory(row.category);
-                    articleObj.setWebSafeLink(row.webSafeLink);
-                    this.articles.set(row.title, articleObj);
-                });
-        }).catch(e => {
-            console.log(e);
-        });
     };
 
     this.StartCollectingArticles = function (sourceMap) {
@@ -80,7 +45,16 @@ var ArticleBank = function () {
         return this.getNewSources().then(() => {
             setInterval(self.getNewSources.bind(this), 600000);
         }).then(() => {
-            this.articleCount = this.articles.size;
+            this.queryForSize().then((res) => {
+                console.log("Articles Loaded this round: " + res);
+            });
+        });
+    };
+
+    this.queryForSize = function () {
+        return this.pool.query("SELECT COUNT(*) FROM `articles`;").then((rows) => {
+            this.articleCount = rows[0]['COUNT(*)'];
+            return rows[0]['COUNT(*)'];
         });
     };
 
@@ -105,8 +79,10 @@ var ArticleBank = function () {
         }
 
         return Promise.all(promiseArr).then(() => {
-            console.log("Articles loaded this round: " + this.articles.size);
             this.loadedArticles = true;
+            this.queryForSize().then((res) => {
+                console.log(res);
+            });
         }).catch(e => {
             console.log(e);
         });
@@ -119,23 +95,30 @@ var ArticleBank = function () {
     this.requestArticles = function (source, type, query) {
         return request(query).then((body) => {
             const json = JSON.parse(body);
+            if (json.status !== "ok") {
+                Console.log(json.source + "Failed Response.");
+            }
             return Promise.all(
                 json.articles
-                    .filter(article => !self.articles.has(article.title) && checkValueWith(article))
+                    .filter(article => checkValueWith(article).then((res) => {
+                        console.log(res);
+                        return res;
+                    }))
                     .map(article => {
 
-                        var desc;
+                        let desc, title;
 
                         if (article.description != null) {
                             desc = article.description.replace(/[^\x20-\x7E]+/g, '');
                         }
 
-                        const values = [json.source, article.author, article.title, desc, article.url, article.urlToImage, article.publishedAt, type, 0, createWebSafeLink(article.title)];
+                        if (article.title != null) {
+                            title = article.title.replace(/[^\x20-\x7E]+/g, '');
+                        }
+
+                        const values = [json.source, article.author, title, desc, article.url, article.urlToImage, article.publishedAt, type, 0, createWebSafeLink(title)];
                         return this.pool.query('INSERT INTO `articles` (source,author,title,articleDesc,url,urlToImage,publishedAt,category,articleScore,webSafeLink) VALUES (?,?,?,?,?,?,?,?,?,?)', values);
                     })
-            ).then(() => {
-                    self.loadArticlesFromDatabase();
-                }
             );
         }).catch(e => {
             console.log(e);
@@ -148,12 +131,9 @@ var ArticleBank = function () {
      * @returns {boolean}
      */
     function checkValueWith(articleData) {
-        for (var [key, value] of self.articles) {
-            if (value.getPublishedAt() === articleData.publishedAt && value.getUrl() === articleData.url) {
-                return false;
-            }
-        }
-        return true;
+        return self.pool.query('Select * from `articles` where title="'+ articleData.title +'" OR url="'+ articleData.url +'"; ').then((rows) => {
+            return rows.length > 0;
+        });
     }
 
     function createWebSafeLink(str) {
@@ -223,10 +203,61 @@ var ArticleBank = function () {
 
             return tempArr;
         }).then((arr) => {
+            console.log("sent " + arr.length + " more articles");
             socket.emit('recFurtherArticles', {
                 arr: arr
             });
         });
+    };
+
+    this.getAllArticles = () => {
+        return this.pool.query("Select * from `Articles`").then(function (rows) {
+            const tempArr = [];
+
+            for (let i in rows) {
+                const articleObj = new Article();
+                articleObj.setId(rows[i].id);
+                articleObj.setSource(rows[i].source);
+                articleObj.setAuthor(rows[i].author);
+                articleObj.setTitle(rows[i].title);
+                articleObj.setDesc(rows[i].articleDesc);
+                articleObj.setUrl(rows[i].url);
+                articleObj.setUrlToImage(rows[i].urlToImage);
+                articleObj.setPublishedAt(rows[i].publishedAt);
+                articleObj.setArticleScore(rows[i].articleScore);
+                articleObj.setCategory(rows[i].category);
+                articleObj.setWebSafeLink(rows[i].webSafeLink);
+
+                tempArr.push(articleObj);
+            }
+
+            return tempArr;
+        });
+    };
+
+    this.getLatestID = (id) => {
+        return this.pool.query("Select * from `articles` Where id > " + id + ";").then((rows) => {
+            const tempArr = [];
+
+            for (let i in rows) {
+                const articleObj = new Article();
+                articleObj.setId(rows[i].id);
+                articleObj.setSource(rows[i].source);
+                articleObj.setAuthor(rows[i].author);
+                articleObj.setTitle(rows[i].title);
+                articleObj.setDesc(rows[i].articleDesc);
+                articleObj.setUrl(rows[i].url);
+                articleObj.setUrlToImage(rows[i].urlToImage);
+                articleObj.setPublishedAt(rows[i].publishedAt);
+                articleObj.setArticleScore(rows[i].articleScore);
+                articleObj.setCategory(rows[i].category);
+                articleObj.setWebSafeLink(rows[i].webSafeLink);
+
+                tempArr.push(articleObj);
+            }
+
+            return tempArr;
+        })
     };
 
 

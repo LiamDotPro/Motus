@@ -145,6 +145,8 @@ function LearningAlgorithm(socket) {
         }, 120000);
     };
 
+
+
     this.getProfile = () => {
         return this.categoryProfile;
     };
@@ -164,76 +166,40 @@ function LearningAlgorithm(socket) {
         //This makes records records kind of random but categories regularly viewed will change.
         for (let x = 0; x < keys.length; x++) {
             if (categoryCopy[keys[x]] < 1) {
-                categoryCopy[keys[x]] = ((Math.random() * 1.5) + 0.5).toFixed(2);
+                categoryCopy[keys[x]] = ((Math.random() * 2) + 1).toFixed(2);
             }
         }
 
-        let keysSorted = Object.keys(categoryCopy).sort((a, b) => categoryCopy[a] - categoryCopy[b]);
+        let dataArr = [];
 
-        let output = groupBy(articlesArr, 'category');
-        let outputKeys = Object.keys(output);
+        for (let y = 0; y < articlesArr.length; y++) {
 
+            let title = articlesArr[y].title;
 
-        var intersectionArr = keysSorted.filter(function (n) {
-            return outputKeys.indexOf(n) !== -1;
-        });
-
-        console.log(output);
-
-
-        // let resultArr = intersectionArr.reduce(function(acc, key){
-        //     let categoryData = output[key];
-        //
-        //     let numItemsToTake = _.random(1, categoryData.length);
-        //     let items = _.sample(categoryData, numItemsToTake);
-        //     acc.push(...items);
-        //     return acc;
-        // }, []);
-
-        let resultArr = [];
-        let categoryNum = 0;
-        let c = 0;
-        while (c < articlesArr.length) {
-            //We reached the end of the iteration reset
-            if (categoryNum == intersectionArr.length) {
-                categoryNum = 0;
+            if(articlesArr[y].title === null || articlesArr[y].title === "" || articlesArr[y].title === " " || articlesArr[y].title === 'undefined'){
+                title = "not specified";
             }
 
-            debugger;
-            if (output[intersectionArr[categoryNum]].length != 0) {
-                let r = getRandomArbitrary(1, (output[intersectionArr[categoryNum]].length));
-                console.log(output[intersectionArr[categoryNum]].length);
-                console.log(r);
-
-                //for loop takes the necessary articles
-                for (let t = 0; t < r; t++) {
-                    console.log(intersectionArr[categoryNum]);
-                    resultArr.push(output[intersectionArr[categoryNum]][t]);
-                    //splice the entry so we can always start from 0 on the remaining set.
-                    output[intersectionArr[categoryNum]].splice(t, 1);
-                    c++;
-                }
-
-
-            }
-
-
-
-            categoryNum++;
+            let value = parseInt(categoryCopy[articlesArr[y].category]);
+            dataArr.push([articlesArr[y].title, value, {
+                name: title,
+                weight: value,
+                data: articlesArr[y]
+            }]);
         }
-        console.log(resultArr);
+        let wl = new WeightedList(dataArr);
+
+        let result = wl.shuffle();
+
+        let returnArr = [];
+
+        for(let t of result){
+            returnArr.push(t.data.data);
+        }
+
+        return returnArr;
+
     };
-
-    function groupBy(arr, property) {
-        return arr.reduce(function (memo, x) {
-            if (!memo[x[property]]) {
-                memo[x[property]] = [];
-            }
-            memo[x[property]].push(x);
-
-            return memo;
-        }, {});
-    }
 
     function getRandomArbitrary(min, max) {
         return Math.floor(Math.random() * (max - min) + min);

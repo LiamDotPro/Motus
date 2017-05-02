@@ -13,6 +13,7 @@ function Website(socket) {
     this.scrolling = false;
     this.loadCount = 0;
     this.lastId = 0;
+    this.firstId = 0;
     this.learning = new LearningAlgorithm(socket);
 
     this.getLearning = () => {
@@ -20,12 +21,13 @@ function Website(socket) {
     };
 
     this.sortByLearning = () => {
-         this.learning.orderDataBasedOnValues(this.articleList);
+        this.articleList = this.learning.orderDataBasedOnValues(this.articleList);
     };
 
     this.setArticleList = function (arrOfArticles) {
         this.articleList = arrOfArticles;
         this.lastId = this.articleList[this.articleList.length - 1].getId();
+        this.firstId = this.articleList[0].getId();
     };
 
     this.getArticleList = function () {
@@ -127,7 +129,7 @@ function Website(socket) {
             if (self.getUnloadedArticles().length > 0) {
                 currentId = self.getUnloadedArticles()[self.getUnloadedArticles().length - 1].id;
             } else {
-                currentId = self.getArticleList()[0].id;
+                currentId = self.firstId;
             }
 
             socket.emit('checkForNewArticles', {

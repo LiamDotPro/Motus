@@ -234,47 +234,49 @@ io.on('connection', function (socket) {
     socket.on('websiteLoad', function (data) {
         ensureDataIsAvailable().then(function () {
             //Database is ready for view to be extracted.
-            var articleArr = Array.from(dataStore.getArticleBank().getAllArticles());
+            dataStore.getArticleBank().getAllArticles().then((articleArr) => {
 
-            articleArr.sort(function (a, b) {
-                return b[1].id - a[1].id;
+                articleArr.sort(function (a, b) {
+                    return b.id - a.id;
+                });
+
+                var arrOfArticles = [];
+
+                for (var x = 0; x < 100; x++) {
+                    var articleObj = {
+                        id: articleArr[x].id,
+                        source: articleArr[x].source,
+                        author: articleArr[x].author,
+                        title: articleArr[x].title,
+                        desc: articleArr[x].desc,
+                        url: articleArr[x].url,
+                        urlToImage: articleArr[x].urlToImage,
+                        publishedAt: articleArr[x].publishedAt,
+                        score: articleArr[x].articleScore,
+                        category: articleArr[x].category,
+                        webSafeLink: articleArr[x].getWebSafeLink()
+                    };
+
+                    arrOfArticles.push(articleObj);
+                }
+
+                if (data.type === 'silent') {
+                    socket.emit('loadArticles', {
+                        articles: arrOfArticles,
+                        type: data.type
+                    });
+                } else if (data.type === 'load') {
+                    socket.emit('loadArticles', {
+                        articles: arrOfArticles,
+                        type: data.type
+                    });
+                }
+
+                socket.emit('recCategoryValues', {
+                    valuesObj: dataStore.getPieData()
+                });
             });
 
-            var arrOfArticles = [];
-
-            for (var x = 0; x < 100; x++) {
-                var articleObj = {
-                    id: articleArr[x][1].id,
-                    source: articleArr[x][1].source,
-                    author: articleArr[x][1].author,
-                    title: articleArr[x][1].title,
-                    desc: articleArr[x][1].desc,
-                    url: articleArr[x][1].url,
-                    urlToImage: articleArr[x][1].urlToImage,
-                    publishedAt: articleArr[x][1].publishedAt,
-                    score: articleArr[x][1].articleScore,
-                    category: articleArr[x][1].category,
-                    webSafeLink: articleArr[x][1].getWebSafeLink()
-                };
-
-                arrOfArticles.push(articleObj);
-            }
-
-            if (data.type === 'silent') {
-                socket.emit('loadArticles', {
-                    articles: arrOfArticles,
-                    type: data.type
-                });
-            } else if (data.type === 'load') {
-                socket.emit('loadArticles', {
-                    articles: arrOfArticles,
-                    type: data.type
-                });
-            }
-
-            socket.emit('recCategoryValues', {
-                valuesObj: dataStore.getPieData()
-            });
 
         });
     });
@@ -382,32 +384,14 @@ io.on('connection', function (socket) {
 
     socket.on('checkForNewArticles', function (data) {
         var latestID = data.latestId;
-
-        var articleMap = dataStore.getArticleBank().getAllArticles();
-
-        var articleArr = Array.from(articleMap);
-
-        articleArr.sort(function (a, b) {
-            return b[1].id - a[1].id;
-        });
-
-        var resultArr = [];
-
-        for (var i = 0; i < articleArr.length; i++) {
-            if (latestID < articleArr[i][1].id) {
-                resultArr.push(articleArr[i][1]);
-            } else {
-                //break as were parsing articles the user already has.
-                break;
+        dataStore.getArticleBank().getLatestID(latestID).then((articleArr) => {
+            console.log("here");
+            if (articleArr.length > 0) {
+                socket.emit('addNewArticles', {
+                    arrOfNewArticles: articleArr
+                });
             }
-        }
-
-        if (resultArr.length > 0) {
-            socket.emit('addNewArticles', {
-                arrOfNewArticles: resultArr
-            });
-        }
-
+        });
     });
 
     /**
@@ -439,7 +423,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('getArticleCount', () => {
-        let len = dataStore.getAllArticles().size;
+        let len = dataStore.getArticleBank().getArticlesSize();
         socket.emit('recArticleCount', {
             count: len
         });
