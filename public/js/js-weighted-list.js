@@ -81,7 +81,7 @@ var WeightedList = (function() {
             //console.debug('k:', key, 'w:', weight, 'd:', data);
 
             if (this.weights[key]) {
-                throw new Error('');
+                //debugger;
             }
             if (typeof weight !== typeof 1) {
                 throw new Error('Weight must be numeric (got ' + weight.toString() + ')');

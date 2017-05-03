@@ -132,6 +132,7 @@
     });
 
     socket.on("recArticlesTableData", (data) => {
+        console.log(data);
         $(document).ready(function () {
 
             $('#articlesDataView').append('<table id="article-table" class="table table-striped table-bordered display"><thead><tr><th></th><th>source</th><th>title</th><th>Publish Date</th><th>Article Score</th></tr></thead>' + data.str + '<tbody id="tableData"> </tbody></table>');

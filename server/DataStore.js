@@ -476,7 +476,7 @@ var DataStore = function () {
         let resultStr = "";
 
 
-        this.getArticleBank().getAllArticles().then((res) => {
+        return this.getArticleBank().getAllArticles().then((res) => {
             let c = 0;
             for (x of res) {
                 if (c <= range) {

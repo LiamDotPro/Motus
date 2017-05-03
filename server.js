@@ -216,69 +216,52 @@ io.on('connection', function (socket) {
     //Holds the Unique ID of this client session for retrieval from the datastore.
     var connectedClient = '';
 
-    function ensureDataIsAvailable() {
-        return new Promise(function (resolve, reject) {
-            waitForData(resolve);
-        });
-    }
-
-    function waitForData(resolve) {
-        if (!dataStore.getArticleBank().getLoadedArticlesBool()) {
-            console.log(dataStore.getArticleBank().getLoadedArticlesBool());
-            setTimeout(waitForData.bind(this, resolve), 300);
-        } else {
-            resolve();
-        }
-    }
-
     socket.on('websiteLoad', function (data) {
-        ensureDataIsAvailable().then(function () {
-            //Database is ready for view to be extracted.
-            dataStore.getArticleBank().getAllArticles().then((articleArr) => {
+        //lower call to 100
+        dataStore.getArticleBank().getAllArticles().then((articleArr) => {
 
-                articleArr.sort(function (a, b) {
-                    return b.id - a.id;
-                });
-
-                var arrOfArticles = [];
-
-                for (var x = 0; x < 100; x++) {
-                    var articleObj = {
-                        id: articleArr[x].id,
-                        source: articleArr[x].source,
-                        author: articleArr[x].author,
-                        title: articleArr[x].title,
-                        desc: articleArr[x].desc,
-                        url: articleArr[x].url,
-                        urlToImage: articleArr[x].urlToImage,
-                        publishedAt: articleArr[x].publishedAt,
-                        score: articleArr[x].articleScore,
-                        category: articleArr[x].category,
-                        webSafeLink: articleArr[x].getWebSafeLink()
-                    };
-
-                    arrOfArticles.push(articleObj);
-                }
-
-                if (data.type === 'silent') {
-                    socket.emit('loadArticles', {
-                        articles: arrOfArticles,
-                        type: data.type
-                    });
-                } else if (data.type === 'load') {
-                    socket.emit('loadArticles', {
-                        articles: arrOfArticles,
-                        type: data.type
-                    });
-                }
-
-                socket.emit('recCategoryValues', {
-                    valuesObj: dataStore.getPieData()
-                });
+            articleArr.sort(function (a, b) {
+                return b.id - a.id;
             });
 
+            var arrOfArticles = [];
 
+            for (var x = 0; x < 100; x++) {
+                var articleObj = {
+                    id: articleArr[x].id,
+                    source: articleArr[x].source,
+                    author: articleArr[x].author,
+                    title: articleArr[x].title,
+                    desc: articleArr[x].desc,
+                    url: articleArr[x].url,
+                    urlToImage: articleArr[x].urlToImage,
+                    publishedAt: articleArr[x].publishedAt,
+                    score: articleArr[x].articleScore,
+                    category: articleArr[x].category,
+                    webSafeLink: articleArr[x].getWebSafeLink()
+                };
+
+                arrOfArticles.push(articleObj);
+            }
+
+            if (data.type === 'silent') {
+                socket.emit('loadArticles', {
+                    articles: arrOfArticles,
+                    type: data.type
+                });
+            } else if (data.type === 'load') {
+                socket.emit('loadArticles', {
+                    articles: arrOfArticles,
+                    type: data.type
+                });
+            }
+
+            socket.emit('recCategoryValues', {
+                valuesObj: dataStore.getPieData()
+            });
         });
+
+
     });
 
     //disconnect event
@@ -385,7 +368,7 @@ io.on('connection', function (socket) {
     socket.on('checkForNewArticles', function (data) {
         var latestID = data.latestId;
         dataStore.getArticleBank().getLatestID(latestID).then((articleArr) => {
-            console.log("here");
+            console.log("looking for new articles: " +latestID);
             if (articleArr.length > 0) {
                 socket.emit('addNewArticles', {
                     arrOfNewArticles: articleArr
@@ -464,11 +447,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('getArticleDataForTables', () => {
-        let result = dataStore.getArticlesReadyForTables(100);
+        dataStore.getArticlesReadyForTables(100).then((res) => {
+            socket.emit('recArticlesTableData', {
+                str: res
+            })
 
-        socket.emit('recArticlesTableData', {
-            str: result
-        })
+        });
+
     });
 
     socket.on('getSourcesGraphData', () => {

@@ -268,6 +268,8 @@
 
     socket.on('addNewArticles', function (data) {
         console.log("received new articles");
+        console.log(data);
+
         if (data.arrOfNewArticles.length > 0) {
             var articles = data.arrOfNewArticles;
             for (var x in articles) {
@@ -630,6 +632,56 @@
 
         });
 
+        let typingTimer;
+        let typingInterval = 2000;
+        let searching = false;
+        let searchText;
+        $('#search-box').on('keyup', function () {
+            searchText = this.value;
+            clearTimeout(typingTimer);
+            if (this.value.length >= 4) {
+
+                $('#logo').addClass('hidden');
+                $('#loader').css('display', '');
+
+                typingTimer = setTimeout(queryElastic, typingInterval);
+            } else {
+                //reset ui
+                console.log("making news hub visible");
+                $('#news-hub').removeClass('hidden');
+                thisWebsite.setScrolling(true);
+                thisWebsite.emptySearchArticles();
+            }
+        });
+
+        function queryElastic() {
+
+            thisWebsite.setScrolling(false);
+
+            $.ajax({
+                method: 'post',
+                url: "http://localhost:9200/motus/_search?q=title:" + searchText + "&size=20",
+                crossDomain: true,
+                async: true,
+                dataType: 'json',
+                contentType: 'application/json',
+            }).done((data) => {
+                console.log(data);
+                $('#news-hub').addClass('hidden');
+                $('#search-div').removeClass('hidden');
+                thisWebsite.appendSearchItems(data.hits.hits);
+
+            }).fail((data) => {
+                console.log(data);
+            });
+
+        }
+
+
+        $('#search-box').on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
         /**
          * Sets the category values from the server.
          */
@@ -790,7 +842,8 @@
                                             <div class="search-box-container">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                                    <input type="text" class="form-control" placeholder="Search..."
+                                                    <input id="search-box" type="text" class="form-control"
+                                                           placeholder="Search..."
                                                            aria-describedby="">
                                                 </div>
                                             </div>
@@ -887,6 +940,10 @@
                             <img style="opacity: 0.4;" src="/public/images/default/loading/break.png"/>
                             <h1 style="color:#dcdcdc;">Grabbing the latest news off the press...</h1>
                         </div>
+                    </div>
+
+                    <div class="hidden row row-flex row-flex-wrap" id="search-div">
+
                     </div>
 
                 </div>

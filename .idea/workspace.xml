@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52e37564-3eca-4cf1-8bc0-31b3177826f4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/js-weighted-list.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/dashboard/articles.html" afterPath="$PROJECT_DIR$/public/dashboard/articles.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/LearningAlgorithm.js" afterPath="$PROJECT_DIR$/public/js/LearningAlgorithm.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/Website.js" afterPath="$PROJECT_DIR$/public/js/Website.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/js-weighted-list.js" afterPath="$PROJECT_DIR$/public/js/js-weighted-list.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/ArticleBank.js" afterPath="$PROJECT_DIR$/server/ArticleBank.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/CategoryFilter.js" afterPath="$PROJECT_DIR$/server/CategoryFilter.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/DataStore.js" afterPath="$PROJECT_DIR$/server/DataStore.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -25,56 +24,24 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="DataStore.js" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/server/DataStore.js">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="693">
-                    <caret line="568" column="43" lean-forward="false" selection-start-line="568" selection-start-column="43" selection-end-line="568" selection-end-column="43" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="577">
-              <caret line="398" column="7" lean-forward="true" selection-start-line="398" selection-start-column="7" selection-end-line="398" selection-end-column="7" />
+            <state relative-caret-position="1394">
+              <caret line="364" column="71" lean-forward="true" selection-start-line="364" selection-start-column="71" selection-end-line="364" selection-end-column="71" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LearningAlgorithm.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/LearningAlgorithm.js">
+      <file leaf-file-name="articles.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/dashboard/articles.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2975">
-              <caret line="177" column="0" lean-forward="true" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
-              <folding>
-                <element signature="n#!!doc;n#LearningAlgorithm#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="js-weighted-list.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/js-weighted-list.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="861">
-              <caret line="161" column="25" lean-forward="false" selection-start-line="161" selection-start-column="25" selection-end-line="161" selection-end-column="25" />
+            <state relative-caret-position="1405">
+              <caret line="134" column="26" lean-forward="false" selection-start-line="134" selection-start-column="26" selection-end-line="134" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -90,13 +57,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4974">
-              <caret line="64" column="7" lean-forward="true" selection-start-line="64" selection-start-column="7" selection-end-line="64" selection-end-column="7" />
+            <state relative-caret-position="399">
+              <caret line="664" column="28" lean-forward="true" selection-start-line="664" selection-start-column="28" selection-end-line="664" selection-end-column="28" />
               <folding>
-                <marker date="1493751194834" expanded="true" signature="13255:13262" ph="×" />
+                <marker date="1493845047421" expanded="true" signature="13283:13290" ph="×" />
               </folding>
             </state>
           </provider>
@@ -105,8 +72,8 @@
       <file leaf-file-name="Website.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/Website.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="160" column="6" lean-forward="true" selection-start-line="160" selection-start-column="6" selection-end-line="160" selection-end-column="6" />
+            <state relative-caret-position="699">
+              <caret line="311" column="6" lean-forward="true" selection-start-line="311" selection-start-column="6" selection-end-line="311" selection-end-column="6" />
               <folding>
                 <element signature="n#!!doc;n#Website#0" expanded="false" />
               </folding>
@@ -117,18 +84,28 @@
       <file leaf-file-name="CategoryFilter.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/CategoryFilter.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+            <state relative-caret-position="340">
+              <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ArticleBank.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ArticleBank.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/ArticleBank.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="106" column="37" lean-forward="true" selection-start-line="106" selection-start-column="37" selection-end-line="106" selection-end-column="37" />
+            <state relative-caret-position="1029">
+              <caret line="103" column="0" lean-forward="true" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DataStore.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/DataStore.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="383">
+              <caret line="93" column="28" lean-forward="false" selection-start-line="93" selection-start-column="28" selection-end-line="93" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -137,24 +114,11 @@
       <file leaf-file-name="Article.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/Article.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="419">
-              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+            <state relative-caret-position="510">
+              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc;n#Article#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="0">
-                <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                <folding />
-              </first_editor>
-              <second_editor />
             </state>
           </provider>
         </entry>
@@ -172,10 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>logout</find>
-      <find>#home</find>
-      <find>#refre</find>
-      <find>.pinned</find>
       <find>recUs</find>
       <find>pushpin</find>
       <find>login</find>
@@ -202,6 +162,10 @@
       <find>rec</find>
       <find>recF</find>
       <find>queryForMoreArticles</find>
+      <find>recArticlesTableData</find>
+      <find>input</find>
+      <find>scrolling</find>
+      <find>setscr</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -236,7 +200,6 @@
         <option value="$PROJECT_DIR$/server/CategoryFilter().js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/server/SourceAnalytics.js" />
-        <option value="$PROJECT_DIR$/public/dashboard/articles.html" />
         <option value="$PROJECT_DIR$/public/js/DashboardArticles.js" />
         <option value="$PROJECT_DIR$/public/dashboard.html" />
         <option value="$PROJECT_DIR$/public/js/UserAnalytics.js" />
@@ -249,14 +212,15 @@
         <option value="$PROJECT_DIR$/public/js/Client.js" />
         <option value="$PROJECT_DIR$/test.js" />
         <option value="$PROJECT_DIR$/public/dashboard/trends.html" />
+        <option value="$PROJECT_DIR$/server/CategoryFilter.js" />
+        <option value="$PROJECT_DIR$/public/js/LearningAlgorithm.js" />
+        <option value="$PROJECT_DIR$/public/dashboard/articles.html" />
+        <option value="$PROJECT_DIR$/server/DataStore.js" />
+        <option value="$PROJECT_DIR$/server.js" />
+        <option value="$PROJECT_DIR$/server/ArticleBank.js" />
         <option value="$PROJECT_DIR$/public/js/js-weighted-list.js" />
         <option value="$PROJECT_DIR$/public/js/Website.js" />
-        <option value="$PROJECT_DIR$/server/CategoryFilter.js" />
-        <option value="$PROJECT_DIR$/server/DataStore.js" />
         <option value="$PROJECT_DIR$/public/index.html" />
-        <option value="$PROJECT_DIR$/server.js" />
-        <option value="$PROJECT_DIR$/public/js/LearningAlgorithm.js" />
-        <option value="$PROJECT_DIR$/server/ArticleBank.js" />
       </list>
     </option>
   </component>
@@ -313,8 +277,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -411,6 +373,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -594,16 +558,17 @@
       <workItem from="1493586680480" duration="18223000" />
       <workItem from="1493617135879" duration="18610000" />
       <workItem from="1493696305159" duration="2385000" />
-      <workItem from="1493733300129" duration="14394000" />
+      <workItem from="1493733300129" duration="14437000" />
+      <workItem from="1493806062432" duration="26785000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="588488000" />
+    <option name="totallyTimeSpent" value="615316000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13962065" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -649,7 +614,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -683,13 +648,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/css/scrollbarBaseCss.css" />
     <entry file="file://$PROJECT_DIR$/public/css/style.css.map">
-      <provider editor-type-id="sourcemapFileViewerProvider">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
         </state>
+      </provider>
+      <provider editor-type-id="sourcemapFileViewerProvider">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -859,15 +824,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
           <caret line="29" column="4" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/dashboard/articles.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="120" column="30" lean-forward="false" selection-start-line="120" selection-start-column="30" selection-end-line="120" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -884,8 +840,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/Article.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+        <state relative-caret-position="510">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc;n#Article#0" expanded="false" />
           </folding>
@@ -902,9 +858,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/CategoryFilter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+        <state relative-caret-position="340">
+          <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/LearningAlgorithm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="861">
+          <caret line="177" column="0" lean-forward="false" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc;n#LearningAlgorithm#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -916,10 +882,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server/DataStore.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="93" column="28" lean-forward="false" selection-start-line="93" selection-start-column="28" selection-end-line="93" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="364" column="71" lean-forward="true" selection-start-line="364" selection-start-column="71" selection-end-line="364" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/ArticleBank.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1029">
+          <caret line="103" column="0" lean-forward="true" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/js-weighted-list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="81" column="0" lean-forward="true" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/dashboard/articles.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1405">
+          <caret line="134" column="26" lean-forward="false" selection-start-line="134" selection-start-column="26" selection-end-line="134" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/Website.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="160" column="6" lean-forward="true" selection-start-line="160" selection-start-column="6" selection-end-line="160" selection-end-column="6" />
+        <state relative-caret-position="699">
+          <caret line="311" column="6" lean-forward="true" selection-start-line="311" selection-start-column="6" selection-end-line="311" selection-end-column="6" />
           <folding>
             <element signature="n#!!doc;n#Website#0" expanded="false" />
           </folding>
@@ -928,53 +934,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4974">
-          <caret line="64" column="7" lean-forward="true" selection-start-line="64" selection-start-column="7" selection-end-line="64" selection-end-column="7" />
+        <state relative-caret-position="399">
+          <caret line="664" column="28" lean-forward="true" selection-start-line="664" selection-start-column="28" selection-end-line="664" selection-end-column="28" />
           <folding>
-            <marker date="1493751194834" expanded="true" signature="13255:13262" ph="×" />
+            <marker date="1493845047421" expanded="true" signature="13283:13290" ph="×" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="398" column="7" lean-forward="true" selection-start-line="398" selection-start-column="7" selection-end-line="398" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/js-weighted-list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="861">
-          <caret line="161" column="25" lean-forward="false" selection-start-line="161" selection-start-column="25" selection-end-line="161" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/LearningAlgorithm.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2975">
-          <caret line="177" column="0" lean-forward="true" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc;n#LearningAlgorithm#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/DataStore.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="693">
-          <caret line="568" column="43" lean-forward="false" selection-start-line="568" selection-start-column="43" selection-end-line="568" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/ArticleBank.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="106" column="37" lean-forward="true" selection-start-line="106" selection-start-column="37" selection-end-line="106" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>

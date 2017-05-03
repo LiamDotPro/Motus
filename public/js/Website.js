@@ -9,6 +9,7 @@ function Website(socket) {
     this.articleList = [];
     this.loadedArticleIds = [];
     this.unloadedArticles = [];
+    this.searchArticles = [];
     this.currentViewType = 'list';
     this.scrolling = false;
     this.loadCount = 0;
@@ -269,4 +270,49 @@ function Website(socket) {
         });
     };
 
+    this.appendSearchItems = (data) => {
+
+        this.searchArticles = [];
+        $('#search-div').empty();
+
+
+        $('#logo').removeClass('hidden');
+        $('#loader').css('display', 'none');
+
+        var tempArr = [];
+
+        for (var x = 0; x < data.length; x++) {
+            var tempArticle = new Article();
+            tempArticle.setId(data[x]._source.id);
+            tempArticle.setSource(data[x]._source.source);
+            tempArticle.setAuthor(data[x]._source.author);
+            tempArticle.setTitle(data[x]._source.title);
+            tempArticle.setDesc(data[x]._source.articledesc);
+            tempArticle.setUrl(data[x]._source.url);
+            tempArticle.setUrlToImage(data[x]._source.urltoimage);
+            tempArticle.setPublishedAt(formatDate(data[x]._source.publishedAt));
+            tempArticle.setArticleScore(data[x]._source.articlescore);
+            tempArticle.setCategory(data[x]._source.category);
+            tempArticle.setWebSafeLink(data[x]._source.webSafeLink);
+            tempArr.push(tempArticle);
+        }
+
+        this.searchArticles = tempArr;
+
+        const searchRes = document.getElementById("search-div");
+
+        for (var t = 0; t < this.searchArticles.length; t++) {
+            if (this.currentViewType === 'tile') {
+                searchRes.innerHTML = ' <div id="article' + this.searchArticles[t].getId() + '" class="col-md-6 news-tile-half article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.searchArticles[t].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i id="' + this.searchArticles[t].getId() + '" class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.searchArticles[t].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.searchArticles[t].getTitle()) + '"> <span class="news-time-date">' + this.searchArticles[t].getSource() + ' | ' + this.searchArticles[t].getPublishedAt() + ' | ' + this.searchArticles[t].getCategory() + ' </span> <h2>' + this.searchArticles[t].getTitle() + '</h2> </a> </div> </div> </div> </div>' + searchRes.innerHTML;
+            } else {
+                searchRes.innerHTML = '<div id="article' + this.searchArticles[t].getId() + '" class="col-md-12 article"><div class="news-tile"><div class="news-tile-controls row"><div class="col-md-6 control-button news-tile-controls-votes"> <a href=""> <i class="fa fa-chevron-up" aria-hidden="true"></i> </a> <span class="vote-amounts">' + this.searchArticles[t].getArticleScore() + '</span> <a href=""> <i class="fa fa-chevron-down" aria-hidden="true"></i> </a> </div><div class="col-md-6 control-button news-tile-controls-pin text-right"> <a class="control-icon pushpin" href=""><i id="' + this.searchArticles[t].getId() + '" class="fa fa-thumb-tack "></i></a> </div> </div> <div class="news-tile-image row"> <div class="col-md-12"><div class="news-tile-img-col"><img src="' + checkImageForNull(this.searchArticles[t].getUrlToImage()) + '" class="img-responsive"></div> </div> </div> <div class="news-tile-info row"> <div class="col-md-12"> <a class="news-tile-info-wrap article-link" href="' + createNavSafeLink(this.searchArticles[t].getTitle()) + '"> <span class="news-time-date">' + this.searchArticles[t].getSource() + ' | ' + this.searchArticles[t].getPublishedAt() + ' | ' + this.searchArticles[t].getCategory() + ' </span> <h2>' + this.searchArticles[t].getTitle() + '</h2> </a> </div> </div> </div> </div>' + searchRes.innerHTML;
+
+            }
+        }
+    };
+
+    this.emptySearchArticles = () => {
+        this.searchArticles = [];
+        $('#search-div').empty();
+    }
 }
