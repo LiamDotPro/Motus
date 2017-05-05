@@ -300,9 +300,6 @@ var ArticleBank = function () {
                 return tempArr;
             })
         };
-
-
-    }
-    ;
+    };
 
 module.exports = ArticleBank;
