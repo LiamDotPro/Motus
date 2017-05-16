@@ -266,8 +266,6 @@ io.on('connection', function (socket) {
 
     //disconnect event
     socket.on('disconnect', function () {
-
-
         if (connectedClient != '') {
             var dataStoreInstance = dataStore.getClient(connectedClient);
 
@@ -355,9 +353,9 @@ io.on('connection', function (socket) {
      * Pushes a new instance of pinned article to the user.
      */
     socket.on('addNewPinnedArticle', (data) => {
-        if (dataStore.pushPinnedArticles(data.email, data.article)) {
+        dataStore.pushPinnedArticles(data.email, data.article).then(() => {
 
-        }
+        });
     });
 
     socket.on('clientCanvasData', function (data) {
@@ -368,7 +366,7 @@ io.on('connection', function (socket) {
     socket.on('checkForNewArticles', function (data) {
         var latestID = data.latestId;
         dataStore.getArticleBank().getLatestID(latestID).then((articleArr) => {
-            console.log("looking for new articles: " +latestID);
+            console.log("looking for new articles: " + latestID);
             if (articleArr.length > 0) {
                 socket.emit('addNewArticles', {
                     arrOfNewArticles: articleArr
@@ -489,6 +487,10 @@ io.on('connection', function (socket) {
         let id = data.lastId;
 
         dataStore.requestNext100(id, socket);
+    });
+
+    socket.on('sendProfileChanges', (data) => {
+        dataStore.updateCategoryProfile(data.user, data.profile);
     });
 
 });

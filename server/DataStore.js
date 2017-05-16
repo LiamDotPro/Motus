@@ -256,6 +256,7 @@ var DataStore = function () {
                 var admin = JSON.parse(rows[i].admin);
                 tempUser.setAdmin(admin.Access);
                 tempUser.setPinnedArticles(rows[i].pinnedArticles);
+                tempUser.setCategoryProfileData(rows[i].categoryProfile);
                 self.addUser(rows[i].email, tempUser);
             }
         }).then(function () {
@@ -385,9 +386,7 @@ var DataStore = function () {
         //Push new articles to the live model and also update database model
         user.addPinnedArticle(article);
 
-        poolRef.query('UPDATE `users` SET pinnedArticles=? WHERE email=? ;', [user.getPinnedArticlesAsJson(), email]);
-
-        return true;
+        return poolRef.query('UPDATE `users` SET pinnedArticles=? WHERE email=? ;', [user.getPinnedArticlesAsJson(), email]);
     };
 
     /**
@@ -480,7 +479,7 @@ var DataStore = function () {
             let c = 0;
             for (x of res) {
                 if (c <= range) {
-                    resultStr += "<tr><td><a href='/articles/" + x.websafelink + "'><i class='fa fa-eye'></i></a></td><td>" + x.source + "</td><td>" + x.title + "</td><td>" + moment(x.publishedAt).format("DD MM YYYY - h:mm a") + "</td><td>" + x.articleScore + "</td></tr>";
+                    resultStr += "<tr><td><a href='/article/" + x.websafelink + " target='_blank'><i class='fa fa-eye'></i></a></td><td>" + x.source + "</td><td>" + x.title + "</td><td>" + moment(x.publishedAt).format("DD MM YYYY - h:mm a") + "</td><td>" + x.articleScore + "</td></tr>";
                     c++;
                 } else {
                     break;
@@ -568,6 +567,18 @@ var DataStore = function () {
     this.requestNext100 = (id, socket) => {
         this.articleBank.queryForMoreArticles(id, socket);
     };
+
+    this.updateCategoryProfile = (user, categoryProfile) => {
+        let poolRef = this.pool;
+
+        poolRef.query('UPDATE `users` SET categoryProfile=? Where id="' + user.id + '"; ', [JSON.stringify(categoryProfile)]).then(() => {
+            console.log("updated Category Profile");
+        });
+
+        let srvUser = this.getUserByEmail(user.email);
+
+        srvUser.setCategoryProfileData(JSON.stringify(categoryProfile));
+    }
 
 
 };

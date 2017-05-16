@@ -51,7 +51,7 @@ function Client(socket) {
 
         console.log(this.user.pinnedArticles);
 
-        let output = this.user.pinnedArticles.wordFilter((e) => {
+        let output = this.user.pinnedArticles.filter((e) => {
             return e.getId() == articleId;
         });
 
@@ -257,10 +257,9 @@ function Client(socket) {
     };
 
     this.appendPinnedArticles = () => {
-
         var articleArr = this.user.pinnedArticles;
         for (var x = articleArr.length; x > 0; x--) {
-            $('#pinlist-ul').append('<li><a href="' + articleArr[x - 1].webSafeLink + '">' + articleArr[x - 1].title + '</a></li>');
+            $('#pinlist-ul').append('<li><a href="/article/' + articleArr[x - 1].websafelink + '">' + articleArr[x - 1].title + '</a></li>');
         }
     }
 

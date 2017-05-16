@@ -9,6 +9,7 @@ var User = function () {
     this.admin = {};
     this.canvasData = {};
     this.pinnedArticles = [];
+    this.categoryProfile = [];
 
     this.getPinnedArticles = () => {
         return this.pinnedArticles;
@@ -54,6 +55,10 @@ var User = function () {
         this.canvasData = newCanvasDataObj;
     };
 
+    this.setCategoryProfileData = (newProfile) => {
+        this.categoryProfile = newProfile;
+    };
+
     /**
      * Sets a new status for the user.
      * @param newStatus
@@ -62,9 +67,13 @@ var User = function () {
         this.status = newStatus;
     };
 
-    this.getPinnedArticlesAsJson = () =>{
-      return JSON.stringify(this.pinnedArticles);
+    this.getPinnedArticlesAsJson = () => {
+        return JSON.stringify(this.pinnedArticles);
     };
+
+    this.getCategoryProfile = () => {
+        return this.categoryProfile;
+    }
 };
 
 module.exports = User;

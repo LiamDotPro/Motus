@@ -133,6 +133,8 @@ function Website(socket) {
                 currentId = self.firstId;
             }
 
+            console.log(currentId);
+
             socket.emit('checkForNewArticles', {
                 latestId: currentId
             });

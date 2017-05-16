@@ -4,7 +4,11 @@
 
 function LearningAlgorithm(socket) {
 
+    this.user = null;
+
     this.globalDecayInterval = null;
+
+    this.viewedArticleIds = [];
 
     this.interactionValues = {
         viewingArticle: 0.5,
@@ -76,18 +80,26 @@ function LearningAlgorithm(socket) {
      * @param action
      * @param category
      */
-    this.increaseCategoryProfileValue = (action, category) => {
+    this.increaseCategoryProfileValue = (action, category, articleID) => {
+
+        if (this.viewedArticleIds.includes(articleID) && action === 'viewingArticle') {
+            console.log("Article view already attributed to learning");
+            return;
+        }
 
         console.log("interaction found --->");
         console.log(action);
         console.log(category);
 
-        let actionValue = this.interactionValues[action];
-        let categoryValue = this.categoryValues[category];
+
+        let actionValue = Number(parseFloat(this.interactionValues[action]));
+        let categoryValue = Number(parseFloat(this.categoryValues[category]));
+
+        console.log(Number(parseFloat(actionValue * categoryValue / 6)));
 
         //If statement limit's the total available for each category.
-        if (this.categoryProfile[category] + actionValue * categoryValue < 100) {
-            this.categoryProfile[category] += actionValue * categoryValue;
+        if ((categoryValue * actionValue) + parseFloat(this.categoryProfile[category]) < 100) {
+            this.categoryProfile[category] = Number(parseFloat(this.categoryProfile[category]) + parseFloat(actionValue * categoryValue / 7));
         } else {
             this.categoryProfile[category] = 100
         }
@@ -116,13 +128,31 @@ function LearningAlgorithm(socket) {
                 } else if (this.categoryProfile[keys[x]] > 10) {
                     this.categoryProfile[keys[x]] -= 0.5;
                 } else if (this.categoryProfile[keys[x]] > 0) {
-                    console.log("Not decaying an article near the bottom")
+                    console.log("Not decaying an article category near the bottom");
                 }
             }
         }
 
-        //update experience with profile.
-        socket.emit('sendProfileChanges', {});
+        //Is there a user present -> update profile.
+        if (this.user !== null) {
+            //update experience with profile.
+            socket.emit('sendProfileChanges', {
+                profile: this.categoryProfile,
+                user: this.user
+            });
+
+            if (action === 'viewingArticle')
+            //Updates the users record that they viewed an article
+
+                this.viewedArticleIds.push(articleID);
+
+            socket.emit('UpdateViewedArticles', {
+                user: this.user
+            });
+        }
+
+
+        console.log(this.categoryProfile);
 
     };
 
@@ -142,9 +172,9 @@ function LearningAlgorithm(socket) {
                     }
                 }
             }
+            console.log("Global Decay Performed");
         }, 120000);
     };
-
 
 
     this.getProfile = () => {
@@ -176,7 +206,7 @@ function LearningAlgorithm(socket) {
 
             let title = articlesArr[y].title;
 
-            if(articlesArr[y].title === null || articlesArr[y].title === "" || articlesArr[y].title === " " || articlesArr[y].title === 'undefined'){
+            if (articlesArr[y].title === null || articlesArr[y].title === "" || articlesArr[y].title === " " || articlesArr[y].title === 'undefined') {
                 title = "not specified";
             }
 
@@ -193,7 +223,7 @@ function LearningAlgorithm(socket) {
 
         let returnArr = [];
 
-        for(let t of result){
+        for (let t of result) {
             returnArr.push(t.data.data);
         }
 
@@ -201,12 +231,16 @@ function LearningAlgorithm(socket) {
 
     };
 
-    function getRandomArbitrary(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
-    }
-
     this.orderArticlesBasedOnStringValues = () => {
 
+    };
+
+    this.setUser = (userObj) => {
+        this.user = new User();
+        this.user.setId(userObj.id);
+        this.user.setEmail(userObj.email);
+        this.user.setAdmin(userObj.admin);
+        this.user.setArticleObjects(userObj.pinnedArticles);
     };
 
 }
