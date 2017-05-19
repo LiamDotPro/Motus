@@ -253,8 +253,7 @@ var DataStore = function () {
                 tempUser.setId(rows[i].id);
                 tempUser.setEmail(rows[i].email);
                 tempUser.setCanvasData(rows[i].canvasData);
-                var admin = JSON.parse(rows[i].admin);
-                tempUser.setAdmin(admin.Access);
+                tempUser.setAdmin(rows[i].admin);
                 tempUser.setPinnedArticles(rows[i].pinnedArticles);
                 tempUser.setCategoryProfileData(rows[i].categoryProfile);
                 tempUser.setViewedArticleIds(rows[i].viewedArticles);
@@ -299,11 +298,10 @@ var DataStore = function () {
             hashes: [canvasHash]
         };
 
-        var jsonAdmin = JSON.stringify(adminObj);
+        var jsonAdmin = "false";
         var jsonCanvas = JSON.stringify(canvasObj);
 
         var hashedPassword = passwordHash.generate(password);
-        var poolRef = this.pool;
 
         let emptyArr = [];
         let emptyCatObj = {
@@ -322,19 +320,20 @@ var DataStore = function () {
         var categoryProfile = JSON.stringify(emptyCatObj);
         var keywordProfile = JSON.stringify({});
 
-        return poolRef.query('INSERT INTO `users` (email, password, admin, canvasHash, pinnedArticles, categoryProfile, viewedArticles, keywordProfile) VALUES (?,?,?,?,?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas, pinnedArticles, categoryProfile, viewedArticles, keywordProfile]).then((res) => {
+        return this.pool.query('INSERT INTO `users` (email, password, admin, canvasHash, pinnedArticles, categoryProfile, viewedArticles, keywordProfile) VALUES (?,?,?,?,?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas, pinnedArticles, categoryProfile, viewedArticles, keywordProfile]).then((res) => {
             let tempUser = new User();
-
             tempUser.setEmail(email);
             tempUser.setCanvasData(jsonCanvas);
             tempUser.setAdmin(jsonAdmin);
             tempUser.setId(res.insertId);
-            tempUser.setCategoryProfileData(emptyCatObj);
+            tempUser.setCategoryProfileDataN(emptyCatObj);
 
             self.addUser(email, tempUser);
 
             console.log("New User created");
             return "User Created";
+        }).catch((e) => {
+            console.log(e);
         });
 
 
@@ -364,11 +363,12 @@ var DataStore = function () {
             loginPromise.then((outcome) => {
                 if (outcome) {
                     let user = self.getUserByEmail(email);
-                    let accessObj = JSON.parse(user.getAdmin());
+                    console.log(user);
+                    let accessObj = user.getAdmin();
 
                     socket.emit('successfulLogin', {
                         email: email,
-                        access: accessObj.Access,
+                        access: accessObj,
                         user: user
                     });
                 } else {
@@ -381,9 +381,14 @@ var DataStore = function () {
 
     };
 
+    this.getUserByEmailDB = (email) => {
+        return this.pool.query('select id, email, admin, canvasHash, pinnedArticles, categoryProfile, viewedArticles, keywordProfile from `users` where email=?', [email]);
+    };
+
     this.getUserByEmail = (email) => {
         return this.users.get(email);
     };
+
 
     /**
      * pushes a new pinned article object onto a user.
@@ -437,7 +442,6 @@ var DataStore = function () {
 
     this.getGraphData = (day, month, year, socket) => {
         let poolRef = this.pool;
-        let result = [];
 
         poolRef.query('SELECT * FROM `articlecounter` ORDER BY id DESC').then((rows) => {
             var arr = [];
@@ -603,6 +607,10 @@ var DataStore = function () {
 
         poolRef.query('UPDATE `users` SET viewedArticles=? Where id="' + user.id + '"; ', [JSON.stringify(user.viewedArticles)]).then(() => {
         });
+
+        let srvUser = this.getUserByEmail(user.email);
+
+        srvUser.setViewedArticleIds(JSON.stringify(user.viewedArticles));
     };
 
     this.updateKeywordAnalysisProfile = (user, profile) => {
@@ -610,6 +618,10 @@ var DataStore = function () {
 
         poolRef.query('UPDATE `users` SET keywordProfile=? Where id="' + user.id + '"; ', [JSON.stringify(profile)]).then(() => {
         });
+
+        let srvUser = this.getUserByEmail(user.email);
+
+        srvUser.setKeywordProfile(user.profile);
     }
 
 };

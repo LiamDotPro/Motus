@@ -301,21 +301,21 @@
 
     //small function for interpreating if null or true;
     function checkForNull(val) {
-        return !val ? val : {};
+        return val ? val : {};
     }
 
     /**
      * Triggered when a successful login has been processed.
      */
     socket.on('successfulLogin', (data) => {
-        debugger;
+
         $('#login-btn').addClass('hidden');
         $('#login-panel').addClass('hidden');
         $('#register-user').addClass('hidden');
         $('#user-dashboard').removeClass('hidden');
         $('#logout-btn').removeClass('hidden');
 
-        if (data.user.admin) {
+        if (data.user.admin === "true") {
             $('#dashboard-btn').removeClass('hidden');
         }
 
@@ -365,7 +365,7 @@
 
         thisWebsite.getLearning().setCategoryProfile(data.obj.categoryProfile);
 
-        thisWebsite.getLearning().wordAnalysisProfile.setProfile(checkForNull(data.obj.keywordProfile));
+        thisWebsite.getLearning().wordAnalysisProfile.setProfile(JSON.parse(checkForNull(data.obj.keywordProfile)));
 
         console.log(thisClient.getUser().getId());
 
@@ -574,7 +574,6 @@
         //programmatic handling of click event on articles
         $(document).on('click', '.article-link', (e) => {
 
-            debugger;
             //grab scroll bar height first
             scrollTop = $(window).scrollTop();
 

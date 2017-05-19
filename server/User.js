@@ -6,7 +6,7 @@ var User = function () {
 
     this.id = 0;
     this.email = '';
-    this.admin = {};
+    this.admin = false;
     this.canvasData = {};
     this.pinnedArticles = [];
     this.categoryProfile = {};
@@ -63,6 +63,10 @@ var User = function () {
 
     this.setCategoryProfileData = (newProfile) => {
         this.categoryProfile = JSON.parse(newProfile);
+    };
+
+    this.setCategoryProfileDataN = (profile) => {
+        this.categoryProfile = profile;
     };
 
     this.setKeywordProfile = (newProfile) => {

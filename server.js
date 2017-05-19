@@ -22,6 +22,9 @@ memwatch.on('leak', function (info) {
 //module exports
 var DataStore = require('./server/DataStore.js');
 
+var User = require('./server/User.js');
+
+
 var dataStore = new DataStore();
 
 //database connection pool - 100 max connections
@@ -342,11 +345,23 @@ io.on('connection', function (socket) {
     });
 
     socket.on('getUserObject', (data) => {
-        let user = dataStore.getUserByEmail(data.user);
+        let result = dataStore.getUserByEmailDB(data.user).then((row) => {
+            let tempUser = new User();
+            tempUser.setId(row[0].id);
+            tempUser.setEmail(row[0].email);
+            tempUser.setCanvasData(row[0].canvasData);
+            tempUser.setAdmin(row[0].admin);
+            tempUser.setPinnedArticles(row[0].pinnedArticles);
+            tempUser.setCategoryProfileData(row[0].categoryProfile);
+            tempUser.setViewedArticleIds(row[0].viewedArticles);
+            tempUser.setKeywordProfile(row[0].keywordProfile);
 
-        socket.emit('recUserObj', {
-            obj: user
+            socket.emit('recUserObj', {
+                obj: tempUser
+            });
         });
+
+
     });
 
     /**
@@ -481,7 +496,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('getSingleArticleByLink', (data) => {
-        let result = dataStore.getSingleArticle(data.link, socket);
+        dataStore.getSingleArticle(data.link, socket);
     });
 
     socket.on('getFurtherArticles', (data) => {
@@ -491,11 +506,11 @@ io.on('connection', function (socket) {
     });
 
     socket.on('sendProfileChanges', (data) => {
-        console.log("updated learning profile");
         dataStore.updateCategoryProfile(data.user, data.profile);
     });
 
     socket.on('UpdateViewedArticles', (data) => {
+        console.log(data.user);
         dataStore.updateViewedArticles(data.user);
     });
 

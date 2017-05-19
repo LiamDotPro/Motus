@@ -196,6 +196,8 @@ function Website(socket) {
 
         this.sortUnloadedArticlesById();
 
+        this.unloadedArticles = this.learning.orderDataBasedOnValues(this.unloadedArticles);
+
         const newsHub = document.getElementById("news-hub");
 
         if (this.unloadedArticles.length > 0) {

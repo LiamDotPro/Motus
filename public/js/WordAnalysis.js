@@ -37,7 +37,7 @@ function WordAnalysis(socket) {
                 this.analysisProfile[y] = Number(1);
             }
         }
-
+        debugger;
         //reset any words
         let profileKeys = Object.keys(this.analysisProfile).filter((el) => {
             return this.bannedWords.has(el);
@@ -47,6 +47,7 @@ function WordAnalysis(socket) {
         for (let t = 0; t < profileKeys.length; t++) {
             delete this.analysisProfile[profileKeys[t]];
         }
+
 
         //update the users profile to include the profile
         socket.emit('updateKeywordObject', {
@@ -98,6 +99,12 @@ function WordAnalysis(socket) {
     };
 
     function moveItemsInArray(articleArr, itemsForMoving) {
+
+        if (itemsForMoving.length > 0) {
+            console.log("articles moved up by algorithm");
+            console.log(itemsForMoving);
+        }
+
         for (let x of itemsForMoving) {
             //firstly find the maximum possible steps it could move.
 
@@ -107,7 +114,7 @@ function WordAnalysis(socket) {
                 step = getRandomArbitrary(1, x.arrPos);
             }
 
-            articleArr = move(articleArr, x.arrPos, step - x.arrPos);
+            articleArr = move(articleArr, x.arrPos, x.arrPos - step);
 
         }
 
@@ -135,6 +142,6 @@ function WordAnalysis(socket) {
 
 
     this.setProfile = (newProfile) => {
-        this.keywordProfile = newProfile;
+        this.analysisProfile = newProfile;
     }
 }

@@ -6,7 +6,7 @@ function User() {
 
     this.id = 0;
     this.email = '';
-    this.admin = {};
+    this.admin = false;
     this.canvasData = {};
     this.pinnedArticles = [];
     this.viewedArticles = [];
