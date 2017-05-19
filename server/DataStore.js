@@ -257,6 +257,8 @@ var DataStore = function () {
                 tempUser.setAdmin(admin.Access);
                 tempUser.setPinnedArticles(rows[i].pinnedArticles);
                 tempUser.setCategoryProfileData(rows[i].categoryProfile);
+                tempUser.setViewedArticleIds(rows[i].viewedArticles);
+                tempUser.setKeywordProfile(rows[i].keywordProfile);
                 self.addUser(rows[i].email, tempUser);
             }
         }).then(function () {
@@ -304,21 +306,38 @@ var DataStore = function () {
         var poolRef = this.pool;
 
         let emptyArr = [];
+        let emptyCatObj = {
+            "general": 0,
+            "sport": 0,
+            "technology": 0,
+            "business": 0,
+            "entertainment": 0,
+            "science_and_nature": 0,
+            "gaming": 0,
+            "music": 0
+        };
 
         var pinnedArticles = JSON.stringify(emptyArr);
+        var viewedArticles = JSON.stringify(emptyArr);
+        var categoryProfile = JSON.stringify(emptyCatObj);
+        var keywordProfile = JSON.stringify({});
 
-        poolRef.query('INSERT INTO `users` (email, password, admin, canvasHash, pinnedArticles) VALUES (?,?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas, pinnedArticles]);
+        return poolRef.query('INSERT INTO `users` (email, password, admin, canvasHash, pinnedArticles, categoryProfile, viewedArticles, keywordProfile) VALUES (?,?,?,?,?,?,?,?)', [email.toLowerCase(), hashedPassword, jsonAdmin, jsonCanvas, pinnedArticles, categoryProfile, viewedArticles, keywordProfile]).then((res) => {
+            let tempUser = new User();
 
-        var tempUser = new User();
+            tempUser.setEmail(email);
+            tempUser.setCanvasData(jsonCanvas);
+            tempUser.setAdmin(jsonAdmin);
+            tempUser.setId(res.insertId);
+            tempUser.setCategoryProfileData(emptyCatObj);
 
-        tempUser.setEmail(email);
-        tempUser.setCanvasData(jsonCanvas);
-        tempUser.setAdmin(jsonAdmin);
+            self.addUser(email, tempUser);
 
-        this.addUser(email, tempUser);
+            console.log("New User created");
+            return "User Created";
+        });
 
-        console.log("New User created");
-        return "User Created";
+
     };
 
     /**
@@ -572,14 +591,26 @@ var DataStore = function () {
         let poolRef = this.pool;
 
         poolRef.query('UPDATE `users` SET categoryProfile=? Where id="' + user.id + '"; ', [JSON.stringify(categoryProfile)]).then(() => {
-            console.log("updated Category Profile");
         });
 
         let srvUser = this.getUserByEmail(user.email);
 
         srvUser.setCategoryProfileData(JSON.stringify(categoryProfile));
-    }
+    };
 
+    this.updateViewedArticles = (user) => {
+        let poolRef = this.pool;
+
+        poolRef.query('UPDATE `users` SET viewedArticles=? Where id="' + user.id + '"; ', [JSON.stringify(user.viewedArticles)]).then(() => {
+        });
+    };
+
+    this.updateKeywordAnalysisProfile = (user, profile) => {
+        let poolRef = this.pool;
+
+        poolRef.query('UPDATE `users` SET keywordProfile=? Where id="' + user.id + '"; ', [JSON.stringify(profile)]).then(() => {
+        });
+    }
 
 };
 

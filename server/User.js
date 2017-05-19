@@ -9,7 +9,9 @@ var User = function () {
     this.admin = {};
     this.canvasData = {};
     this.pinnedArticles = [];
-    this.categoryProfile = [];
+    this.categoryProfile = {};
+    this.viewedArticles = [];
+    this.keywordProfile = {};
 
     this.getPinnedArticles = () => {
         return this.pinnedArticles;
@@ -17,6 +19,10 @@ var User = function () {
 
     this.setPinnedArticles = (articleJSON) => {
         this.pinnedArticles = JSON.parse(articleJSON);
+    };
+
+    this.setViewedArticleIds = (articleJSON) => {
+        this.viewedArticles = JSON.parse(articleJSON);
     };
 
     this.addPinnedArticle = (article) => {
@@ -56,7 +62,11 @@ var User = function () {
     };
 
     this.setCategoryProfileData = (newProfile) => {
-        this.categoryProfile = newProfile;
+        this.categoryProfile = JSON.parse(newProfile);
+    };
+
+    this.setKeywordProfile = (newProfile) => {
+        this.keywordProfile = newProfile;
     };
 
     /**
@@ -73,7 +83,11 @@ var User = function () {
 
     this.getCategoryProfile = () => {
         return this.categoryProfile;
-    }
+    };
+
+    this.getViewedArticles = () => {
+        return this.viewedArticles;
+    };
 };
 
 module.exports = User;

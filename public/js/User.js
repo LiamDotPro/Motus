@@ -9,6 +9,7 @@ function User() {
     this.admin = {};
     this.canvasData = {};
     this.pinnedArticles = [];
+    this.viewedArticles = [];
 
     this.setArticleObjects = (arrayOfArticleObjects) => {
         this.pinnedArticles = this.convertToArticle(arrayOfArticleObjects);
@@ -71,6 +72,19 @@ function User() {
         this.canvasData = newCanvasDataObj;
     };
 
+    this.setViewedArticles = (viewedArticleIds) => {
+        if (viewedArticleIds !== null) {
+            this.viewedArticles = viewedArticleIds;
+        } else {
+            this.viewedArticles = [];
+        }
+
+    };
+
+    this.getViewedArticles = () => {
+        return this.viewedArticles;
+    };
+
     /**
      * Sets a new status for the user.
      * @param newStatus
@@ -82,5 +96,6 @@ function User() {
     this.getPinnedArticlesAsJson = () => {
         return JSON.stringify(this.pinnedArticles);
     };
+
 
 }

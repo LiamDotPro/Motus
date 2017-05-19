@@ -18,6 +18,7 @@ function Client(socket) {
         this.user.setEmail(userObj.email);
         this.user.setAdmin(userObj.admin);
         this.user.setArticleObjects(userObj.pinnedArticles);
+        this.user.setViewedArticles(userObj.viewedArticles);
     };
 
     this.getUser = () => {

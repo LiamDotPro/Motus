@@ -382,20 +382,21 @@ io.on('connection', function (socket) {
         console.log("request to create a new user incoming");
 
         //canvas hash, boolean, email address, password.
-        var result = dataStore.registerNewUser(data.hash, data.admin, data.email, data.password);
+        dataStore.registerNewUser(data.hash, data.admin, data.email, data.password).then((result) => {
+            switch (result) {
+                case 'Email Already Registered':
+                    socket.emit('emailAlreadyRegistered', {
+                        message: "Email Already registered"
+                    });
+                    break;
+                case 'User Created':
+                    socket.emit('newUserCreated', {
+                        message: "New Account created - Login available via the homepage"
+                    });
+                    break;
+            }
+        });
 
-        switch (result) {
-            case 'Email Already Registered':
-                socket.emit('emailAlreadyRegistered', {
-                    message: "Email Already registered"
-                });
-                break;
-            case 'User Created':
-                socket.emit('newUserCreated', {
-                    message: "New Account created - Login available via the homepage"
-                });
-                break;
-        }
 
     });
 
@@ -490,7 +491,16 @@ io.on('connection', function (socket) {
     });
 
     socket.on('sendProfileChanges', (data) => {
+        console.log("updated learning profile");
         dataStore.updateCategoryProfile(data.user, data.profile);
     });
+
+    socket.on('UpdateViewedArticles', (data) => {
+        dataStore.updateViewedArticles(data.user);
+    });
+
+    socket.on('updateKeywordObject', (data) => {
+        dataStore.updateKeywordAnalysisProfile(data.user, data.profile);
+    })
 
 });

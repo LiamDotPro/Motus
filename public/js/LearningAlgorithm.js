@@ -5,10 +5,9 @@
 function LearningAlgorithm(socket) {
 
     this.user = null;
+    this.wordAnalysisProfile = new WordAnalysis(socket);
 
     this.globalDecayInterval = null;
-
-    this.viewedArticleIds = [];
 
     this.interactionValues = {
         viewingArticle: 0.5,
@@ -79,10 +78,12 @@ function LearningAlgorithm(socket) {
      * Increases the category value.
      * @param action
      * @param category
+     * @param articleID
+     * @param title
      */
-    this.increaseCategoryProfileValue = (action, category, articleID) => {
+    this.increaseCategoryProfileValue = (action, category, articleID, title) => {
 
-        if (this.viewedArticleIds.includes(articleID) && action === 'viewingArticle') {
+        if (this.user.getViewedArticles() !== null && this.user.getViewedArticles().includes(articleID) && action === 'viewingArticle') {
             console.log("Article view already attributed to learning");
             return;
         }
@@ -141,17 +142,20 @@ function LearningAlgorithm(socket) {
                 user: this.user
             });
 
-            if (action === 'viewingArticle')
-            //Updates the users record that they viewed an article
+            if (action === 'viewingArticle') {
+                this.wordAnalysisProfile.analyzeKeywords(title, this.user);
 
-                this.viewedArticleIds.push(articleID);
+                //Updates the users record that they viewed an article
+                this.user.viewedArticles.push(articleID);
 
-            socket.emit('UpdateViewedArticles', {
-                user: this.user
-            });
+                socket.emit('UpdateViewedArticles', {
+                    user: this.user
+                });
+            }
+
         }
 
-
+        console.log(this.user);
         console.log(this.categoryProfile);
 
     };
@@ -173,7 +177,7 @@ function LearningAlgorithm(socket) {
                 }
             }
             console.log("Global Decay Performed");
-        }, 120000);
+        }, 300000);
     };
 
 
@@ -217,6 +221,7 @@ function LearningAlgorithm(socket) {
                 data: articlesArr[y]
             }]);
         }
+
         let wl = new WeightedList(dataArr);
 
         let result = wl.shuffle();
@@ -227,11 +232,8 @@ function LearningAlgorithm(socket) {
             returnArr.push(t.data.data);
         }
 
-        return returnArr;
-
-    };
-
-    this.orderArticlesBasedOnStringValues = () => {
+        //return once it has been analysed for string matches.
+        return this.wordAnalysisProfile.reorderArrayBasedOnKeywords(returnArr);
 
     };
 
@@ -242,5 +244,6 @@ function LearningAlgorithm(socket) {
         this.user.setAdmin(userObj.admin);
         this.user.setArticleObjects(userObj.pinnedArticles);
     };
+
 
 }
