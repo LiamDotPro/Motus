@@ -17,7 +17,7 @@ function Client(socket) {
         this.user.setId(userObj.id);
         this.user.setEmail(userObj.email);
 
-        if (userObj === "true") {
+        if (userObj.admin === "true") {
             this.user.setAdmin(true);
         } else {
             this.user.setAdmin(false);

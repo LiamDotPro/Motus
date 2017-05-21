@@ -581,7 +581,15 @@
 
             e.preventDefault();
 
-            var link = $(e.target).parent().attr("href");
+            var link;
+
+            if ($(e.target).is('a')) {
+                link = $(e.target).attr("href");
+            } else {
+                link = $(e.target).parent().attr("href");
+            }
+
+
             var article = thisWebsite.getArticleByName(link);
 
             if (article === false) {
@@ -629,6 +637,7 @@
                     console.log("Adding pinned article");
                     thisClient.addPinnedArticleToUser(article);
                     thisWebsite.addPinnedArticleToList(article);
+                    thisWebsite.getLearning().increaseCategoryProfileValue('PinningAnArticle', article.getCategory(), article.getId(), article.getTitle());
                 }
             } else {
                 console.log("User not logged in");

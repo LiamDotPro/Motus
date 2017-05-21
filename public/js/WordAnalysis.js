@@ -37,7 +37,7 @@ function WordAnalysis(socket) {
                 this.analysisProfile[y] = Number(1);
             }
         }
-        debugger;
+
         //reset any words
         let profileKeys = Object.keys(this.analysisProfile).filter((el) => {
             return this.bannedWords.has(el);
